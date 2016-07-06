@@ -1,0 +1,21 @@
+Dir {
+    Etc {
+        SourceList "-";
+        SourceParts {{ dir }}/sources.list.d/;
+    }
+}
+
+APT {
+    Get {
+        List-Cleanup "0";
+        Assume-Yes true;
+        force-yes true;
+    }
+}
+
+Dpkg {
+    Options {
+        "--force-confdef";
+        "--force-confold";
+    }
+}

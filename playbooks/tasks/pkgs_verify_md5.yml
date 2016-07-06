@@ -1,0 +1,31 @@
+- name: 'pre-run checks'
+  fail:
+    msg: 'mos_release not provided (use -e option) or unsupported OS'
+  when: mos_release is undefined or (ansible_distribution != 'CentOS' and ansible_distribution != 'Ubuntu')
+- name: 'check if an exclude filter file exists'
+  delegate_to: '127.0.0.1'
+  stat:
+    path: '/root/timmy-customtest/db/md5/{{ mos_release }}/{{ ansible_distribution|lower }}-filter.yaml'
+  register: filter_file
+  ignore_errors: true
+- name: 'allocate a temp file on the target'
+  when: filter_file.stat.exists == true
+  command: 'mktemp'
+  register: temp_file
+- block:
+    - name: 'copy exclude filter file to the target'
+      when: ansible_distribution == 'Ubuntu' and filter_file.stat.exists == true
+      copy:
+        src: "/root/timmy-customtest/db/md5/{{ mos_release }}/{{ ansible_distribution|lower }}-filter.yaml"
+        dest: '{{ temp_file.stdout }}'
+    - name: 'perform md5 check of all installed packages'
+      pkgs_verify_md5:
+        exclude_filter_file: '{{ temp_file.stdout|default(None) }}'
+      register: pkgs_verify_md5_result
+  always:
+    - name: 'cleanup'
+      when: filter_file.stat.exists == true
+      file:
+        path: '{{ temp_file.stdout }}'
+        state: absent
+

@@ -1,0 +1,60 @@
+---
+- hosts: compute
+  strategy: free
+  tasks:
+
+  - name: 'Restart OpenStack services on computes'
+    tags: compute_services
+    ignore_errors: yes
+    service: name={{ item }} state=restarted
+    with_items:
+    - nova-compute
+    - neutron-l3-agent
+    - neutron-plugin-openvswitch-agent
+    - neutron-metadata-agent
+    - ceilometer-agent-compute
+
+- hosts: controller
+  strategy: free
+  tasks:
+
+  - name: 'Restart OpenStack services on controllers'
+    tags: controller_services
+    ignore_errors: yes
+    service: name={{ item }} state=restarted
+    with_items:
+    - heat-api
+    - heat-api-cfn
+    - heat-api-cloudwatch
+    - nova-api
+    - nova-cert
+    - nova-conductor
+    - nova-scheduler
+    - nova-novncproxy
+    - nova-objectstore
+    - nova-consoleauth
+    - cinder-api
+    - cinder-backup
+    - cinder-volume
+    - cinder-scheduler
+    - glance-api
+    - glance-registry
+    - neutron-server
+    - ceilometer-api
+    - ceilometer-collector
+    - ceilometer-alarm-notifier
+    - ceilometer-agent-notification
+
+  - name: 'Restart OpenStack services under Pacemaker'
+    tags: controller_pcs
+    run_once: true
+    ignore_errors: yes
+    script: files/pcs_resource_restart {{ item }}
+    with_items:
+    - p_heat-engine
+    - p_neutron-l3-agent
+    - p_neutron-plugin-openvswtich-agent
+    - p_neutron-dhcp-agent
+    - p_neutron-metadata-agent
+    - p_ceilometer-central-agent
+    - p_ceilometer-alarm-evaluator

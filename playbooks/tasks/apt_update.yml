@@ -1,0 +1,24 @@
+---
+
+- name: "Create dir"
+  file:
+    path: "{{ dir }}/sources.list.d"
+    state: directory
+  when: env_release == mos_release
+
+- name: "Copy sources.lists"
+  template:
+    src: "sources.list.j2"
+    dest: "{{ dir }}/sources.list.d/{{ item }}.list"
+    force: yes
+  with_items: repos
+
+- name: "Copy apt.conf"
+  template:
+    src: "apt.conf.j2"
+    dest: "{{ dir }}/apt.conf"
+    force: yes
+
+- name: "APT update"
+  command: apt-get update -c {{ dir }}/apt.conf
+
