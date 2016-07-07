@@ -1,4 +1,5 @@
 ---
+
 - name: Check customization
   script: files/pack_diff.sh {{ item }} {{ apt_conf }}
   register: customs

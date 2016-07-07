@@ -38,7 +38,7 @@ APT_CONF=${1:-"/etc/apt/apt.conf"}
 
 CUSTOM_PACKAGES=""
 RET=0
-for PKG in $(apt-get --just-print upgrade | awk '/Conf/ {print $2}' ); do
+for PKG in $(apt-get -c ${APT_CONF} --just-print upgrade | awk '/Conf/ {print $2}' ); do
     apt-cache -c ${APT_CONF} policy ${PKG} | grep "\*\*\*" -A1 | grep Packages &> /dev/null
     if (( $? != 0 ))
     then
