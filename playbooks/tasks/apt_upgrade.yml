@@ -1,9 +1,10 @@
----
 - name: APT correct dependencies
-  command: apt-get -c {{ apt_conf }} -f install
-
+  command: "apt-get -y -c {{ apt_conf }} -f install"
+  environment:
+    DEBIAN_FRONTEND: noninteractive
 - name: APT upgrade
-  command: apt-get -c {{ apt_conf }} upgrade
-
+  command: "apt-get -y -c {{ apt_conf }} upgrade"
+  environment:
+    DEBIAN_FRONTEND: noninteractive
 - name: Apply customizations
   script: files/apply_customizations.sh
