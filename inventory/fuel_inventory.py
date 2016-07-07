@@ -46,18 +46,21 @@ def get_inventory_json():
         inventory['_meta']['hostvars'][node['fqdn']] = {}
         host_meta = inventory['_meta']['hostvars'][node['fqdn']]
         host_meta['ansible_host'] = node['ip']
-        host_meta['mos_release'] = cluster_release[node['cluster']]
+        if node['cluster']:
+            host_meta['mos_release'] = cluster_release[node['cluster']]
+            cluster = 'cluster_%d' % node['cluster']
+            if cluster not in inventory:
+                inventory[cluster] = {}
+                inventory[cluster]['hosts'] = []
+            inventory[cluster]['hosts'].append(node['fqdn'])
+        else:
+            host_meta['mos_release'] = None
         host_meta.update(node)
         for role in node['roles']:
             if role not in inventory:
                 inventory[role] = {}
                 inventory[role]['hosts'] = []
             inventory[role]['hosts'].append(node['fqdn'])
-        cluster = 'cluster_%d' % node['cluster']
-        if cluster not in inventory:
-            inventory[cluster] = {}
-            inventory[cluster]['hosts'] = []
-        inventory[cluster]['hosts'].append(node['fqdn'])
     add_fuel_to_inventory(inventory, fc)
     return json.dumps(inventory, indent=2)
 
