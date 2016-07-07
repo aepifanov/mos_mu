@@ -1,16 +1,16 @@
 ---
 - name: Check customization
-  script: files/pack_diff.sh {{ item.package_name }} {{ dir }}/apt.conf
+  script: files/pack_diff.sh {{ item }} {{ apt_conf }}
   register: customs
-  with_items: "{{ pkgs_verify_md5_result.result }}"
+  with_items: "{{ pkgs_verify_md5_result.stdout_lines }}"
 
 - name: Make sure customizations folder exists
   local_action: file path=/root/customizations/{{ ansible_hostname }} state=directory
 
 - name: Download customizations to Fuel
   fetch:
-    src: "/tmp/customizations/{{ item.package_name }}/{{ item.package_name }}_customization.patch"
-    dest: "/root/customizations/{{ ansible_hostname }}/{{ item.package_name }}.patch"
+    src:  "/tmp/customizations/{{ item }}/{{ item }}_customization.patch"
+    dest: "/root/customizations/{{ ansible_hostname }}/{{ item }}.patch"
     flat: true
-  with_items: "{{ pkgs_verify_md5_result.result }}"
+  with_items: "{{ pkgs_verify_md5_result.stdout_lines }}"
 

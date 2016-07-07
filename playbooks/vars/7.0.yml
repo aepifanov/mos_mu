@@ -11,4 +11,5 @@ repos:
   - "7.0-mu-4"
   - "7.0-release"
 repo_name: "mos7.0-updates"
-dir: "/root/mos{{ env_release }}"
+apt_dir: "/root/mos{{ env_release }}"
+apt_conf: "{{ apt_dir }}/apt.conf"

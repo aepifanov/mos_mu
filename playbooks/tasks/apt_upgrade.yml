@@ -1,9 +1,9 @@
 ---
 - name: APT correct dependencies
-  command: apt-get -c {{ dir }}/apt.conf -f install
+  command: apt-get -c {{ apt_conf }} -f install
 
 - name: APT upgrade
-  command: apt-get -c {{ dir }}/apt.conf upgrade
+  command: apt-get -c {{ apt_conf }} upgrade
 
 - name: Apply customizations
   script: files/apply_customizations.sh

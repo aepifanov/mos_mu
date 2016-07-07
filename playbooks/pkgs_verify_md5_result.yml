@@ -1,18 +1,19 @@
+- include: env_update.yml
 - hosts: all
   vars_files:
     - "vars/7.0.yml"
   tasks:
-    - include: tasks/pkgs_verify_md5.yml
-    - name: 'show results'
+    - name: check md5 sum
+      script: files/packages-verify-ubuntu.sh {{ apt_conf }}
+      register: pkgs_verify_md5_result
+    - name: show results
       when: pkgs_verify_md5_result.changed
       debug:
-        msg: '{{ pkgs_verify_md5_result.result.0.package_name }}'
+        msg: '{{ pkgs_verify_md5_result.stdout_lines }}'
     - include: tasks/check_customization.yml
-    - name: 'show customization'
+    - name: show customization
       when: customs.changed
       debug:
         msg: '{{ customs }}'
     - include: tasks/apt_upgrade.yml
 - include: restart_services.yml
-
-
