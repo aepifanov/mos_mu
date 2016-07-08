@@ -66,7 +66,7 @@
     with_items:
     - p_heat-engine
     - p_neutron-l3-agent
-    - p_neutron-plugin-openvswtich-agent
+    - p_neutron-plugin-openvswitch-agent
     - p_neutron-dhcp-agent
     - p_neutron-metadata-agent
     - p_ceilometer-agent-central
