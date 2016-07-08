@@ -11,4 +11,6 @@
     DEBIAN_FRONTEND: noninteractive
 
 - name: Apply customizations
-  script: files/apply_customizations.sh
+  script: files/pkgs_apply_customizations.sh
+  environment:
+    MOS_DIR: "{{ mos_dir }}"

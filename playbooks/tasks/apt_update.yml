@@ -26,5 +26,5 @@
     force: yes
 
 - name: APT Update
-  command: apt-get update -c {{ apt_conf }}
+  command: apt-get -c {{ apt_conf }} update
 

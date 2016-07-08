@@ -1,7 +1,0 @@
----
-- hosts: all
-  vars_files:
-    - "vars/7.0.yml"
-
-  tasks:
-    - include: tasks/apt_update.yml

@@ -14,7 +14,7 @@ PACK_NAME="${PACK}_${VERS}_all.deb"
 NEW_PACK_NAME="${PACK}_${NEW_VERS}_all.deb"
 
 CACHED_PACK="/var/cache/apt/archives/${PACK_NAME}"
-EXTRACTED_PACK="/tmp/customizations/${PACK}"
+EXTRACTED_PACK="${MOS_DIR}/${PACK}"
 INSTALLED_PACK="/usr/lib/python2.7/dist-packages/${PYTHON_PACK}"
 
 DIFF="${EXTRACTED_PACK}/${PACK}_customization.patch"

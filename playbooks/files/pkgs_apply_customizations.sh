@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-EXTRACTED_PACK="/tmp/customizations"
+EXTRACTED_PACK=${MOS_DIR:-"/root/mos_mu"}
 INSTALLED_PACK="/usr/lib/python2.7/dist-packages"
 
 

@@ -1,0 +1,19 @@
+---
+
+- name: Check customization
+  script: files/pkgs_get_customizations.sh {{ item }} {{ apt_conf }}
+  register: customizations
+  environment:
+    MOS_DIR: "{{ mos_dir }}"
+  with_items: "{{ verify_result.stdout_lines }}"
+
+- name: Make sure customizations folder exists
+  local_action: file path={{ fuel_dir }}/{{ ansible_hostname }} state=directory
+
+- name: Download customizations to Fuel
+  fetch:
+    src:  "{{ mos_dir }}/{{ item }}/{{ item }}_customization.patch"
+    dest: "{{ fuel_dir }}/{{ ansible_hostname }}/{{ item }}.patch"
+    flat: true
+  with_items: "{{ verify_result.stdout_lines }}"
+

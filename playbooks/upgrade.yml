@@ -1,0 +1,13 @@
+---
+
+- include: get_customizations.yml
+
+- hosts: all:!fuel
+  gather_facts: false
+
+  vars_files:
+    - "vars/7.0.yml"
+
+  tasks:
+    - include: tasks/apt_upgrade.yml
+

@@ -1,0 +1,20 @@
+---
+
+- hosts: all:!fuel
+
+  vars_files:
+    - "vars/7.0.yml"
+
+  tasks:
+    - include: tasks/apt_update.yml
+
+    - name: Check MD5 sum for upgradable packages
+      script: files/pkgs_verify_ubuntu.sh {{ apt_conf }}
+      register: verify_result
+
+    - name: Show verify results
+      when: verify_result.changed and
+            skip_show_verify_result is undefined
+      debug:
+        msg: "{{ verify_result.stdout_lines }}"
+
