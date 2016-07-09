@@ -7,7 +7,7 @@
     MOS_DIR: "{{ mos_dir }}"
   with_items: "{{ verify_result.stdout_lines }}"
 
-- name: Make sure customizations folder exists
+- name: Make sure local customizations folder exists
   local_action: file path={{ fuel_dir }}/{{ ansible_hostname }} state=directory
 
 - name: Download customizations to Fuel

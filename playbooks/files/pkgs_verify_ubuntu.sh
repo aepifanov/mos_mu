@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# This script
+# - make
+#     apt-get -c $1 update
+# - for each upgradable package verify md5 sum
+# - return:
+#     0 - ok
+#     1 - some packets were installed not from configured repositories
+# - output:
+#     list of customized packages and undentified packages
+
 function md5_verify()
 {
     PGK=${1:?"Please specify package name."}
@@ -36,13 +46,12 @@ function md5_verify()
 
 APT_CONF=${1:-"/etc/apt/apt.conf"}
 
-CUSTOM_PACKAGES=""
 RET=0
 for PKG in $(apt-get -c ${APT_CONF} --just-print upgrade | awk '/Conf/ {print $2}' ); do
     apt-cache -c ${APT_CONF} policy ${PKG} | grep "\*\*\*" -A1 | grep Packages &> /dev/null
     if (( $? != 0 ))
     then
-        echo "Packet ${PKG} was installed not from the configured repositories."
+        echo "Undentified package: \"${PKG}\" was installed not from the configured repositories."
         RET=1
         continue
     fi
@@ -52,6 +61,5 @@ for PKG in $(apt-get -c ${APT_CONF} --just-print upgrade | awk '/Conf/ {print $2
         echo ${PKG}
     fi
 done
-#test ${RET} && echo -e "${CUSTOM_PACKAGES}"
 exit ${RET}
 

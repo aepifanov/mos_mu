@@ -6,18 +6,19 @@
     state: directory
   when: env_release == mos_release
 
-- name: Copy sources.lists
+- name: Generate sources.lists for configured repos
   template:
     src: "sources.list.j2"
     dest: "{{ apt_dir }}/sources.list.d/{{ item.name }}.list"
     force: yes
-  with_items: repos
+  with_items: "{{ apt_repos }}"
 
-- name: Copy local nailgun source
+- name: Copy configured sources.lists
   copy:
     remote_src: True
-    src: "/etc/apt/sources.list.d/mos.list"
-    dest: "{{ apt_dir }}/sources.list.d/nailgun.list"
+    src: "{{ item.path }}"
+    dest: "{{ apt_dir }}/sources.list.d/{{ item.name }}.list"
+  with_items: "{{ apt_sources_lists }}"
 
 - name: Copy apt.conf
   template:

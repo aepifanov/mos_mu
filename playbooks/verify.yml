@@ -14,7 +14,8 @@
 
     - name: Show verify results
       when: verify_result.changed and
-            skip_show_verify_result is undefined
+            skip_show_verify_result is undefined and
+            skip_show_verify_result
       debug:
         msg: "{{ verify_result.stdout_lines }}"
 

@@ -1,6 +1,6 @@
 ---
 - hosts: compute
-  strategy: free
+  gather_facts: false
   tasks:
 
   - name: 'Restart OpenStack services on computes'
@@ -15,7 +15,7 @@
     - ceilometer-agent-compute
 
 - hosts: cinder
-  strategy: free
+  gather_facts: false
   tasks:
 
   - name: 'Restart Cinder services on Cinder nodes'
@@ -27,7 +27,7 @@
     - cinder-backup
 
 - hosts: controller
-  strategy: free
+  gather_facts: false
   tasks:
 
   - name: 'Restart OpenStack services on controllers'
@@ -56,6 +56,7 @@
     - ceilometer-agent-notification
 
 - hosts: controller
+  gather_facts: false
   tasks:
 
   - name: 'Restart OpenStack services under Pacemaker'

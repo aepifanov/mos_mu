@@ -1,6 +1,6 @@
 ---
 
-- include: verify.yml skip_show_verify_result=true
+- include: verify.yml skip_show_verify_result=false
 
 - hosts: all:!fuel
   gather_facts: false
