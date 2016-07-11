@@ -54,6 +54,7 @@
     - ceilometer-collector
     - ceilometer-alarm-notifier
     - ceilometer-agent-notification
+    - apache2
 
 - hosts: controller
   gather_facts: false
