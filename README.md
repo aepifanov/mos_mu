@@ -12,7 +12,7 @@ Usage:
 
 Or
 
-The tool can be used partially, step by step (each step will invoke all steps above it):
+The tool can be used partially, step by step (each step will invoke all steps above it, except the last one):
 
 1. Check that all upgradable packages were installed from configured repositaries and which from them were customized.
 
@@ -26,7 +26,7 @@ The tool can be used partially, step by step (each step will invoke all steps ab
 
 `ansible-playbook playbooks/upgrade.yml --limit="cluster_1"`
 
-4. Restart OpenStack services
+4. Restart OpenStack services (only restarting)
 
 `ansible-playbook playbooks/restart_services.yml --limit="cluster_1"`
 
