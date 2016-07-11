@@ -1,8 +1,9 @@
 ---
 
-- include: verify.yml skip_show_verify_result=false
+- include: verify.yml skip_show_verify_result=False
 
-- hosts: all:!fuel
+- name: Gather customizations
+  hosts: all:!fuel
   gather_facts: false
 
   vars_files:
@@ -10,5 +11,7 @@
 
   tasks:
     - include: tasks/pkgs_get_customizations.yml
-      when: verify_result.stdout != ""
+      when: (not skip_gather_current_customization) and
+            verify_result is defined and
+            verify_result.stdout != ""
 

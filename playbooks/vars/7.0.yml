@@ -30,4 +30,12 @@ mos_dir: "/root/mos_mu"
 apt_dir: "{{ mos_dir }}/apt"
 apt_conf: "{{ apt_dir }}/apt.conf"
 custom_dir: "{{ mos_dir }}/customizations"
+patches_dir: "{{ mos_dir }}/customizations/patches"
 fuel_dir: "/root/customizations"
+
+skip_show_verify_result: false
+
+skip_apt_update: true
+skip_gather_current_customization: false
+skip_use_current_customization: false
+skip_apply_patches: true

@@ -1,17 +1,30 @@
-#!/bin/bash -x
+#!/bin/bash
 
-EXTRACTED_PACK=${MOS_DIR:-"/root/mos_mu"}
-INSTALLED_PACK="/usr/lib/python2.7/dist-packages"
+CUSTOM_DIR=${CUSTOM_DIR:-1}
+CUSTOM_DIR=${CUSTOM_DIR:?"CUSTOM_DIR is undefined!"}
+PATCHES_DIR=${PATCHES_DIR:-2}
+PATCHES_DIR=${PATCHES_DIR:?"PATCHES_DIR is undefined!"}
 
+SKIP_USE_CURRENT_CUSTOMIZATIONS=${SKIP_USE_CURRENT_CUSTOMIZATIONS:-1}
 
-cd ${EXTRACTED_PACK} || exit 0
+prepare_current_customizations_for_applying()
+{
+    cd ${CUSTOM_DIR} || return 0
+    [ ! -d ${PATCHES_DIR} ] || mkdir -p ${PATCHES_DIR}
+    for PACK in $(ls .)
+    do
+        cp ${PACK}/${PACK}_customization.patch ${PATCHES_DIR}
+    done
+}
 
-for PACK in $(ls .)
+[ ${SKIP_USE_CURRENT_CUSTOMIZATIONS} ] && prepare_current_customizations_for_applying
+
+cd ${PATCHES_DIR} || exit 0
+
+for PATCH in $(ls .)
 do
-  PACK_DIR=${PACK##python-}
-
-  if patch -p0 -N --dry-run -d / < ${PACK}/${PACK}_customization.patch;
-  then
-    patch -p0 -d / < ${PACK}/${PACK}_customization.patch;
-  fi
+    if patch -p0 -N --dry-run -d / < ${PATCH}
+    then
+        patch -p0 -d / < ${PATCH}
+    fi
 done

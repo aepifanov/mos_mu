@@ -1,6 +1,7 @@
 ---
 
 - include: get_customizations.yml
+  when: not "{{ skip_gather_current_customization }}"
 
 - hosts: all:!fuel
   gather_facts: false

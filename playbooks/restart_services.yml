@@ -3,7 +3,7 @@
   gather_facts: false
   tasks:
 
-  - name: 'Restart OpenStack services on computes'
+  - name: Restart OpenStack services on computes
     tags: compute_services
     ignore_errors: yes
     service: name={{ item }} state=restarted
@@ -18,7 +18,7 @@
   gather_facts: false
   tasks:
 
-  - name: 'Restart Cinder services on Cinder nodes'
+  - name: Restart Cinder services on Cinder nodes
     tags: cinder_services
     ignore_errors: yes
     service: name={{ item }} state=restarted
@@ -30,7 +30,7 @@
   gather_facts: false
   tasks:
 
-  - name: 'Restart OpenStack services on controllers'
+  - name: Restart OpenStack services on controllers
     tags: controller_services
     ignore_errors: yes
     service: name={{ item }} state=restarted
@@ -59,7 +59,7 @@
   gather_facts: false
   tasks:
 
-  - name: 'Restart OpenStack services under Pacemaker'
+  - name: Restart OpenStack services under Pacemaker
     tags: controller_pcs
     run_once: true
     ignore_errors: yes

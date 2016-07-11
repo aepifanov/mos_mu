@@ -7,15 +7,17 @@
 
   tasks:
     - include: tasks/apt_update.yml
+      when: not "{{ skip_apt_update }}"
 
     - name: Check MD5 sum for upgradable packages
       script: files/pkgs_verify_ubuntu.sh {{ apt_conf }}
       register: verify_result
 
     - name: Show verify results
-      when: verify_result.changed and
-            skip_show_verify_result is undefined and
-            skip_show_verify_result
+      when: (verify_result is defined and
+            verify_result.changed) and
+            (skip_show_verify_result is undefined or
+            skip_show_verify_result == False)
       debug:
         msg: "{{ verify_result.stdout_lines }}"
 

@@ -39,4 +39,9 @@ ar p ${NEW_PACK_NAME} data.tar.xz | tar xJ || exit 1
 
 cd ${EXTRACTED_PACK}
 patch -p1 -N --dry-run --silent -d ${NEW_VERS} < ${DIFF}
+RET=$?
 
+IGNORE_RESULT=${IGNORE_RESULT:-"false"}
+[[ ${IGNORE_RESULT,,} == "true" ]] && exit 0
+
+exit ${RET}
