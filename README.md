@@ -10,6 +10,7 @@ Usage:
 Or
 
 The tool can be used partially, step by step (each step will invoke all steps above it):
+
 1. Check that all upgradable packages were installed from configured repositaries
    and which from them were customized.
    `ansible-playbook playbooks/verify.yml --limit="node-1.domain.tld"  -vvvv`
