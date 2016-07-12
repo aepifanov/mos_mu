@@ -1,0 +1,11 @@
+---
+- name: Apply customizations
+  hosts: all:!fuel
+  gather_facts: false
+
+  vars_files:
+    - "vars/7.0.yml"
+
+  tasks:
+    - include: tasks/pkgs_apply_customizations.yml
+

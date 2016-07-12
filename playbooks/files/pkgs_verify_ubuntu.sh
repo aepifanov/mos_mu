@@ -7,6 +7,7 @@
 # - return:
 #     0 - ok
 #     1 - some packets were installed not from configured repositories
+#     2 - some other error
 # - output:
 #     list of customized packages and undentified packages
 
@@ -47,19 +48,23 @@ function md5_verify()
 APT_CONF=${1:-"/etc/apt/apt.conf"}
 
 RET=0
-for PKG in $(apt-get -c ${APT_CONF} --just-print upgrade | awk '/Conf/ {print $2}' ); do
-    apt-cache -c ${APT_CONF} policy ${PKG} | grep "\*\*\*" -A1 | grep Packages &> /dev/null
-    if (( $? != 0 ))
-    then
+PKGS=$(apt-get -c ${APT_CONF} --just-print upgrade) || exit 2
+
+for PKG in $(echo "${PKGS}" | awk '/Conf/ {print $2}'); do
+
+    PKG_POLICY=$(apt-cache -c ${APT_CONF} policy ${PKG}) || exit 2
+    echo "${PKG_POLICY}" | grep "\*\*\*" -A1 | grep Packages &> /dev/null
+    if [ ! $? ]; then
         echo "Undentified package: \"${PKG}\" was installed not from the configured repositories."
         RET=1
         continue
     fi
+
     md5_verify ${PKG}
-    if (( $? == 1 ))
-    then
+    if (( $? == 1 )); then
         echo ${PKG}
     fi
 done
+
 exit ${RET}
 

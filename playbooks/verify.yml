@@ -1,4 +1,5 @@
 ---
+- include: clean.yml
 
 - hosts: all:!fuel
 
@@ -6,8 +7,9 @@
     - "vars/7.0.yml"
 
   tasks:
+
     - include: tasks/apt_update.yml
-      when: not "{{ skip_apt_update }}"
+      when: not skip_apt_update
 
     - name: Check MD5 sum for upgradable packages
       script: files/pkgs_verify_ubuntu.sh {{ apt_conf }}

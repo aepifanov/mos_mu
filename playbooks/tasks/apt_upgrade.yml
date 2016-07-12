@@ -10,10 +10,3 @@
   environment:
     DEBIAN_FRONTEND: noninteractive
 
-- name: Apply customizations
-  script: files/pkgs_apply_customizations.sh
-  environment:
-    CUSTOM_DIR: "{{ custom_dir }}"
-    PATCHES_DIR: "{{ patches_dir }}"
-    SKIP_USE_CURRENT_CUSTOMIZATIONS: "{{ skip_apply_customization }}"
-  when: skip_apply_customization == True
