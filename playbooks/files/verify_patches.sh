@@ -32,7 +32,7 @@ for PATCH in *.patch; do
 
     # Download new version and extract it
     PKG_PATH=${VERIFICATION_DIR}/${PKG}
-    POLICY=$(apt-cache -c ${APT_CONF} policy ${PKG}) || exit 1
+    POLICY=$(apt-cache -c ${APT_CONF} policy ${PKG}) || exit 2
     VERS_ORIG=$(echo -e "${POLICY}" | awk '/Candidate/ {print $2}')
     VERS=${VERS_ORIG/\:/\%3a}
     VERS_PATH=${PKG_PATH}/${VERS}
@@ -41,8 +41,9 @@ for PATCH in *.patch; do
     [ -d ${VERS_PATH} ] || mkdir -p ${VERS_PATH}
     cd ${VERS_PATH}
     [ -e ${PKG_NAME} ] ||
-        apt-get -c ${APT_CONF} download ${PKG} ||
-	    { RET=2; continue; }
+        apt-get -q -c ${APT_CONF} download ${PKG} &>/dev/null ||
+	        { echo "[ERROR] Failed to download ${PKG}";
+            RET=2; continue; }
     [ -d "usr" ] ||
         ar p ${PKG_NAME} data.tar.xz | tar xJ ||
     	    { RET=2; continue; }
@@ -50,8 +51,9 @@ for PATCH in *.patch; do
     # Dry-run apply patch
     cd ${PKG_PATH}
     cp -f ${PATCHES_DIR}/${PATCH} .
-    patch -p1 -N -d ${VERS} < ${PATCH} ||
-        { echo "[ERROR] ${PATCH} failed to apply"; RET=1; }
+    patch -p1 -N -d ${VERS} < ${PATCH} &>/dev/null ||
+        { echo "[ERROR] Failed to apply ${PATCH}";
+        RET=1; }
 done
 
 exit ${RET}
