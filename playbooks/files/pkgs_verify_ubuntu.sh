@@ -14,14 +14,16 @@
 APT_CONF=${APT_CONF:-$1}
 APT_CONF=${APT_CONF:-"/etc/apt/apt.conf"}
 
+PKG=${1:?"Please specify package name."}
+
 function md5_verify()
 {
-    PGK=${1:?"Please specify package name."}
+    cd / || return 2
     if [ -f "/var/lib/dpkg/info/${PKG}:amd64.md5sums" ]
     then
-        result="$(cd /; nice -n 19 ionice -c 3 md5sum --quiet -c /var/lib/dpkg/info/${PKG}:amd64.md5sums 2>&1)"
+        result="$(nice -n 19 ionice -c 3 md5sum --quiet -c /var/lib/dpkg/info/"${PKG}":amd64.md5sums 2>&1)"
     else
-        result="$(cd /; nice -n 19 ionice -c 3 md5sum --quiet -c /var/lib/dpkg/info/${PKG}.md5sums 2>&1)"
+        result="$(nice -n 19 ionice -c 3 md5sum --quiet -c /var/lib/dpkg/info/"${PKG}".md5sums 2>&1)"
     fi
 
     test $? -eq 0 && return 0
@@ -48,13 +50,13 @@ function md5_verify()
 }
 
 RET=0
-PKGS=$(apt-get -c ${APT_CONF} --just-print upgrade) || exit 2
+PKGS=$(apt-get -c "${APT_CONF}" --just-print upgrade) || exit 2
 
 for PKG in $(echo "${PKGS}" | awk '/Conf/ {print $2}'); do
     # We will work only with python packages
-    PKG=$(echo ${PKG} | grep "python-") || continue
+    PKG=$(echo "${PKG}" | grep "python-") || continue
 
-    PKG_POLICY=$(apt-cache -c ${APT_CONF} policy ${PKG}) || exit 2
+    PKG_POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}") || exit 2
     echo "${PKG_POLICY}" | grep "\*\*\*" -A1 | grep Packages &> /dev/null
     if [ ! $? ]; then
         echo "Undentified package: \"${PKG}\" was installed not from the configured repositories."
@@ -62,11 +64,11 @@ for PKG in $(echo "${PKGS}" | awk '/Conf/ {print $2}'); do
         continue
     fi
 
-    md5_verify ${PKG}
+    md5_verify "${PKG}"
     if (( $? == 1 )); then
-        echo ${PKG}
+        echo "${PKG}"
     fi
 done
 
-exit ${RET}
+exit "${RET}"
 

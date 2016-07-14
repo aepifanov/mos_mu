@@ -11,7 +11,7 @@ PYTHON_PKG=${PKG##python-}
 EXTRACTED_PKG="${CUSTOM_DIR}/${PKG}"
 INSTALLED_PKG="/usr/lib/python2.7/dist-packages/${PYTHON_PKG}"
 
-POLICY=$(apt-cache -c ${APT_CONF} policy ${PKG}) || exit 1
+POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}") || exit 1
 VERS_ORIG=$(echo -e "${POLICY}" | awk '/Installed/ {print $2}')
 VERS=${VERS_ORIG/\:/\%3a}
 
@@ -21,19 +21,19 @@ CACHED_PKG_FILE="/var/cache/apt/archives/${PKG_FILE}"
 DIFF="${EXTRACTED_PKG}/${PKG}_customization.patch"
 
 # Check if diff already exists
-[ -e ${DIFF} ] && exit 0
+[ -e "${DIFF}" ] && exit 0
 
-[ -d ${EXTRACTED_PKG}/${VERS} ] || mkdir -p ${EXTRACTED_PKG}/${VERS}
-cd ${EXTRACTED_PKG}/${VERS}     && rm -rf *
+[ -d "${EXTRACTED_PKG}/${VERS}" ] || mkdir -p "${EXTRACTED_PKG}/${VERS}"
+cd "${EXTRACTED_PKG}/${VERS}"     && rm -rf ./*
 
-if ! [ -e ${CACHED_PKG} ]; then
-    apt-get -c ${APT_CONF} download ${PKG}=${VERS_ORIG} || exit 1
+if ! [ -e "${CACHED_PKG}" ]; then
+    apt-get -c "${APT_CONF}" download "${PKG}=${VERS_ORIG}" || exit 1
     CACHED_PKG_FILE=${PKG_NAME}
 fi
-ar p ${CACHED_PKG_FILE} data.tar.xz | tar xJ
+ar p "${CACHED_PKG_FILE}" data.tar.xz | tar xJ
 
-cd ${EXTRACTED_PKG}
-diff -c -r -x "*.pyc" ./${VERS}/${INSTALLED_PKG} ${INSTALLED_PKG} > ${DIFF}
+cd "${EXTRACTED_PKG}" || exit 1
+diff -c -r -x "*.pyc" "./${VERS}/${INSTALLED_PKG}" "${INSTALLED_PKG}" > "${DIFF}"
 case $? in
     [1])
         exit 0
