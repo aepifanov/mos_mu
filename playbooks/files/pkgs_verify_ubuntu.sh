@@ -11,6 +11,9 @@
 # - output:
 #     list of customized packages and undentified packages
 
+APT_CONF=${APT_CONF:-$1}
+APT_CONF=${APT_CONF:-"/etc/apt/apt.conf"}
+
 function md5_verify()
 {
     PGK=${1:?"Please specify package name."}
@@ -39,18 +42,17 @@ function md5_verify()
     result="$(echo "$result" | grep -v 'did NOT match\|md5sum: ')"
     if [ -n "$result" ]
     then
-        #echo -e "$result" | sed "s|^|$l\t|"
         return 1
     fi
     return 2
 }
 
-APT_CONF=${1:-"/etc/apt/apt.conf"}
-
 RET=0
 PKGS=$(apt-get -c ${APT_CONF} --just-print upgrade) || exit 2
 
 for PKG in $(echo "${PKGS}" | awk '/Conf/ {print $2}'); do
+    # We will work only with python packages
+    PKG=$(echo ${PKG} | grep "python-") || continue
 
     PKG_POLICY=$(apt-cache -c ${APT_CONF} policy ${PKG}) || exit 2
     echo "${PKG_POLICY}" | grep "\*\*\*" -A1 | grep Packages &> /dev/null

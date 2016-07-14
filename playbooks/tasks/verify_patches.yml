@@ -1,0 +1,27 @@
+---
+
+- name: Sync configured patches
+  synchronize:
+    src: "{{ fuel_patches_dir}}/."
+    dest: "{{ patches_dir}}"
+    delete: true
+    recursive: true
+
+- name: Use current customizations
+  script: files/use_customizations.sh
+  environment:
+    CUSTOM_DIR: "{{ custom_dir }}"
+    PATCHES_DIR: "{{ patches_dir }}"
+  when: use_current_customizations
+
+- name: Clean verification folder
+  file:
+    path: "{{ verification_dir }}"
+    state: absent
+
+- name: Verify patches
+  script: files/verify_patches.sh
+  environment:
+    APT_CONF: "{{ apt_conf }}"
+    PATCHES_DIR: "{{ patches_dir }}"
+    VERIFICATION_DIR: "{{ verification_dir }}"

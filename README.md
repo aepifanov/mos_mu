@@ -1,5 +1,12 @@
 
-Work in progress!!!
+Work in progress !!!
+
+Don't use it on production environment until it will be released !!!
+
+If you have any questions please don't hesitate to aks me:
+aepifanov@mirantis.com
+
+Any comments/suggestions are welcome :)
 
 Prerequisites:
 --------------
@@ -8,8 +15,21 @@ Prerequisites:
 - centos: `yum -y reinstall centos-release`
 - ansible: `yum -y install ansible`
 
+
+Configuration file:
+-------------------
+
+Conf file contains very important step flags
+
+`playbooks/vars/70.yml`
+
 Usage:
 ------
+
+For avoiding issues (like loose customizations and failed upgrade/appliyng patches)
+some steps are disabled in conf file and
+
+By default, it will not work without addional variables or conf modifiyng.
 
 `ansible-playbook playbooks/apply_mu.yml --limit="cluster_1"`
 
@@ -19,22 +39,26 @@ The tool can be used partially, step by step (each step will invoke all steps ab
 
 1. Check that all upgradable packages were installed from configured repositaries and which from them were customized.
 
-`ansible-playbook playbooks/verify.yml --limit="cluster_1"`
+`ansible-playbook playbooks/verify_md5.yml --limit="cluster_1"`
 
-2. Generate patch files for each customized package, download these patches to Fuel master and test if they can be applied to the new package version
+2. Generate patch files for each customized package, download these patches to Fuel master
 
-`ansible-playbook playbooks/get-customizations.yml --limit="cluster_1"`
+`ansible-playbook playbooks/gather-customizations.yml --limit="cluster_1"`
 
-3. Upgrade all packages and re-apply the customization on any customized packages
+3. Verify that all pathces can be applied to the new packages without issues
+
+`ansible-playbook playbooks/verify_patches.yml --limit="cluster_1"`
+
+4. Upgrade all packages
 
 `ansible-playbook playbooks/upgrade.yml --limit="cluster_1"`
 
-4. Restart OpenStack services (only restarting)
+5. Apply the patches on upgraded cluster
+
+`ansible-playbook playbooks/apply_patches.yml --limit="cluster_1"`
+
+6. Restart OpenStack services (only restarting)
 
 `ansible-playbook playbooks/restart_services.yml --limit="cluster_1"`
 
 
-Configuration file:
--------------------
-
-`playbooks/vars/70.yml`

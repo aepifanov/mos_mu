@@ -1,0 +1,13 @@
+---
+
+- name: Clean customizations files on Fuel
+  file:
+    path: "{{ fuel_custom_dir }}"
+    state: absent
+  delegate_to: localhost
+  run_once: true
+
+- name: Clean all files on host
+  file:
+    path: "{{ mos_dir }}"
+    state: absent

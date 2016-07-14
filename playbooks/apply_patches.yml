@@ -1,6 +1,6 @@
 ---
 
-- include: verify_patches.yml
+- include: upgrade.yml
 
 - hosts: all:!fuel
   gather_facts: false
@@ -9,6 +9,5 @@
     - "vars/7.0.yml"
 
   tasks:
-    - include: tasks/apt_upgrade.yml
-      when: apt_upgrade
+    - include: tasks/apply_patches.yml
 

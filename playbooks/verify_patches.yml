@@ -1,0 +1,16 @@
+---
+
+- include: gather_customizations.yml
+
+- hosts: all:!fuel
+  gather_facts: false
+
+  vars_files:
+    - "vars/7.0.yml"
+
+  tasks:
+    - include: tasks/verify_patches.yml
+      when: use_current_customizations
+
+    - include: tasks/verify_patches.yml
+

@@ -1,0 +1,19 @@
+---
+
+- name: Gather package customizations
+  script: files/pkg_get_customizations.sh {{ item }}
+  register: customizations_result
+  environment:
+    APT_CONF: "{{ apt_conf }}"
+    CUSTOM_DIR: "{{ custom_dir }}"
+  with_items: "{{ md5_verify_result.stdout_lines }}"
+
+- name: Download customizations to Fuel
+  fetch:
+    src:  "{{ custom_dir }}/{{ item }}/{{ item }}_customization.patch"
+    dest: "{{ fuel_custom_dir }}/{{ ansible_hostname }}/"
+    flat: true
+  with_items: "{{ md5_verify_result.stdout_lines }}"
+  when: customizations_result is defined and
+        customizations_result.changed
+

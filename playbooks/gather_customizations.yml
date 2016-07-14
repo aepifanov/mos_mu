@@ -1,0 +1,16 @@
+---
+
+- include: verify_md5.yml
+
+- hosts: all:!fuel
+  gather_facts: false
+
+  vars_files:
+    - "vars/7.0.yml"
+
+  tasks:
+    - include: tasks/gather_customizations.yml
+      when: gather_current_customizations and
+            md5_verify_result is defined and
+            md5_verify_result.stdout != ""
+
