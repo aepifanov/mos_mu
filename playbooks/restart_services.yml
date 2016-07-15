@@ -64,7 +64,7 @@
     tags: controller_pcs
     run_once: true
     ignore_errors: yes
-    script: files/pcs_resource_restart.sh {{ item }}
+    script: files/restart_pcs_resource.sh {{ item }}
     with_items:
     - p_heat-engine
     - p_neutron-l3-agent

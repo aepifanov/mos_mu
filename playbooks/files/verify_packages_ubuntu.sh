@@ -14,11 +14,13 @@
 APT_CONF=${APT_CONF:-$1}
 APT_CONF=${APT_CONF:-"/etc/apt/apt.conf"}
 
-PKG=${1:?"Please specify package name."}
 
 function md5_verify()
 {
+    PKG=${1:?"Please specify package name."}
+
     cd / || return 2
+
     if [ -f "/var/lib/dpkg/info/${PKG}:amd64.md5sums" ]
     then
         result="$(nice -n 19 ionice -c 3 md5sum --quiet -c /var/lib/dpkg/info/"${PKG}":amd64.md5sums 2>&1)"

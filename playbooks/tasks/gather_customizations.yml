@@ -1,7 +1,7 @@
 ---
 
 - name: Gather package customizations
-  script: files/pkg_get_customizations.sh {{ item }}
+  script: files/get_package_customizations.sh {{ item }}
   register: customizations_result
   environment:
     APT_CONF: "{{ apt_conf }}"
