@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 APT_CONF=${1:-$APT_CONF}
 APT_CONF=${APT_CONF:?"APT_CONF is undefined!"}
@@ -6,6 +6,8 @@ PATCHES_DIR=${2:-$PATCHES_DIR}
 PATCHES_DIR=${PATCHES_DIR:?"PATCHES_DIR is undefined!"}
 VERIFICATION_DIR=${3:-$VERIFICATION_DIR}
 VERIFICATION_DIR=${VERIFICATION_DIR:?"VERIFICATION_DIR is undefined!"}
+PKG_VER_FOR_VERIFICATION=${4:-$PKG_VER_FOR_VERIFICATION}
+PKG_VER_FOR_VERIFICATION=${PKG_VER_FOR_VERIFICATION:?"PKG_VER_FOR_VERIFICATION is undefined!"}
 
 cd "${PATCHES_DIR}" || exit 0
 
@@ -33,7 +35,7 @@ for PATCH in *.patch; do
     # Download new version and extract it
     PKG_PATH=${VERIFICATION_DIR}/${PKG}
     POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}") || exit 2
-    VERS_ORIG=$(echo -e "${POLICY}" | awk '/Candidate/ {print $2}')
+    VERS_ORIG=$(echo -e "${POLICY}" | grep "${PKG_VER_FOR_VERIFICATION}" | awk '{print $2}')
     VERS=${VERS_ORIG/\:/\%3a}
     VERS_PATH=${PKG_PATH}/${VERS}
     PKG_NAME="${PKG}_${VERS}_all.deb"

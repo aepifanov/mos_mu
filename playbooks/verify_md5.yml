@@ -3,7 +3,8 @@
 - hosts: all:!fuel
 
   vars_files:
-    - "vars/7.0.yml"
+    - "vars/mos_releases/{{ mos_release }}.yml"
+    - "vars/steps/{{ steps }}.yml"
 
   tasks:
     - include: tasks/clean_customizations.yml

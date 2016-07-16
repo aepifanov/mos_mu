@@ -23,7 +23,6 @@ apt_repos:
     url: "{{ fuel_url }}/7.0-mu-4"
     repo: "mos7.0-updates"
     type: "main restricted"
-
 apt_sources_lists:
   - name: "fuel"
     path: "/etc/apt/sources.list.d/mos.list"
