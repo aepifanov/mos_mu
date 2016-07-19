@@ -15,6 +15,12 @@ Prerequisites:
 - centos: `yum -y reinstall centos-release`
 - ansible: `yum -y install ansible`
 
+Install:
+--------
+
+Clone Git repositary from GitHub on Fuel Master node:
+
+`git clone https://github.com/aepifanov/mos_mu.git`
 
 Configuration file:
 -------------------
@@ -40,25 +46,19 @@ The tool can be used partially, step by step (each step will invoke all steps ab
 1. Check that all upgradable packages were installed from configured repositaries and which from them were customized.
 
 `ansible-playbook playbooks/verify_md5.yml --limit="cluster_1 -e '{"steps":"steps_conf"}"`
-
 2. Generate patch files for each customized package, download these patches to Fuel master
 
 `ansible-playbook playbooks/gather-customizations.yml --limit="cluster_1 -e '{"steps":"steps_conf"}"`
-
 3. Verify that all pathces can be applied to the new packages without issues
 
 `ansible-playbook playbooks/verify_patches.yml --limit="cluster_1 -e '{"steps":"steps_conf"}"`
-
 4. Upgrade all packages
 
 `ansible-playbook playbooks/upgrade.yml --limit="cluster_1 -e '{"steps":"steps_conf"}"`
-
 5. Apply the patches on upgraded cluster
 
 `ansible-playbook playbooks/apply_patches.yml --limit="cluster_1 -e '{"steps":"steps_conf"}"`
-
 6. Restart OpenStack services (only restarting)
 
 `ansible-playbook playbooks/restart_services.yml --limit="cluster_1 -e '{"steps":"steps_conf"}"`
-
 
