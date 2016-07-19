@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 APT_CONF=${1:-$APT_CONF}
 APT_CONF=${APT_CONF:?"APT_CONF is undefined!"}
@@ -13,7 +13,8 @@ cd "${PATCHES_DIR}" || exit 0
 
 RET=0
 # Check patches
-for PATCH in *.patch; do
+PATCHES=$(find . -type f -name "*.patch" |sort)
+for PATCH in ${PATCHES}; do
     cd "${PATCHES_DIR}" || exit 2
     FILES=$(grep 'diff' -A3 "${PATCH}" | awk '/\-\-\-/ {print $2}')
     PKG=""
@@ -53,7 +54,8 @@ for PATCH in *.patch; do
     # Dry-run apply patch
     cd "${PKG_PATH}" || exit 2
     cp -f "${PATCHES_DIR}/${PATCH}" .
-    patch -p1 -N -d "${VERS}" < "${PATCH}" &>/dev/null ||
+    PATCH_FILENAME=${PATCH##*/}
+    patch -p1 -N -d "${VERS}" < "${PATCH_FILENAME}" &>/dev/null ||
         { echo "[ERROR] Failed to apply ${PATCH}";
         RET=1; }
 done

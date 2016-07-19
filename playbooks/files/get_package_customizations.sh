@@ -26,7 +26,7 @@ DIFF="${EXTRACTED_PKG}/${PKG}_customization.patch"
 [ -d "${EXTRACTED_PKG}/${VERS}" ] || mkdir -p "${EXTRACTED_PKG}/${VERS}"
 cd "${EXTRACTED_PKG}/${VERS}"     && rm -rf ./*
 
-if ! [ -e "${CACHED_PKG}" ]; then
+if ! [ -e "${CACHED_PKG_FILE}" ]; then
     apt-get -c "${APT_CONF}" download "${PKG}=${VERS_ORIG}" || exit 1
     CACHED_PKG_FILE=${PKG_NAME}
 fi
