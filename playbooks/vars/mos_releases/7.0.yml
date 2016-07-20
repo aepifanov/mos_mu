@@ -3,25 +3,29 @@
 env_release: "7.0"
 fuel_url: "http://mirror.fuel-infra.org/mos-repos/ubuntu"
 apt_repos:
-  - name: "7.0"
+  - name: "latest"
     url: "{{ fuel_url }}/7.0"
     repo: "mos7.0"
     type: "main restricted"
-  - name: "7.0-mu-1"
+  - name: "mu-1"
     url: "{{ fuel_url }}/7.0-mu-1"
     repo: "mos7.0-updates"
     type: "main restricted"
-  - name: "7.0-mu-2"
+  - name: "mu-2"
     url: "{{ fuel_url }}/7.0-mu-2"
     repo: "mos7.0-updates"
     type: "main restricted"
-  - name: "7.0-mu-3"
+  - name: "mu-3"
     url: "{{ fuel_url }}/7.0-mu-3"
     repo: "mos7.0-updates"
     type: "main restricted"
-  - name: "7.0-mu-4"
+  - name: "mu-4"
     url: "{{ fuel_url }}/7.0-mu-4"
     repo: "mos7.0-updates"
+    type: "main restricted"
+  - name: "GA"
+    url: "{{ fuel_url }}/7.0-release"
+    repo: "mos7.0"
     type: "main restricted"
 apt_sources_lists:
   - name: "fuel"
@@ -38,3 +42,44 @@ fuel_dir:         "/root/fuel_mos_mu"
 fuel_custom_dir:  "{{ fuel_dir }}/customizations"
 fuel_patches_dir: "{{ fuel_dir }}/patches"
 
+controller_pcs_resources:
+    - p_heat-engine
+    - p_neutron-l3-agent
+    - p_neutron-plugin-openvswitch-agent
+    - p_neutron-dhcp-agent
+    - p_neutron-metadata-agent
+    - p_ceilometer-agent-central
+    - p_ceilometer-alarm-evaluator
+
+controller_services:
+    - heat-api
+    - heat-api-cfn
+    - heat-api-cloudwatch
+    - nova-api
+    - nova-cert
+    - nova-conductor
+    - nova-scheduler
+    - nova-novncproxy
+    - nova-objectstore
+    - nova-consoleauth
+    - cinder-api
+    - cinder-scheduler
+    - glance-api
+    - glance-registry
+    - neutron-server
+    - ceilometer-api
+    - ceilometer-collector
+    - ceilometer-alarm-notifier
+    - ceilometer-agent-notification
+    - apache2
+
+compute_services:
+    - nova-compute
+    - neutron-l3-agent
+    - neutron-plugin-openvswitch-agent
+    - neutron-metadata-agent
+    - ceilometer-agent-compute
+
+cinder_services:
+    - cinder-volume
+    - cinder-backup

@@ -1,5 +1,10 @@
 ---
 
+- name: Clean APT files on host
+  file:
+    path: "{{ apt_dir }}"
+    state: absent
+
 - name: Create APT config directory
   file:
     path: "{{ apt_dir }}/sources.list.d"

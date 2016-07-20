@@ -1,0 +1,13 @@
+---
+
+- name: Get current MU
+  script: files/get_current_mu.sh
+  environment:
+    APT_DIR: "{{ apt_dir }}"
+    APT_CONF: "{{ apt_conf }}"
+  register: current_mu
+
+- name: Show current MU
+  debug:
+    msg: "{{ current_mu.stdout_lines }}"
+

@@ -13,5 +13,3 @@
     - include: tasks/verify_patches.yml
       when: use_current_customizations
 
-    - include: tasks/verify_patches.yml
-

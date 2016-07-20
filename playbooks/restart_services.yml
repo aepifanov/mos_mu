@@ -1,63 +1,44 @@
 ---
 - hosts: compute
   gather_facts: false
+  vars_files:
+    - "vars/mos_releases/{{ mos_release }}.yml"
   tasks:
 
   - name: Restart OpenStack services on computes
     tags: compute_services
     ignore_errors: yes
     service: name={{ item }} state=restarted
-    with_items:
-    - nova-compute
-    - neutron-l3-agent
-    - neutron-plugin-openvswitch-agent
-    - neutron-metadata-agent
-    - ceilometer-agent-compute
+    with_items: "{{ compute_services }}"
 
 - hosts: cinder
   gather_facts: false
+  vars_files:
+    - "vars/mos_releases/{{ mos_release }}.yml"
   tasks:
 
   - name: Restart Cinder services on Cinder nodes
     tags: cinder_services
     ignore_errors: yes
     service: name={{ item }} state=restarted
-    with_items:
-    - cinder-volume
-    - cinder-backup
+    with_items: "{{ cinder_services }}"
 
 - hosts: controller
   gather_facts: false
+  vars_files:
+    - "vars/mos_releases/{{ mos_release }}.yml"
   tasks:
 
   - name: Restart OpenStack services on controllers
     tags: controller_services
     ignore_errors: yes
     service: name={{ item }} state=restarted
-    with_items:
-    - heat-api
-    - heat-api-cfn
-    - heat-api-cloudwatch
-    - nova-api
-    - nova-cert
-    - nova-conductor
-    - nova-scheduler
-    - nova-novncproxy
-    - nova-objectstore
-    - nova-consoleauth
-    - cinder-api
-    - cinder-scheduler
-    - glance-api
-    - glance-registry
-    - neutron-server
-    - ceilometer-api
-    - ceilometer-collector
-    - ceilometer-alarm-notifier
-    - ceilometer-agent-notification
-    - apache2
+    with_items: "{{ controller_services }}"
 
 - hosts: controller
   gather_facts: false
+  vars_files:
+    - "vars/mos_releases/{{ mos_release }}.yml"
   tasks:
 
   - name: Restart OpenStack services under Pacemaker
@@ -65,11 +46,4 @@
     run_once: true
     ignore_errors: yes
     script: files/restart_pcs_resource.sh {{ item }}
-    with_items:
-    - p_heat-engine
-    - p_neutron-l3-agent
-    - p_neutron-plugin-openvswitch-agent
-    - p_neutron-dhcp-agent
-    - p_neutron-metadata-agent
-    - p_ceilometer-agent-central
-    - p_ceilometer-alarm-evaluator
+    with_items: "{{ controller_pcs_resources }}"
