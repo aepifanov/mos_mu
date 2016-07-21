@@ -1,20 +1,30 @@
 ---
 
-- include: verify_md5.yml
-
 - hosts: all:!fuel
-  gather_facts: false
 
   vars_files:
     - "vars/mos_releases/{{ mos_release }}.yml"
-    - "vars/steps/{{ steps }}.yml"
+    - "vars/steps/gather_customizations.yml"
 
   tasks:
+    - include: tasks/apt_update.yml
+      when: apt_update is defined and
+            apt_update
+
+    - include: tasks/get_current_mu.yml
+      when: rollback is undefined or
+            not rollback
+
+    - include: tasks/verify_md5.yml
+      when: verify_md5 is defined and
+            verify_md5
+
     - include: tasks/clean_customizations.yml
-      when: clean_customizations
+      when: clean_customizations is defined and
+            clean_customizations
 
     - include: tasks/gather_customizations.yml
-      when: gather_current_customizations and
+      when: gather_current_customizations is defined and
+            gather_current_customizations and
             md5_verify_result is defined and
             md5_verify_result.stdout != ""
-

@@ -3,8 +3,8 @@
 - name: Get current MU
   script: files/get_current_mu.sh
   environment:
-    APT_DIR: "{{ apt_dir }}"
     APT_CONF: "{{ apt_conf }}"
+    APT_SRC_DIR: "{{ apt_src_dir }}"
   register: current_mu
 
 - name: Show current MU

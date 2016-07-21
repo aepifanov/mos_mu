@@ -1,6 +1,5 @@
 ---
 - hosts: compute
-  gather_facts: false
   vars_files:
     - "vars/mos_releases/{{ mos_release }}.yml"
   tasks:
@@ -12,7 +11,6 @@
     with_items: "{{ compute_services }}"
 
 - hosts: cinder
-  gather_facts: false
   vars_files:
     - "vars/mos_releases/{{ mos_release }}.yml"
   tasks:
@@ -24,9 +22,9 @@
     with_items: "{{ cinder_services }}"
 
 - hosts: controller
-  gather_facts: false
   vars_files:
     - "vars/mos_releases/{{ mos_release }}.yml"
+    - "vars/steps/{{ steps }}.yml"
   tasks:
 
   - name: Restart OpenStack services on controllers
@@ -34,12 +32,6 @@
     ignore_errors: yes
     service: name={{ item }} state=restarted
     with_items: "{{ controller_services }}"
-
-- hosts: controller
-  gather_facts: false
-  vars_files:
-    - "vars/mos_releases/{{ mos_release }}.yml"
-  tasks:
 
   - name: Restart OpenStack services under Pacemaker
     tags: controller_pcs

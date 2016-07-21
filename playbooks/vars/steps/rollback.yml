@@ -1,0 +1,48 @@
+---
+#####################
+#
+# Steps configuration
+#
+#####################
+
+# !!! WARNING !!!
+#
+# Before modifiyng PLEASE read the documenation
+# and make sure that you completly understand what
+# means each step and how it impacts other steps
+#
+# !!! WARNING !!!
+
+# Perform apt-get update
+apt_update: true
+
+# All your customizations will be copied to patches folder on nodes
+# and then veified and applied
+#
+# By default it in 'false' state since, it is strogly recommended
+# to verify current customizations by yourself and manually move to patches folder
+use_current_customizations: true
+
+# Which packet should be used for verification
+# - Installed
+# - Candidate
+#
+# If you want istall MU you shoud use 'Candidate'
+# If you want just appy new patch on the current installation
+# you need to use 'Installed' and enable 'use_current_customizations"
+pkg_ver_for_verifiacation: "Candidate"
+
+# Rollback on the specified release
+#
+# Value: false or name of repo or source list
+# Should be passed as extra var
+rollback: false
+
+# Apply all patches from patches folder
+#
+# Please change it on 'true' after you make sure that all your
+# patches are apllied without any issues
+apply_patches: true
+
+# Restart services
+restart_services: true

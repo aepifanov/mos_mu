@@ -1,5 +1,16 @@
 ---
 
+- name: Check if customizations were gathered
+  stat:
+    path: "{{ custom_dir }}"
+  register: customizations_dir
+
+- name: Make sure customizations directory exists
+  file:
+    path: "{{ custom_dir}}"
+    state: directory
+  when: not customizations_dir.stat.exists
+
 - name: Gather package customizations
   script: files/get_package_customizations.sh {{ item }}
   register: customizations_result
@@ -7,6 +18,7 @@
     APT_CONF: "{{ apt_conf }}"
     CUSTOM_DIR: "{{ custom_dir }}"
   with_items: "{{ md5_verify_result.stdout_lines }}"
+  when: not customizations_dir.stat.exists
 
 - name: Download customizations to Fuel
   fetch:

@@ -37,6 +37,7 @@ patches_dir:      "{{ mos_dir }}/patches"
 verification_dir: "{{ mos_dir }}/verification"
 apt_dir:          "{{ mos_dir }}/apt"
 apt_conf:         "{{ apt_dir }}/apt.conf"
+apt_src_dir:      "{{ apt_dir }}/sources.list.d"
 
 fuel_dir:         "/root/fuel_mos_mu"
 fuel_custom_dir:  "{{ fuel_dir }}/customizations"

@@ -5,7 +5,6 @@
   environment:
     APT_CONF: "{{ apt_conf }}"
   register: md5_verify_result
-  when: verify_md5
 
 - name: Show results of MD5 sum verification
   debug:

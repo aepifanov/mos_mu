@@ -4,4 +4,3 @@
   script: files/apply_patches.sh
   environment:
     PATCHES_DIR: "{{ patches_dir }}"
-  when: apply_patches

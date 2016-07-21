@@ -5,13 +5,11 @@ CUSTOM_DIR=${CUSTOM_DIR:?"CUSTOM_DIR is undefined!"}
 PATCHES_DIR=${2:-$PATCHES_DIR}
 PATCHES_DIR=${PATCHES_DIR:?"PATCHES_DIR is undefined!"}
 
-prepare_current_customizations_for_applying()
-{
-    cd "${CUSTOM_DIR}" || return 0
-    [ -d "${PATCHES_DIR}" ] || mkdir -p "${PATCHES_DIR}"
-    for PACK in *; do
-        cp -f "${PACK}/${PACK}_customization.patch" "${PATCHES_DIR}" || exit 1
-    done
-}
+cd "${CUSTOM_DIR}" || exit 0
+[ -d "${PATCHES_DIR}" ] || mkdir -p "${PATCHES_DIR}"
+rm -rf "${PATCHES_DIR}"/*
 
-prepare_current_customizations_for_applying
+PATCHES=$(find . -type f -name "*.patch" |sort)
+for PATCH in ${PATCHES}; do
+    cp -f "${PATCH}" "${PATCHES_DIR}/" || exit 1
+done

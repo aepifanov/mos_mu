@@ -4,7 +4,7 @@
 
   vars_files:
     - "vars/mos_releases/{{ mos_release }}.yml"
-    - "vars/steps/verify_patches.yml"
+    - "vars/steps/rollback.yml"
 
   tasks:
     - include: tasks/apt_update.yml
@@ -12,4 +12,12 @@
             apt_update
 
     - include: tasks/verify_patches.yml
+
+    - include: tasks/rollback_upgrade.yml
+
+    - include: tasks/apply_patches.yml
+      when: apply_patches is defined and
+            apply_patches
+
+- include: restart_services.yml
 

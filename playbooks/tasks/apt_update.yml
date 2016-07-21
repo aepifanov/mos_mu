@@ -7,23 +7,29 @@
 
 - name: Create APT config directory
   file:
-    path: "{{ apt_dir }}/sources.list.d"
+    path: "{{ apt_src_dir }}"
     state: directory
   when: env_release == mos_release
 
 - name: Generate sources.lists for configured repos
   template:
     src: "sources.list.j2"
-    dest: "{{ apt_dir }}/sources.list.d/{{ item.name }}.list"
+    dest: "{{ apt_src_dir }}/{{ item.name }}.list"
     force: yes
   with_items: "{{ apt_repos }}"
+  when: rollback is undefined or
+        not rollback or
+        item.name == rollback
 
 - name: Copy configured sources.lists
   copy:
     remote_src: True
     src: "{{ item.path }}"
-    dest: "{{ apt_dir }}/sources.list.d/{{ item.name }}.list"
+    dest: "{{ apt_src_dir }}/{{ item.name }}.list"
   with_items: "{{ apt_sources_lists }}"
+  when: rollback is undefined or
+        not rollback or
+        item.name == rollback
 
 - name: Copy apt.conf
   template:
