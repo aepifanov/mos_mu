@@ -25,6 +25,5 @@
 
     - include: tasks/gather_customizations.yml
       when: gather_current_customizations is defined and
-            gather_current_customizations and
-            md5_verify_result is defined and
-            md5_verify_result.stdout != ""
+            gather_current_customizations
+

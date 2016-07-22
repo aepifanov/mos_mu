@@ -18,7 +18,9 @@
     APT_CONF: "{{ apt_conf }}"
     CUSTOM_DIR: "{{ custom_dir }}"
   with_items: "{{ md5_verify_result.stdout_lines }}"
-  when: not customizations_dir.stat.exists
+  when: not customizations_dir.stat.exists and
+        md5_verify_result is defined and
+        md5_verify_result.stdout != ""
 
 - name: Download customizations to Fuel
   fetch:
