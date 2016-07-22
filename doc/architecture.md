@@ -27,7 +27,7 @@ Direrctory tree:
 │       └── python-neutron_customization.patch
 └── patches
     └── python-nova.patch
-    ```
+```
 
 * Folder **customizations** is used for gathering customizations from nodes.
   Customizations are placed in folder with nodename.
