@@ -26,7 +26,7 @@ Direrctory tree:
 │   └── node-3
 │       └── python-neutron_customization.patch
 └── patches
-    └── python-nova.patch
+    └── 01-python-nova.patch
 ```
 
 * Folder **customizations** is used for gathering customizations from nodes.
@@ -35,7 +35,7 @@ Direrctory tree:
   with flag **clean_customizations: true**.
   Please be carefull with this flag since you can loose your customizations.
 
-* Folder **patches** is used for store set of patches which will be synced
+* Folder **patches** is used for storing set of patches which will be synced
   on nodes and used for verifying applying and applying on cloud.
   Patches should have **.patch** extentions. Please be aware that patches
   will be applied in alphabetic order, also keep in mind that if flag
@@ -81,7 +81,7 @@ Direrctory tree:
 ├── patches
 │   ├── 00-customizations
 │   │   └── python-neutron_customization.patch
-│   └── python-nova.patch
+│   └── 01-python-nova.patch
 └── verification
     ├── python-neutron
     │   ├── 1%3a2015.1.1-1~u14.04+mos5371
@@ -94,7 +94,7 @@ Direrctory tree:
         │   ├── python-nova_1%3a2015.1.1-1~u14.04+mos19695_all.deb
         │   └── usr
         |         ............
-        └── python-nova.patch
+        └── 01-python-nova.patch
 ```
 
 * Folder **apt** contains apt.conf which is always used for apt and uses
@@ -125,28 +125,28 @@ Tasks
 apt_update.yml
 --------------
 
-* Clean *apt* folder on nodes* Generate and copy on nodes sources.list files
-  from *templates/sources.list.j2*.
-* Generate and copy on nodes sources.list files from *templates/sources.list.j2*
-  using configuring repositories in conf file.
-* Generate and copy on nodes apt.conf file from *templates/apt_conf.j2*.
-* Perform APT update using generated *apt.conf* on nodes.
+* Clean **apt** folder on nodes. Generate and copy on nodes sources.list files
+  from **templates/sources.list.j2**.
+* Generate and copy on nodes sources.list files from
+  **templates/sources.list.j2** using configuring repositories in conf file.
+* Generate and copy on nodes **apt.conf** file from **templates/apt_conf.j2**.
+* Perform APT update using generated **apt.conf** on nodes.
 
 get_current_mu.yml
 ------------------
 
-* Run **files/get_current_mu.sh** script for identifying which MU currently
+* Run **files/get_current_mu.sh** script to identify which MU currently
   applied. Actually this scipt just uses one by one sources.list from
   sources.list.d folder and check if any package have available 'update'.
   If noone have update it means that exactly this MU is installed now.
-  It can return 'undefine' result, it means the node has some mix installed
-  packages.
+  It can return 'undefine' result, that means the node has installed packages
+  from different MU(or other undefined) repos.
 
 verify_md5.yml
 --------------
 
-* Run **files/verify_packages_ubuntu.sh** script for identifying packages which
-  have available new version is customized. For this all these packages script
+* Run **files/verify_packages_ubuntu.sh** script to identify which packages
+  have available new version and customized. For all these packages script
   calculate MD5 sum and compared with origin.
 * Return list of customized packages in **md5_verify_result** variable.
 
@@ -159,8 +159,8 @@ clean_customizations.yml
 gather_current_customizations.yml
 ---------------------------------
 
-* Check if customizations is already gathered ( **customized** folder exits on
-  nodes ).
+* Check if customizations is already gathered ( **customization** folder exits
+  on nodes ).
 * Create **customizations** folder if doesn't exist.
 * If doesn't exist run **files/get_package_customizations.sh** script for each
   customized package in **md5_verify_result**. This script unpacks cached
@@ -194,14 +194,14 @@ apt_upgrade.yml
 apply_patches.yml
 -----------------
 
-* Run **files/apply_patches.sh** script which just applied sorted by relaive
+* Run **files/apply_patches.sh** script which just applies sorted by relaive
   name patches in **patches** folder on nodes.
 
 rollback_upgrade.yml
 --------------------
 
 * Correct dependencies.
-* Perform APT upgrade using only specified in var **rollback** MU name.
+* Perform APT upgrade using only specified in variable **rollback** MU name.
 
 Playbooks
 =========
@@ -239,7 +239,7 @@ verify_patches.yml
 Just verify applying patches on target version of packages
 **pkg_ver_for_verifiacation**.
 
-Uses **vars/steps/verify_patches.yml** set of flags
+Uses **vars/steps/verify_patches.yml** set of flags.
 
 Runs only two steps:
 * tasks/apt_update.yml
@@ -248,7 +248,7 @@ Runs only two steps:
 apply_mu.yml
 ------------
 
-Apply MU and reapply current customizations.
+Apply MU and reapply current customizations(if enabled).
 
 By default uses **var/steps/apply_mu.yml** set of flags.
 
@@ -262,13 +262,13 @@ Run the following tasks:
 * tasks/apt_upgrade.yml
 * tasks/apply_patches.yml
 
-and then included one mode playbook:
+and then include one more playbook:
 * restart_services.yml
 
 restart_services.yml
 --------------------
 
-Restarts specified in **vars/mos_releases/<mos_release>.yml** services for each
+Restart specified in **vars/mos_releases/<mos_release>.yml** services for each
 role.
 
 Might be used separatly.
@@ -276,9 +276,9 @@ Might be used separatly.
 rollback.yml
 ------------
 
-This is pseudo rollback, since it does not save the current state, but let you
-mechanism for install any MU release (that you have initially for rollback) and
-apply gathered customizations, of course as usual with verifying patches before
-installing.
+This is pseudo rollback, since it does not save the current state, but provide
+you a mechanism for install any MU release (that you have initially for
+rollback) and apply gathered customizations, of course as usual with verifying
+patches before installing.
 
 Uses **vars/steps/rollback.yml** set of flags.
