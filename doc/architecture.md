@@ -55,7 +55,8 @@ Direrctory tree:
 
 * Folder **customizations** is used for gathering customizations from nodes.
   Customizations are placed in folder with nodename.
-  This folder will be cleared taks **gather_customizations.yml** will be run
+  This folder will be cleared taks
+  [gather_customizations.yml](#gather_current_customizationsyml) will be run
   with flag **clean_customizations: true**.
   Please be carefull with this flag since you can loose your customizations.
 
@@ -135,7 +136,7 @@ Direrctory tree:
 * **patches** folder contains all patches from Fuel **patches** folder and
   current customizations **00-customizations** if flag
   **use_current_customizations: true** is enabled. This folder is cleared every
-  time when task **verify_patches.yml** is started.
+  time when task [verify_patches.yml](#verify_patchesyml) is started.
 
 * **verification** folder consist from folders for custmoized packages.
   Packages folder contains folder (canditate package version, by default,
@@ -155,7 +156,7 @@ Tasks
   [templates/sources.list.j2](../playbooks/templates/sources.list.j2) using i
   configuring repositories in conf file.
 * Generate and copy on nodes **apt.conf** file from
-  [templates/apt_conf.j2](../playbooks/templates/apt_conf.j2).
+  [templates/apt_conf.j2](../playbooks/templates/apt.conf.j2).
 * Perform APT update using generated **apt.conf** on nodes.
 
 [get_current_mu.yml](../playbooks/tasks/get_current_mu.yml)
@@ -221,8 +222,9 @@ Tasks
 [apply_patches.yml](../playbooks/tasks/apply_patches.yml)
 ---------------------------------------------------------
 
-* Run [files/apply_patches.sh]files/apply_patches.sh() script which just
-  applies sorted by relaive name patches in **patches** folder on nodes.
+* Run [files/apply_patches.sh](../playbooks/files/apply_patches.sh) script
+  which just applies sorted by relaive name patches in **patches** folder on
+  nodes.
 
 [rollback_upgrade.yml](../playbooks/tasks/rollback_upgrade.yml)
 ---------------------------------------------------------------
@@ -273,15 +275,15 @@ Uses [vars/steps/verify_patches.yml](../playbooks/vars/steps/verify_patches.yml)
 set of flags.
 
 Runs only two steps:
-* [tasks/apt_update.yml](../playbooks/tasks/apt_update.yml)
-* [tasks/verify_patches.yml](../playbooks/tasks/verify_patches.yml)
+* [apt_update.yml](../playbooks/tasks/apt_update.yml)
+* [verify_patches.yml](../playbooks/tasks/verify_patches.yml)
 
 [apply_mu.yml](../playbooks/apply_mu.yml)
 -----------------------------------------
 
 Apply MU, apply patches amd re-apply current customizations(if enabled).
 
-By default uses [var/steps/apply_mu.yml](../playbooks/var/steps/apply_mu.yml)
+By default uses [var/steps/apply_mu.yml](../playbooks/vars/steps/apply_mu.yml)
 set of flags.
 
 Run the following tasks:
@@ -301,7 +303,7 @@ and then include one more playbook:
 ---------------------------------------------------------
 
 Restart all services for each role specified in
-[vars/mos_releases/<mos_release>.yml](../playbooks/vars/mos_releases).
+[vars/mos_releases/{{ mos_releases }}.yml](../playbooks/vars/mos_releases).
 
 Might be used separatly.
 
