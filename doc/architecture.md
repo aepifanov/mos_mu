@@ -148,8 +148,8 @@ Tasks
   [templates/apt_conf.j2](../playbooks/templates/apt_conf.j2).
 * Perform APT update using generated **apt.conf** on nodes.
 
-get_current_mu.yml
-------------------
+[get_current_mu.yml](../playbooks/tasks/get_current_mu.yml)
+-----------------------------------------------------------
 
 * Run [files/get_current_mu.sh](../playbooks/files/get_current_mu.sh) script to
   identify which MU currently is applied. Actually this scipt just uses one by
@@ -158,22 +158,22 @@ get_current_mu.yml
   installed now. It can return 'undefine' result, that means the node has
   installed packages from different MU(or other undefined) repos.
 
-verify_md5.yml
---------------
+[verify_md5.yml](../playbooks/tasks/verify_md5.yml)
+---------------------------------------------------
 
 * Run [files/verify_packages_ubuntu.sh](../playbooks/files/verify_packages_ubuntu.sh)
   script to identify which packages have available new version and customized.
   For all these packages script calculate MD5 sum and compared with origin.
 * Return list of customized packages in **md5_verify_result** variable.
 
-clean_customizations.yml
-------------------------
+[clean_customizations.yml](../playbooks/tasks/clean_customizations.yml)
+-----------------------------------------------------------------------
 
 * Delete **customizations** folder on Fuel.
 * Delete **customizations** folder on nodes.
 
-gather_current_customizations.yml
----------------------------------
+[gather_customizations.yml](../playbooks/tasks/gather_customizations.yml)
+-------------------------------------------------------------------------
 
 * Check if customizations is already gathered ( **customization** folder exits
   on nodes ).
@@ -185,8 +185,8 @@ gather_current_customizations.yml
 * If customizations were gatherd, download them on Fuel in
   **customizations/\<nodename\>**.
 
-verify_patches.yml
-------------------
+[verify_patches.yml](../playbooks/tasks/verify_patches.yml)
+-----------------------------------------------------------
 
 * Clean **patches** folder on nodes.
 * Clean **verification** folder on nodes.
@@ -202,20 +202,20 @@ verify_patches.yml
     * Try to apply patch. If more than 1 patch affects this package they will
       be applied by alphabetic order.
 
-apt_upgrade.yml
----------------
+[apt_upgrade.yml](../playbooks/tasks/apt_upgrade.yml)
+-----------------------------------------------------
 
 * Correct dependencies.
 * Perform APT upgrade.
 
-apply_patches.yml
------------------
+[apply_patches.yml](../playbooks/tasks/apply_patches.yml)
+---------------------------------------------------------
 
 * Run [files/apply_patches.sh]files/apply_patches.sh() script which just
   applies sorted by relaive name patches in **patches** folder on nodes.
 
-rollback_upgrade.yml
---------------------
+[rollback_upgrade.yml](../playbooks/tasks/rollback_upgrade.yml)
+---------------------------------------------------------------
 
 * Correct dependencies.
 * Perform APT upgrade using only specified in variable **rollback** MU name.
@@ -235,8 +235,8 @@ the inventarization phase.
 Also it is possible to pass extra variables via cli using standard flar **-e**,
 like this `-e '{"apt_update":false, "verify_md5":true}'`.
 
-gather_customizations.yml
--------------------------
+[gather_customizations.yml](../playbooks/gather_customizations.yml)
+-------------------------------------------------------------------
 
 Makes sure that customizations were not gatherd  already and then gathers them.
 If you need to gather it again you can use flag **clean_customizations**.
@@ -247,14 +247,14 @@ tasks. Uses
 set of flags.
 
 Run the following tasks:
-* [tasks/apt_update.yml](../playbooks/tasks/apt_update.yml)
-* [tasks/get_current_mu.yml](../playbooks/tasks/get_current_mu.yml)
-* [tasks/verify_md5.yml](../playbooks/tasks/verify_md5.yml)
-* [tasks/clean_customizations.yml](../playbooks/tasks/clean_customizations.yml)
-* [tasks/gather_customizations.yml](../playbooks/tasks/clean_customizations.yml)
+* [apt_update.yml](#apt_updateyml)
+* [get_current_mu.yml](#get_current_muyml)
+* [verify_md5.yml](#verify_md5yml)
+* [clean_customizations.yml](#clean_customizationsyml)
+* [gather_customizations.yml](#clean_customizationsyml)
 
-verify_patches.yml
-------------------
+[verify_patches.yml](../playbooks/verify_patches.yml)
+-----------------------------------------------------
 
 Just verify applying patches on target version of packages
 **pkg_ver_for_verifiacation**.
@@ -266,8 +266,8 @@ Runs only two steps:
 * [tasks/apt_update.yml](../playbooks/tasks/apt_update.yml)
 * [tasks/verify_patches.yml](../playbooks/tasks/verify_patches.yml)
 
-apply_mu.yml
-------------
+[apply_mu.yml](../playbooks/apply_mu.yml)
+-----------------------------------------
 
 Apply MU and reapply current customizations(if enabled).
 
@@ -275,29 +275,28 @@ By default uses [var/steps/apply_mu.yml](../playbooks/var/steps/apply_mu.yml)
 set of flags.
 
 Run the following tasks:
-* [apt_update.yml](#apt_update.yml)
-* [tasks/apt_update.yml](../playbooks/tasks/apt_update.yml)
-* [tasks/get_current_mu.yml](../playbooks/tasks/get_current_mu.yml)
-* [tasks/verify_md5.yml](../playbooks/tasks/verify_md5.yml)
-* [tasks/clean_customizations.yml](../playbooks/tasks/clean_customizations.yml)
-* [tasks/gather_customizations.yml](../playbooks/tasks/gather_customizations.yml)
-* [tasks/verify_patches.yml](../playbooks/tasks/verify_patches.yml)
-* [tasks/apt_upgrade.yml](../playbooks/tasks/apt_upgrade.yml)
-* [tasks/apply_patches.yml](../playbooks/tasks/apply_patches.yml)
+* [apt_update.yml](#apt_updateyml)
+* [get_current_mu.yml](#get_current_muyml)
+* [verify_md5.yml](#verify_md5yml)
+* [clean_customizations.yml](#clean_customizationsyml)
+* [gather_customizations.yml](#customizationsyml)
+* [verify_patches.yml](#verify_patchesyml)
+* [apt_upgrade.yml](#apt_upgradeyml)
+* [apply_patches.yml](#apply_patchesyml)
 
 and then include one more playbook:
-* restart_services.yml
+* [restart_services.yml](#restart_servicesiyml)
 
-restart_services.yml
---------------------
+[restart_services.yml](../playbooks/restart_services.yml)
+---------------------------------------------------------
 
 Restart all services for each role specified in
 [vars/mos_releases/<mos_release>.yml](../playbooks/vars/mos_releases).
 
 Might be used separatly.
 
-rollback.yml
-------------
+[rollback.yml](../playbooks/rollback.yml)
+-----------------------------------------
 
 This is pseudo rollback, since it does not save the current state, but provide
 you a mechanism for install any MU release (that you have initially for
