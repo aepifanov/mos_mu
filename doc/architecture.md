@@ -1,3 +1,13 @@
+
+## Table of Contents
+ - [Inventory](#inventory)
+ - [Folder structure](#folder_structure)
+   - [Fuel](#fuel_folder_str)
+   - [Nodes](#nodes_folder_str)
+ - [Tasks](#tasks)
+   - [apt_update.yml](#apt_update.yml)
+
+
 Inventory
 =========
 
@@ -46,7 +56,7 @@ Direrctory tree:
   **01-\<patchname\>.patch, 02-\<patchname2\>.patch**.
 
 Nodes
----
+-----
 
 Variables in config:
 ```
@@ -124,6 +134,8 @@ Tasks
 
 apt_update.yml
 --------------
+
+[tasks/apt_update.yml](../playbooks/tasks/apt_update.yml)
 
 * Clean **apt** folder on nodes.
 * Generate and copy on nodes sources.list files from
@@ -260,6 +272,7 @@ By default uses [var/steps/apply_mu.yml](../playbooks/var/steps/apply_mu.yml)
 set of flags.
 
 Run the following tasks:
+* [apt_update.yml](#apt_update.yml)
 * [tasks/apt_update.yml](../playbooks/tasks/apt_update.yml)
 * [tasks/get_current_mu.yml](../playbooks/tasks/get_current_mu.yml)
 * [tasks/verify_md5.yml](../playbooks/tasks/verify_md5.yml)
