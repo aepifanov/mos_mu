@@ -1,11 +1,11 @@
 
 ## Table of Contents
  - [Inventory](#inventory)
- - [Folder structure](#folder_structure)
-   - [Fuel](#fuel_folder_str)
-   - [Nodes](#nodes_folder_str)
+ - [Folder structure](#folder-structure)
+   - [Fuel](#fuel-folder-str)
+   - [Nodes](#nodes-folder-str)
  - [Tasks](#tasks)
-   - [apt_update.yml](#apt_update.yml)
+   - [apt_update.yml](#apt-update)
 
 
 Inventory
