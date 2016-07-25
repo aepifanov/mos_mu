@@ -2,10 +2,14 @@
 ## Table of Contents
  - [Inventory](#inventory)
  - [Folder structure](#folder-structure)
-   - [Fuel](#fuel-folder-str)
-   - [Nodes](#nodes-folder-str)
+   - [Fuel](#fuel)
+   - [Nodes](#nodes)
  - [Tasks](#tasks)
-   - [apt_update.yml](#apt-update)
+   - [apt_update.yml](#apt_updateyml)
+   - [get_current_mu.yml]()
+   - [verify_md5.yml]()
+   - [clean_customizations.yml]()
+   - [gather_current_customizations.yml]()
 
 
 Inventory
@@ -132,10 +136,9 @@ Direrctory tree:
 Tasks
 =====
 
-apt_update.yml
---------------
+[apt_update.yml](../playbooks/tasks/apt_update.yml)
+---------------------------------------------------
 
-[tasks/apt_update.yml](../playbooks/tasks/apt_update.yml)
 
 * Clean **apt** folder on nodes.
 * Generate and copy on nodes sources.list files from
