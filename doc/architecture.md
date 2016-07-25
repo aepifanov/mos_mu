@@ -6,10 +6,20 @@
    - [Nodes](#nodes)
  - [Tasks](#tasks)
    - [apt_update.yml](#apt_updateyml)
-   - [get_current_mu.yml]()
-   - [verify_md5.yml]()
-   - [clean_customizations.yml]()
-   - [gather_current_customizations.yml]()
+   - [get_current_mu.yml](#get_current_muyml)
+   - [verify_md5.yml](#verify_md5yml)
+   - [clean_customizations.yml](#clean_customizationsyml)
+   - [gather_current_customizations.yml](#gather_current_customizationsyml)
+   - [verify_patches.yml](#verify_patchesyml)
+   - [apt_upgrade.yml](#apt_upgradeyml)
+   - [apply_patches.yml](#apply_patchesyml)
+   - [rollback_upgrade.yml](#rollback_upgradeyml)
+ - [Playbooks](#playbooks)
+   - [gather_customizations.yml](#gather_customizationsyml)
+   - [verify_patches.yml](#verify_patchesyml)
+   - [apply_mu.yml](#apply_patchesyml)
+   - [restart_services.yml](#restart_servicesyml)
+   - [rollback.yml](#rollbackyml)
 
 
 Inventory
@@ -269,7 +279,7 @@ Runs only two steps:
 [apply_mu.yml](../playbooks/apply_mu.yml)
 -----------------------------------------
 
-Apply MU and reapply current customizations(if enabled).
+Apply MU, apply patches amd re-apply current customizations(if enabled).
 
 By default uses [var/steps/apply_mu.yml](../playbooks/var/steps/apply_mu.yml)
 set of flags.
@@ -279,13 +289,13 @@ Run the following tasks:
 * [get_current_mu.yml](#get_current_muyml)
 * [verify_md5.yml](#verify_md5yml)
 * [clean_customizations.yml](#clean_customizationsyml)
-* [gather_customizations.yml](#customizationsyml)
+* [gather_customizations.yml](#gather_customizationsyml)
 * [verify_patches.yml](#verify_patchesyml)
 * [apt_upgrade.yml](#apt_upgradeyml)
 * [apply_patches.yml](#apply_patchesyml)
 
 and then include one more playbook:
-* [restart_services.yml](#restart_servicesiyml)
+* [restart_services.yml](#restart_servicesyml)
 
 [restart_services.yml](../playbooks/restart_services.yml)
 ---------------------------------------------------------
@@ -302,6 +312,15 @@ This is pseudo rollback, since it does not save the current state, but provide
 you a mechanism for install any MU release (that you have initially for
 rollback) and apply gathered customizations, of course as usual with verifying
 patches before installing.
+
+Runs the following tasks:
+* [apt_update.yml](#apt_updateyml)
+* [verify_patches.yml](#verify_patchesyml)
+* [apt_upgrade.yml](#apt_upgradeyml)
+* [apply_patches.yml](#apply_patchesyml)
+
+and then include one more playbook:
+* [restart_services.yml](#restart_servicesyml)
 
 Uses [vars/steps/rollback.yml](../playbooks/vars/steps/rollback.yml) set of
 flags.
