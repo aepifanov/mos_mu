@@ -125,29 +125,30 @@ Tasks
 apt_update.yml
 --------------
 
-* Clean **apt** folder on nodes. Generate and copy on nodes sources.list files
-  from **templates/sources.list.j2**.
+* Clean **apt** folder on nodes.
 * Generate and copy on nodes sources.list files from
-  **templates/sources.list.j2** using configuring repositories in conf file.
-* Generate and copy on nodes **apt.conf** file from **templates/apt_conf.j2**.
+  [templates/sources.list.j2](templates/sources.list.j2) using configuring
+  repositories in conf file.
+* Generate and copy on nodes **apt.conf** file from
+  [templates/apt_conf.j2](templates/apt_conf.j2).
 * Perform APT update using generated **apt.conf** on nodes.
 
 get_current_mu.yml
 ------------------
 
-* Run **files/get_current_mu.sh** script to identify which MU currently
-  applied. Actually this scipt just uses one by one sources.list from
-  sources.list.d folder and check if any package have available 'update'.
-  If noone have update it means that exactly this MU is installed now.
-  It can return 'undefine' result, that means the node has installed packages
-  from different MU(or other undefined) repos.
+* Run [files/get_current_mu.sh](files/get_current_mu.sh) script to identify
+  which MU currently is applied. Actually this scipt just uses one by one
+  sources.list from sources.list.d folder and check if any package have
+  available 'update'.  If noone have update it means that exactly this MU is
+  installed now. It can return 'undefine' result, that means the node has
+  installed packages from different MU(or other undefined) repos.
 
 verify_md5.yml
 --------------
 
-* Run **files/verify_packages_ubuntu.sh** script to identify which packages
-  have available new version and customized. For all these packages script
-  calculate MD5 sum and compared with origin.
+* Run [files/verify_packages_ubuntu.sh](files/verify_packages_ubuntu.sh) script
+  to identify which packages have available new version and customized. For all
+  these packages script calculate MD5 sum and compared with origin.
 * Return list of customized packages in **md5_verify_result** variable.
 
 clean_customizations.yml
@@ -162,10 +163,10 @@ gather_current_customizations.yml
 * Check if customizations is already gathered ( **customization** folder exits
   on nodes ).
 * Create **customizations** folder if doesn't exist.
-* If doesn't exist run **files/get_package_customizations.sh** script for each
-  customized package in **md5_verify_result**. This script unpacks cached
-  origin installed package (or download if cached is not exists) and make
-  a diff between origin and current state.
+* If doesn't exist for each customized package in **md5_verify_result** run s
+  [files/get_package_customizations.sh](files/get_package_customizations.s).
+  This script unpacks cached origin installed package (or download if cached is
+  not exists) and make a diff between origin and current state.
 * If customizations were gatherd, download them on Fuel in
   **customizations/\<nodename\>**.
 
@@ -176,10 +177,10 @@ verify_patches.yml
 * Clean **verification** folder on nodes.
 * Copy patches from Fuel folder **patches** to nodes folder **patches**
   (if **rollback** is not enabled).
-* Run **files/use_customizations.sh** script which copy current patches from
-  **customizations** folder to **patches** folder
+* Run [files/use_customizations.sh](files/use_customizations.sh) script which
+  copy current patches from **customizations** folder to **patches** folder
   (if **use_curret_customization** is enabled).
-* Run **files/verify_patches.sh** script which:
+* Run [files/verify_patches.sh](files/verify_patches.sh) script which:
     * Make usre that each patch affect only one package.
     * Download and extract candidate package if it is not already exists.
     * Try to apply patch. If more than 1 patch affects this package they will
@@ -194,8 +195,8 @@ apt_upgrade.yml
 apply_patches.yml
 -----------------
 
-* Run **files/apply_patches.sh** script which just applies sorted by relaive
-  name patches in **patches** folder on nodes.
+* Run [files/apply_patches.sh]files/apply_patches.sh() script which just
+  applies sorted by relaive name patches in **patches** folder on nodes.
 
 rollback_upgrade.yml
 --------------------
@@ -210,7 +211,8 @@ By default all playbooks are defined for all nodes except Fuel.
 It might be run for any node and group of nodes using standart flag **--limit**
 like this `--limit=cluster_2:compute` (all comuters in cluster_2).
 
-All playbooks include variable file **vars/mos_releases/{{ mos_release }}.yml**
+All playbooks include variable file
+[vars/mos_releases/{{ mos_release }}.yml](vars/mos_releases)
 based on **mos_release** variable, which dynamicaly defined during
 the inventarization phase.
 
@@ -224,7 +226,9 @@ Makes sure that customizations were not gatherd  already and then gathers them.
 If you need to gather it again you can use flag **clean_customizations**.
 
 Runs the set of tasks based on set of flags which allow or deny executing some
-tasks. Uses **vars/steps/gather_customizations.yml** set of flags.
+tasks. Uses
+[vars/steps/gather_customizations.yml](vars/steps/gather_customizations.yml)
+set of flags.
 
 Run the following tasks:
 * tasks/apt_update.yml
@@ -239,7 +243,8 @@ verify_patches.yml
 Just verify applying patches on target version of packages
 **pkg_ver_for_verifiacation**.
 
-Uses **vars/steps/verify_patches.yml** set of flags.
+Uses [vars/steps/verify_patches.yml](vars/steps/verify_patches.yml) set of
+flags.
 
 Runs only two steps:
 * tasks/apt_update.yml
@@ -250,7 +255,7 @@ apply_mu.yml
 
 Apply MU and reapply current customizations(if enabled).
 
-By default uses **var/steps/apply_mu.yml** set of flags.
+By default uses [var/steps/apply_mu.yml](var/steps/apply_mu.yml) set of flags.
 
 Run the following tasks:
 * tasks/apt_update.yml
@@ -268,8 +273,8 @@ and then include one more playbook:
 restart_services.yml
 --------------------
 
-Restart specified in **vars/mos_releases/<mos_release>.yml** services for each
-role.
+Restart specified in [vars/mos_releases/<mos_release>.yml](vars/mos_releases)
+services for each role.
 
 Might be used separatly.
 
@@ -281,4 +286,4 @@ you a mechanism for install any MU release (that you have initially for
 rollback) and apply gathered customizations, of course as usual with verifying
 patches before installing.
 
-Uses **vars/steps/rollback.yml** set of flags.
+Uses [vars/steps/rollback.yml](vars/steps/rollback.yml) set of flags.
