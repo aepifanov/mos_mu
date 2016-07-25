@@ -28,6 +28,8 @@ Inventory
 Inventory Python script generate inverntory data for Ansible using Fuel API.
 For review inventory you can run this script separatly.
 
+[fuel_inventory.py](../inventory/fuel_inventory.py)
+
 Folder structure
 ================
 

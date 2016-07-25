@@ -1,5 +1,5 @@
 
-Work in progress !!!
+**WORK IN PROGRESS !!!**
 
 Don't use it on production environment until it will be released !!!
 
@@ -20,9 +20,9 @@ Install:
 --------
 
 Clone Git repositary from GitHub on Fuel Master node:
-
-`git clone https://github.com/aepifanov/mos_mu.git`
-
+```
+git clone https://github.com/aepifanov/mos_mu.git
+```
 Configuration file:
 -------------------
 
@@ -39,25 +39,29 @@ Usage:
 ------
 
 For the first step we would recommend to gather current customizations:
-
-`ansible-playbook playbooks/gather_customizations.yml --limit="cluster_1"`
+```
+ansible-playbook playbooks/gather_customizations.yml --limit="cluster_1"
+```
 
 Then check that all customizations are applied on new versions
-
-`ansible-playbook playbooks/verify_patches.yml --limit="cluster_1"`
+```
+ansible-playbook playbooks/verify_patches.yml --limit="cluster_1"
+```
 
 You also gather common customizations to 'patches' folder and disable 'use_curret_customization'
 
 After that you can apply MU on environment
-
-`ansible-playbook playbooks/apply_mu.yml --limit="cluster_1"`
+```
+ansible-playbook playbooks/apply_mu.yml --limit="cluster_1"
+```
 
 this play book contained all previous steps as well, so it might be used from the begining.
 
 Rollback:
 ---------
 
-Also rollback playbook was implement, which can return your cluster on any specified
-release and apply customizations:
-
-`ansible-playbook playbooks/rollback.yml --limit="cluster_1" -e '{"rollback":"mu-1"}'`
+Rollback (actually pseudo rollback) playbook can return your cluster on any
+specified release and apply gathered customizations:
+```
+ansible-playbook playbooks/rollback.yml --limit="cluster_1" -e '{"rollback":"mu-1"}'
+```
