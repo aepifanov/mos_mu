@@ -26,9 +26,14 @@ Clone Git repositary from GitHub on Fuel Master node:
 Configuration file:
 -------------------
 
-Conf file contains very important step flags
+Conf file contains very important step flags:
 
-`playbooks/vars/steps/apply_mu.yml`
+[Apply MU steps](playbooks/vars/steps/apply_mu.yml)
+
+Documentation:
+--------------
+
+[Architecture](doc/architecture.md)
 
 Usage:
 ------
