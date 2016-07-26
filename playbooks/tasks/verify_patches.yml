@@ -34,3 +34,10 @@
     PATCHES_DIR: "{{ patches_dir }}"
     VERIFICATION_DIR: "{{ verification_dir }}"
     PKG_VER_FOR_VERIFICATION: "{{ pkg_ver_for_verifiacation }}"
+  register: verify_patches_result
+
+- name: Show results of Patches Verification
+  debug:
+    msg: "{{ verify_patches_result.stdout_lines }}"
+  when: verify_patches_result is defined and
+        verify_patches_result.changed

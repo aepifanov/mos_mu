@@ -9,4 +9,3 @@
   command: "apt-get -y -c {{ apt_conf }} -o Dir::Etc::sourcelist={{ apt_src_dir }}/{{ rollback }}.list -o Dir::Etc::sourceparts='-' upgrade"
   environment:
     DEBIAN_FRONTEND: noninteractive
-

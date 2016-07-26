@@ -4,3 +4,10 @@
   script: files/apply_patches.sh
   environment:
     PATCHES_DIR: "{{ patches_dir }}"
+  register: apply_patches_result
+
+- name: Show results of Patches Applying
+  debug:
+    msg: "{{ apply_patches_result.stdout_lines }}"
+  when: apply_patches_result is defined and
+        apply_patches_result.changed

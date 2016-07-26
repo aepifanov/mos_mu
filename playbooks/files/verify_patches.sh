@@ -9,7 +9,7 @@ VERIFICATION_DIR=${VERIFICATION_DIR:?"VERIFICATION_DIR is undefined!"}
 PKG_VER_FOR_VERIFICATION=${4:-$PKG_VER_FOR_VERIFICATION}
 PKG_VER_FOR_VERIFICATION=${PKG_VER_FOR_VERIFICATION:?"PKG_VER_FOR_VERIFICATION is undefined!"}
 
-cd "${PATCHES_DIR}" || exit 0
+cd "${PATCHES_DIR}" &>/dev/null || exit 0
 
 RET=0
 # Check patches
@@ -58,6 +58,7 @@ for PATCH in ${PATCHES}; do
     patch -p1 -N -d "${VERS}" < "${PATCH_FILENAME}" &>/dev/null ||
         { echo "[ERROR] Failed to apply ${PATCH}";
         RET=1; }
+    echo "[INFO] ${PATCH} Applied OK"
 done
 
 exit "${RET}"
