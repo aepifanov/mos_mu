@@ -175,8 +175,8 @@ Tasks
 ---------------------------------------------------
 
 * Run [files/verify_packages_ubuntu.sh](../playbooks/files/verify_packages_ubuntu.sh)
-  script to identify which packages have available new version and customized.
-  For all these packages script calculate MD5 sum and compared with origin.
+  script which for all installed python packages calculate MD5 sum and compared
+  with origin.
 * Return list of customized packages in **md5_verify_result** variable.
 
 [clean_customizations.yml](../playbooks/tasks/clean_customizations.yml)
@@ -220,6 +220,7 @@ Tasks
 
 * Correct dependencies.
 * Perform APT upgrade.
+* Reinstall customized packages
 
 [apply_patches.yml](../playbooks/tasks/apply_patches.yml)
 ---------------------------------------------------------
@@ -233,6 +234,7 @@ Tasks
 
 * Correct dependencies.
 * Perform APT upgrade using only specified in variable **rollback** MU name.
+* Reinstall customized packages
 
 Playbooks
 =========
@@ -319,6 +321,9 @@ patches before installing.
 
 Runs the following tasks:
 * [apt_update.yml](#apt_updateyml)
+* [verify_md5.yml](#verify_md5yml)
+* [clean_customizations.yml](#clean_customizationsyml)
+* [gather_customizations.yml](#gather_customizationsyml)
 * [verify_patches.yml](#verify_patchesyml)
 * [apt_upgrade.yml](#apt_upgradeyml)
 * [apply_patches.yml](#apply_patchesyml)
