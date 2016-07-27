@@ -83,7 +83,7 @@ done
 #echo -e "${PYTHON_CUSTOMIZED_PKGS}"
 #echo -e "${NONPYTHON_CUSTOMIZED_PKGS}" &>2
 
-echo -e "${CUSTOMIZED_PKGS}"
+[ -z "${CUSTOMIZED_PKGS}" ] || echo -e "${CUSTOMIZED_PKGS}"
 
 exit "${RET}"
 
