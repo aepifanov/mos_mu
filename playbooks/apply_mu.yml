@@ -1,6 +1,7 @@
 ---
 
 - hosts: all:!fuel
+  any_errors_fatal: true
   vars:
       steps: "apply_mu"
 

@@ -55,7 +55,7 @@ for PATCH in ${PATCHES}; do
     cd "${PKG_PATH}" || exit 2
     cp -f "${PATCHES_DIR}/${PATCH}" .
     PATCH_FILENAME=${PATCH##*/}
-    patch -p1 -N -d "${VERS}" < "${PATCH_FILENAME}" &>/dev/null ||
+    patch -p1 -N -d "${VERS}" < "${PATCH_FILENAME}" ||
         { echo "[ERROR] Failed to apply ${PATCH}";
         RET=1; }
     echo "[INFO] ${PATCH} Applied OK"

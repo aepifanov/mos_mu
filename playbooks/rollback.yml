@@ -1,6 +1,7 @@
 ---
 
 - hosts: all:!fuel
+  any_errors_fatal: true
 
   vars_files:
     - "vars/mos_releases/{{ mos_release }}.yml"
@@ -10,6 +11,18 @@
     - include: tasks/apt_update.yml
       when: apt_update is defined and
             apt_update
+
+    - include: tasks/verify_md5.yml
+      when: verify_md5 is defined and
+            verify_md5
+
+    - include: tasks/clean_customizations.yml
+      when: clean_customizations is defined and
+            clean_customizations
+
+    - include: tasks/gather_customizations.yml
+      when: gather_current_customizations is defined and
+            gather_current_customizations
 
     - include: tasks/verify_patches.yml
 

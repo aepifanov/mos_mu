@@ -9,7 +9,8 @@
 #     1 - some packets were installed not from configured repositories
 #     2 - some other error
 # - output:
-#     list of customized packages and undentified packages
+#     stdout - list of customized packages and undentified packages
+#     stderror - list of customized non-python packages
 
 APT_CONF=${APT_CONF:-$1}
 APT_CONF=${APT_CONF:-"/etc/apt/apt.conf"}
@@ -51,11 +52,12 @@ function md5_verify()
     return 2
 }
 
+# Get list of all installed packages and check md5 sum for them
 RET=0
-PKGS=$(apt-get -c "${APT_CONF}" --just-print upgrade) || exit 2
-
-for PKG in $(echo "${PKGS}" | awk '/Conf/ {print $2}'); do
-    # We will work only with python packages
+CUSTOMIZED_PKGS=""
+ALL_PKGS=$(dpkg-query -W -f='${Package}\n') || exit 2
+for PKG in ${ALL_PKGS}; do
+    # We work only with python packages
     PKG=$(echo "${PKG}" | grep "python-") || continue
 
     PKG_POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}") || exit 2
@@ -68,9 +70,20 @@ for PKG in $(echo "${PKGS}" | awk '/Conf/ {print $2}'); do
 
     md5_verify "${PKG}"
     if (( $? == 1 )); then
-        echo "${PKG}"
+        [[ "${CUSTOMIZED_PKGS}" != "" ]] &&
+            CUSTOMIZED_PKGS="${CUSTOMIZED_PKGS}\n"
+        CUSTOMIZED_PKGS="${CUSTOMIZED_PKGS}${PKG}"
     fi
 done
+
+# Divide them on python and non-python packages
+#PYTHON_CUSTOMIZED_PKGS=$(echo -e "${CUSTOMIZED_PKGS}" | grep "python-")
+#NONPYTHON_CUSTOMIZED_PKGS=$(echo -e "${CUSTOMIZED_PKGS}" | grep -v "python-")
+
+#echo -e "${PYTHON_CUSTOMIZED_PKGS}"
+#echo -e "${NONPYTHON_CUSTOMIZED_PKGS}" &>2
+
+echo -e "${CUSTOMIZED_PKGS}"
 
 exit "${RET}"
 

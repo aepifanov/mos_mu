@@ -10,3 +10,10 @@
   environment:
     DEBIAN_FRONTEND: noninteractive
 
+- name: APT reinstall cusmotomized packages
+  command: "apt-get -y -c {{ apt_conf }} install --reinstall {{ item }}"
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+  with_items: "{{ md5_verify_result.stdout_lines }}"
+  when: md5_verify_result is defined and
+        md5_verify_result.stdout != ""

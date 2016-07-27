@@ -1,6 +1,6 @@
 ---
 
-- name: Check MD5 sum for upgradable packages
+- name: Check MD5 sum for installed packages
   script: files/verify_packages_ubuntu.sh
   environment:
     APT_CONF: "{{ apt_conf }}"
@@ -11,4 +11,10 @@
     msg: "{{ md5_verify_result.stdout_lines }}"
   when: md5_verify_result is defined and
         md5_verify_result.changed
+
+#- name: Show Warnings
+#  fail:
+#    msg: "[ERROR] The following package have update, but they are customized.\n{{ md5_verify_result.stderr }}"
+#  when: md5_verify_result is defined and
+#        md5_verify_result.stderr != ""
 
