@@ -5,6 +5,8 @@
   environment:
     APT_CONF: "{{ apt_conf }}"
   register: md5_verify_result
+  changed_when: md5_verify_result.stdout != "" and
+                md5_verify_result.rc == 0
 
 - name: Show results of MD5 sum verification
   debug:
