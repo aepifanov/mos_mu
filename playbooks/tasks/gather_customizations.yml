@@ -18,8 +18,7 @@
     APT_CONF: "{{ apt_conf }}"
     CUSTOM_DIR: "{{ custom_dir }}"
   with_items: "{{ md5_verify_result.stdout_lines }}"
-  when: not customizations_dir.stat.exists and
-        md5_verify_result is defined and
+  when: md5_verify_result is defined and
         md5_verify_result.stdout != ""
 
 - name: Download customizations to Fuel
@@ -31,3 +30,13 @@
   when: customizations_result is defined and
         customizations_result.changed
 
+- name: Verify customizations consistency
+  register: verify_customizations_result
+  run_once: true
+  delegate_to: localhost
+  script: files/verify_customizations_consistency.sh
+  environment:
+    FUEL_CUSTOM_DIR: "{{ fuel_custom_dir }}"
+    FUEL_PATCHES_DIR: "{{ fuel_patches_dir }}"
+  changed_when: verify_customizations_result.stdout != "" and
+                verify_customizations_result.rc == 0
