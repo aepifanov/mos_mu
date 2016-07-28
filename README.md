@@ -19,7 +19,7 @@ Prerequisites:
 Install:
 --------
 
-Clone Git repositary from GitHub on Fuel Master node:
+Clone Git repository from GitHub on Fuel Master node:
 ```
 git clone https://github.com/aepifanov/mos_mu.git
 ```
@@ -48,14 +48,14 @@ Then check that all customizations are applied on new versions
 ansible-playbook playbooks/verify_patches.yml --limit="cluster_1"
 ```
 
-You also gather common customizations to 'patches' folder and disable 'use_curret_customization'
+You also gather common customizations to 'patches' folder and disable 'use_current_customization'
 
 After that you can apply MU on environment
 ```
 ansible-playbook playbooks/apply_mu.yml --limit="cluster_1"
 ```
 
-this play book contained all previous steps as well, so it might be used from the begining.
+This play book contained all previous steps as well, so it might be used from the beginning.
 
 Rollback:
 ---------
