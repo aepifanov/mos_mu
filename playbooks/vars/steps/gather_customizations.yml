@@ -16,14 +16,9 @@
 # Perform apt-get update
 apt_update: true
 
-# Perform MD5 sum verification for currect installed packets
-verify_md5: true
-
 # Clean gathered customizations on nodes and Fuel
 #
 # Be carefull, you can loose your INITIAL customizations
 # if you perform it after failed upgrade or applying some patches!!!
 clean_customizations: false
 
-# Gather the current customizations and copy it on Fuel node
-gather_current_customizations: true

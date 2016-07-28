@@ -1,6 +1,7 @@
 ---
 
 - name: Apply patches
+  ignore_errors: true
   script: files/apply_patches.sh
   environment:
     PATCHES_DIR: "{{ patches_dir }}"
@@ -11,3 +12,9 @@
     msg: "{{ apply_patches_result.stdout_lines }}"
   when: apply_patches_result is defined and
         apply_patches_result.changed
+
+- name: Fail if patches applying failed
+  fail:
+    msg: "[ERROR] Applying of patches FAILED"
+  when: apply_patches_result is defined and
+        apply_patches_result.failed

@@ -48,14 +48,19 @@ Then check that all customizations are applied on new versions
 ansible-playbook playbooks/verify_patches.yml --limit="cluster_1"
 ```
 
-You also gather common customizations to 'patches' folder and disable 'use_curret_customization'
+It is also strongly recommended to identify and copy common customizations in
+**patches** folder on Fuel and disable **use_curret_customization** flag and
+manage patches to achive success of **verify_patches.yml** step.
 
-After that you can apply MU on environment
+Then you can continue to apply MU on environment
 ```
-ansible-playbook playbooks/apply_mu.yml --limit="cluster_1"
+ansible-playbook playbooks/apply_mu.yml --limit="cluster_1" -e '{"use_curret_customization":false}'
 ```
 
-this play book contained all previous steps as well, so it might be used from the begining.
+This playbook contains all previous steps as well, so it might be used from
+the begining, but in this case it will apply the current customizations on
+each node and patches from **patches** folder on Fuel node and you will
+get exactly the same customizations that was before.
 
 Rollback:
 ---------

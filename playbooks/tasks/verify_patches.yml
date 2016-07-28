@@ -29,6 +29,7 @@
 
 - name: Verify patches
   script: files/verify_patches.sh
+  ignore_errors: True
   environment:
     APT_CONF: "{{ apt_conf }}"
     PATCHES_DIR: "{{ patches_dir }}"
@@ -41,3 +42,9 @@
     msg: "{{ verify_patches_result.stdout_lines }}"
   when: verify_patches_result is defined and
         verify_patches_result.changed
+
+- name: Fail if patches verifying failed
+  fail:
+    msg: "[ERROR] Verifying of patches FAILED"
+  when: verify_patches_result is defined and
+        verify_patches_result.failed

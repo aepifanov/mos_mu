@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 CUSTOM_DIR=${1:-$CUSTOM_DIR}
 CUSTOM_DIR=${CUSTOM_DIR:?"CUSTOM_DIR is undefined!"}

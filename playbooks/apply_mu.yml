@@ -19,16 +19,12 @@
             not rollback
 
     - include: tasks/verify_md5.yml
-      when: verify_md5 is defined and
-            verify_md5
 
     - include: tasks/clean_customizations.yml
       when: clean_customizations is defined and
             clean_customizations
 
     - include: tasks/gather_customizations.yml
-      when: gather_current_customizations is defined and
-            gather_current_customizations
 
     - include: tasks/verify_patches.yml
 
@@ -41,6 +37,4 @@
             apply_patches
 
 - include: restart_services.yml
-  when: restart_services is defined and
-        restart_services
 

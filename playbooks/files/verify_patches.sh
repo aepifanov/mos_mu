@@ -16,7 +16,7 @@ RET=0
 PATCHES=$(find . -type f -name "*.patch" |sort)
 for PATCH in ${PATCHES}; do
     cd "${PATCHES_DIR}" || exit 2
-    FILES=$(grep 'diff' -A3 "${PATCH}" | awk '/\-\-\-/ {print $2}')
+    FILES=$(cat "${PATCH}" | awk '/diff/ {getline; getline; print $2}')
     PKG=""
     # Get Package name and make sure that all affect the only one package
     for FILE in ${FILES}; do
@@ -51,7 +51,7 @@ for PATCH in ${PATCHES}; do
         ar p "${PKG_NAME}" data.tar.xz | tar xJ ||
     	    { RET=2; continue; }
 
-    # Dry-run apply patch
+    # Verify patch applying
     cd "${PKG_PATH}" || exit 2
     cp -f "${PATCHES_DIR}/${PATCH}" .
     PATCH_FILENAME=${PATCH##*/}
