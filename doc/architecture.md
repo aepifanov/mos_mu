@@ -25,8 +25,8 @@
 Inventory
 =========
 
-Inventory Python script generate inverntory data for Ansible using Fuel API.
-For review inventory you can run this script separatly.
+Inventory Python script generates inventory data for Ansible using Fuel API.
+For review inventory you can run this script separately.
 
 [fuel_inventory.py](../inventory/fuel_inventory.py)
 
@@ -45,7 +45,7 @@ fuel_custom_dir:  "{{ fuel_dir }}/customizations"
 fuel_patches_dir: "{{ fuel_dir }}/patches"
 ```
 
-Direrctory tree:
+Directory tree:
 ```
 /root/fuel_mos_mu
 ├── customizations
@@ -57,14 +57,14 @@ Direrctory tree:
 
 * Folder **customizations** is used for gathering customizations from nodes.
   Customizations are placed in folder with nodename.
-  This folder will be cleared taks
+  This folder will be cleared task
   [gather_customizations.yml](#gather_current_customizationsyml) will be run
   with flag **clean_customizations: true**.
-  Please be carefull with this flag since you can loose your customizations.
+  Please be careful with this flag since you can loose your customizations.
 
 * Folder **patches** is used for storing set of patches which will be synced
   on nodes and used for verifying applying and applying on cloud.
-  Patches should have **.patch** extentions. Please be aware that patches
+  Patches should have **.patch** extensions. Please be aware that patches
   will be applied in alphabetic order, also keep in mind that if flag
   **use_current_customizations: true** is enabled current customizations
   will be also copied to **patches** folder on nodes with to
@@ -130,7 +130,7 @@ Direrctory tree:
 * **apt/sources.list.d** contains sources lists for all configured in config
   repositories.
 
-* **customizations** folder consist from folders for custmoized packages.
+* **customizations** folder consists of folders for customized packages.
   Packages folder contains folder (current package version) with unpacked
   package and diff file between this unpacked version and current installed
   (customized) version.
@@ -140,8 +140,8 @@ Direrctory tree:
   **use_current_customizations: true** is enabled. This folder is cleared every
   time when task [verify_patches.yml](#verify_patchesyml) is started.
 
-* **verification** folder consist from folders for custmoized packages.
-  Packages folder contains folder (canditate package version, by default,
+* **verification** folder consists of folders for customized packages.
+  Packages folder contains folder (candidate package version, by default,
   configured by flag **pkg_ver_for_verifiacation: "Candidate"**) with unpacked
   package and patches files witch should be applied.
 
@@ -165,7 +165,7 @@ Tasks
 -----------------------------------------------------------
 
 * Run [files/get_current_mu.sh](../playbooks/files/get_current_mu.sh) script to
-  identify which MU currently is applied. Actually this scipt just uses one by
+  identify which MU currently is applied. Actually this script just uses one by
   one sources.list from sources.list.d folder and check if any package have
   available 'update'.  If noone have update it means that exactly this MU is
   installed now. It can return 'undefine' result, that means the node has
@@ -188,14 +188,14 @@ Tasks
 [gather_customizations.yml](../playbooks/tasks/gather_customizations.yml)
 -------------------------------------------------------------------------
 
-* Check if customizations is already gathered ( **customization** folder exits
+* Check if customizations are already gathered ( **customization** folder exits
   on nodes ).
 * Create **customizations** folder if doesn't exist.
 * If doesn't exist for each customized package in **md5_verify_result** run s
   [files/get_package_customizations.sh](../playbooks/files/get_package_customizations.sh).
-  This script unpacks cached origin installed package (or download if cached is
-  not exists) and make a diff between origin and current state.
-* If customizations were gatherd, download them on Fuel in
+  This script unpacks cached origin installed package (or download if cached does
+  not exist) and make a diff between origin and current state.
+* If customizations were gathered, download them on Fuel in
   **customizations/\<nodename\>**.
 
 [verify_patches.yml](../playbooks/tasks/verify_patches.yml)
@@ -210,10 +210,10 @@ Tasks
   **patches** folder (if **use_curret_customization** is enabled).
 * Run [files/verify_patches.sh](../playbooks/files/verify_patches.sh) script
   which:
-    * Make usre that each patch affect only one package.
-    * Download and extract candidate package if it is not already exists.
+    * Make sure that each patch affects only one package.
+    * Download and extract candidate package if it does not already exist.
     * Try to apply patch. If more than 1 patch affects this package they will
-      be applied by alphabetic order.
+      be applied in alphabetic order.
 
 [apt_upgrade.yml](../playbooks/tasks/apt_upgrade.yml)
 -----------------------------------------------------
@@ -226,7 +226,7 @@ Tasks
 ---------------------------------------------------------
 
 * Run [files/apply_patches.sh](../playbooks/files/apply_patches.sh) script
-  which just applies sorted by relaive name patches in **patches** folder on
+  which just applies sorted by relative name patches in **patches** folder on
   nodes.
 
 [rollback_upgrade.yml](../playbooks/tasks/rollback_upgrade.yml)
@@ -240,21 +240,21 @@ Playbooks
 =========
 
 By default all playbooks are defined for all nodes except Fuel.
-It might be run for any node and group of nodes using standart flag **--limit**
-like this `--limit=cluster_2:compute` (all comuters in cluster_2).
+It might be run for any node and group of nodes using standard flag **--limit**
+like this `--limit=cluster_2:compute` (all computes in cluster_2).
 
 All playbooks include variable file
 [vars/mos_releases/{{ mos_release }}.yml](../playbooks/vars/mos_releases)
-based on **mos_release** variable, which dynamicaly defined during
+based on **mos_release** variable, which dynamically defined during
 the inventarization phase.
 
-Also it is possible to pass extra variables via cli using standard flar **-e**,
+Also it is possible to pass extra variables via cli using standard flag **-e**,
 like this `-e '{"apt_update":false, "verify_md5":true}'`.
 
 [gather_customizations.yml](../playbooks/gather_customizations.yml)
 -------------------------------------------------------------------
 
-Makes sure that customizations were not gatherd  already and then gathers them.
+Makes sure that customizations were not gathered already and then gathers them.
 If you need to gather it again you can use flag **clean_customizations**.
 
 Runs the set of tasks based on set of flags which allow or deny executing some
@@ -285,7 +285,7 @@ Runs only two steps:
 [apply_mu.yml](../playbooks/apply_mu.yml)
 -----------------------------------------
 
-Apply MU, apply patches amd re-apply current customizations(if enabled).
+Apply MU, apply patches and re-apply current customizations(if enabled).
 
 By default uses [var/steps/apply_mu.yml](../playbooks/vars/steps/apply_mu.yml)
 set of flags.
@@ -309,7 +309,7 @@ and then include one more playbook:
 Restart all services for each role specified in
 [vars/mos_releases/{{ mos_releases }}.yml](../playbooks/vars/mos_releases).
 
-Might be used separatly.
+Might be used separately.
 
 [rollback.yml](../playbooks/rollback.yml)
 -----------------------------------------

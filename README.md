@@ -19,7 +19,7 @@ Prerequisites:
 Install:
 --------
 
-Clone Git repositary from GitHub on Fuel Master node:
+Clone Git repository from GitHub on Fuel Master node:
 ```
 git clone https://github.com/aepifanov/mos_mu.git
 ```
@@ -49,8 +49,8 @@ ansible-playbook playbooks/verify_patches.yml --limit="cluster_1"
 ```
 
 It is also strongly recommended to identify and copy common customizations in
-**patches** folder on Fuel and disable **use_curret_customization** flag and
-manage patches to achive success of **verify_patches.yml** step.
+**patches** folder on Fuel and disable **use_current_customization** flag and
+manage patches to successfully execute previous **verify_patches.yml** step.
 
 Then you can continue to apply MU on environment
 ```
@@ -58,9 +58,9 @@ ansible-playbook playbooks/apply_mu.yml --limit="cluster_1" -e '{"use_curret_cus
 ```
 
 This playbook contains all previous steps as well, so it might be used from
-the begining, but in this case it will apply the current customizations on
-each node and patches from **patches** folder on Fuel node and you will
-get exactly the same customizations that was before.
+the beginning, but in this case it will apply the current customizations
+and patches from **patches** folder from Fuel on each node and you will
+get exactly the same customizations that were before.
 
 Rollback:
 ---------
