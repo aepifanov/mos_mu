@@ -61,9 +61,9 @@ for PKG in ${ALL_PKGS}; do
     PKG=$(echo "${PKG}" | grep "python-") || continue
 
     PKG_POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}") || exit 2
-    echo "${PKG_POLICY}" | grep "\*\*\*" -A1 | grep Packages &> /dev/null
-    if [ ! $? ]; then
-        echo "Undentified package: \"${PKG}\" was installed not from the configured repositories."
+    echo "${PKG_POLICY}" | grep -F "***" -A1 | grep Packages &> /dev/null
+    if [ $? != 0 ]; then
+        echo "Unidentified package: \"${PKG}\" was installed not from the configured repositories."
         RET=1
         continue
     fi
