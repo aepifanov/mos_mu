@@ -11,6 +11,13 @@
     state: directory
   when: not customizations_dir.stat.exists
 
+- name: Make sure customizations directory for this node exists on Fuel
+  file:
+    path: "{{ fuel_custom_dir}}/{{ ansible_hostname }}/"
+    state: directory
+  delegate_to: localhost
+  when: not customizations_dir.stat.exists
+
 - name: Gather package customizations
   script: files/get_package_customizations.sh {{ item }}
   register: customizations_result
@@ -40,19 +47,16 @@
   environment:
     FUEL_CUSTOM_DIR: "{{ fuel_custom_dir }}"
     FUEL_PATCHES_DIR: "{{ fuel_patches_dir }}"
-  changed_when: verify_customizations_result.stdout != "" and
-                verify_customizations_result.rc == 0
 
 - name: Show results of customizations consistency Verification
   run_once: true
   debug:
     msg: "{{ verify_customizations_result.stdout_lines }}"
+  when: verify_customizations_result is defined
+
+- name: Fail if verifying of customizations consistency failed
+  run_once: true
+  fail:
+    msg: "[ERROR] Verifying of customizations consistency FAILED"
   when: verify_customizations_result is defined and
         verify_customizations_result.failed
-
-#- name: Fail if verifying of customizations consistency failed
-#  run_once: true
-#  fail:
-#    msg: "[ERROR] Verifying of customizations consistency FAILED"
-#  when: verify_customizations_result is defined and
-#        verify_customizations_result.failed
