@@ -46,3 +46,8 @@ apt_upgrade: true
 # Apply all patches from patches folder
 apply_patches: true
 
+# Skip health check steps
+#
+# This option allows to skip health check steps
+# Use this option with caution
+skip_health_check: false

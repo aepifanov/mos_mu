@@ -1,0 +1,9 @@
+---
+
+- name: Pacemaker status check
+  register: pcs_check_result
+  ignore_errors: false
+  any_errors_fatal: true
+  check_pacemaker:
+  when: "'controller' in group_names"
+

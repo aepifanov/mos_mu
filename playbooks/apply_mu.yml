@@ -10,6 +10,10 @@
     - "vars/steps/{{ steps }}.yml"
 
   tasks:
+    - include: tasks/health_checks.yml
+      when: skip_health_check is undefined or
+            not skip_health_check
+
     - include: tasks/apt_update.yml
       when: apt_update is defined and
             apt_update

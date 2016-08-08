@@ -22,3 +22,8 @@ apt_update: true
 # if you perform it after failed upgrade or applying some patches!!!
 clean_customizations: false
 
+# Skip health check steps
+#
+# This option allows to skip health check steps
+# Use this option with caution
+skip_health_check: false
