@@ -39,9 +39,11 @@ apt_dir:          "{{ mos_dir }}/apt"
 apt_conf:         "{{ apt_dir }}/apt.conf"
 apt_src_dir:      "{{ apt_dir }}/sources.list.d"
 
-fuel_dir:         "/root/fuel_mos_mu"
-fuel_custom_dir:  "{{ fuel_dir }}/customizations"
-fuel_patches_dir: "{{ fuel_dir }}/patches"
+fuel_dir:           "/root/fuel_mos_mu"
+fuel_custom_dir:    "{{ fuel_dir }}/customizations"
+fuel_patches_dir:   "{{ fuel_dir }}/patches"
+fuel_processed_dir: "{{ fuel_dir }}/processed"
+fuel_unified_dir:   "{{ fuel_dir }}/unified"
 
 controller_pcs_resources:
     - p_heat-engine

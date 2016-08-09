@@ -22,6 +22,16 @@ apt_update: true
 # if you perform it after failed upgrade or applying some patches!!!
 clean_customizations: false
 
+# Unify only patches for package
+# Patch will be unified (copied to unified folder) if
+# - it is the same on some nodes
+# - no customizations for the other nodes
+unify_only_patches: false
+
+# All unified customizations will be copied to patches folder
+# and then veified and applied on all nodes
+use_current_customizations: true
+
 # Skip health check steps
 #
 # This option allows to skip health check steps

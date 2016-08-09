@@ -16,10 +16,6 @@
 # Perform apt-get update
 apt_update: true
 
-# All your customizations will be copied to patches folder on nodes
-# and then veified and applied
-use_current_customizations: true
-
 # Which packet should be used for verification
 # - Installed
 # - Candidate
@@ -29,3 +25,6 @@ use_current_customizations: true
 # you need to use 'Installed' and enable 'use_current_customizations"
 pkg_ver_for_verifiacation: "Candidate"
 
+# Ignore already applied patches
+# Disable by default since it might be double checked for avoiding any issues
+ignore_applied_patches: "False"

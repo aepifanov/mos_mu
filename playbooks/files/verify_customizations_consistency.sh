@@ -4,17 +4,24 @@ FUEL_CUSTOM_DIR=${1:-$FUEL_CUSTOM_DIR}
 FUEL_CUSTOM_DIR=${FUEL_CUSTOM_DIR:?"FUEL_CUSTOM_DIR is undefined!"}
 FUEL_PATCHES_DIR=${2:-$FUEL_PATCHES_DIR}
 FUEL_PATCHES_DIR=${FUEL_PATCHES_DIR:?"FUEL_PATCHES_DIR is undefined!"}
+FUEL_PROCESSED_DIR=${3:-$FUEL_PROCESSED_DIR}
+FUEL_PROCESSED_DIR=${FUEL_PROCESSED_DIR:?"FUEL_PROCESSED_DIR is undefined!"}
+FUEL_UNIFIED_DIR=${4:-$FUEL_UNIFIED_DIR}
+FUEL_UNIFIED_DIR=${FUEL_UNIFIED_DIR:?"FUEL_UNIFIED_DIR is undefined!"}
+UNIFY_ONLY_PATCHES=${5:-$UNIFY_ONLY_PATCHES}
+UNIFY_ONLY_PATCHES=${UNIFY_ONLY_PATCHES:-"FALSE"}
 
-PROCESSED_DIR="processed"
-FUEL_PROCESSED_DIR="${FUEL_CUSTOM_DIR}/${PROCESSED_DIR}"
-FUEL_UNIQUE_DIR="${FUEL_PROCESSED_DIR}/unique"
 FUEL_RESULT="${FUEL_PROCESSED_DIR}/result.txt"
 
+
 cd "${FUEL_CUSTOM_DIR}" || exit 0
-ALL_NODES=$(ls | grep -v "${PROCESSED_DIR}" | sort)
+ALL_NODES=$(ls | sort)
 
 mkdir -p "${FUEL_PROCESSED_DIR}"
 rm -rf "${FUEL_PROCESSED_DIR}"/*
+
+mkdir -p "${FUEL_UNIFIED_DIR}"
+rm -rf "${FUEL_UNIFIED_DIR}"/*
 
 for NODE in ${ALL_NODES}; do
     cd ${FUEL_CUSTOM_DIR}/${NODE}
@@ -45,13 +52,8 @@ get_array_id_for_md5()
     return $i
 }
 
+
 RET=0
-set_return_code()
-{
-    NEW_RET=$1
-    [ -z "${NEW_RET}" ] && return 0
-    (( "${NEW_RET}" > "${RET}")) && { RET="${NEW_RET}"; }
-}
 
 ARRAY=()
 imax=$(echo ${ALL_PKGS} | wc -w)
@@ -64,7 +66,7 @@ for PKG in ${ALL_PKGS}; do
     for NODE in ${ALL_NODES}; do
         if [ ! -d ${NODE} ]; then
             ARRAY[$i+$j*$imax]="-"
-            set_return_code 1
+            let "RET|=1"
         else
             FILE_PATCH="${NODE}/${PKG}_customization.patch"
             MD5="$(grep -v -e '^diff' -e '^---' -e '^+++' "${FILE_PATCH}" | md5sum | awk '{print $1}')"
@@ -75,8 +77,42 @@ for PKG in ${ALL_PKGS}; do
         ((j++))
     done
     if (( ${#MD5_ARRAY[*]} > 1 )); then
-        set_return_code 2
+        let "RET|=2"
     fi
+    ((i++))
+done
+
+i=0 #PKG
+for PKG in ${ALL_PKGS}; do
+    j=0 #NODE
+    ST=0
+    cd "${FUEL_PROCESSED_DIR}/${PKG}"
+    FILE_PATCH=$(find . -type f -name "*.patch" | head -n 1)
+    [ -e "${FILE_PATCH}" ] ||
+        continue
+    for NODE in ${ALL_NODES}; do
+        case ${ARRAY[$i+$j*$imax]} in
+            0)
+                ;;
+            '-')
+                let "ST|=1"
+                ;;
+            *)
+                let "ST|=2"
+        esac
+        ((j++))
+    done
+    set -x
+    case ${ST} in
+        0)
+            cp "${FILE_PATCH} ${FUEL_UNIFIED_DIR}"
+            ;;
+        1)
+            if [ "${UNIFY_ONLY_PATCHES,,}" == "true" ]; then
+                cp "${FILE_PATCH}" "${FUEL_UNIFIED_DIR}"
+            fi
+    esac
+    set +x
     ((i++))
 done
 
@@ -98,4 +134,9 @@ echo -e "Legenda:
  'x' - ID of patch\n"
 echo -e "${OUT}" | column -t
 
+
+if [ "${UNIFY_ONLY_PATCHES,,}" == "true" ]; then
+    (( ${RET} == 1 )) &&
+        RET=0
+fi
 exit ${RET}
