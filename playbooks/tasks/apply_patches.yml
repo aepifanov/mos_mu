@@ -5,6 +5,7 @@
   script: files/apply_patches.sh
   environment:
     PATCHES_DIR: "{{ patches_dir }}"
+    IGNORE_APPLIED_PATCHES: "{{ ignore_applied_patches }}"
   register: apply_patches_result
 
 - name: Show results of Patches Applying

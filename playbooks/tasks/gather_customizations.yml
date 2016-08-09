@@ -41,12 +41,14 @@
 - name: Verify customizations consistency
   register: verify_customizations_result
   run_once: true
-  delegate_to: localhost
   ignore_errors: true
-  script: files/verify_customizations_consistency.sh
+  local_action: script files/verify_customizations_consistency.sh
   environment:
     FUEL_CUSTOM_DIR: "{{ fuel_custom_dir }}"
     FUEL_PATCHES_DIR: "{{ fuel_patches_dir }}"
+    FUEL_PROCESSED_DIR: "{{ fuel_processed_dir }}"
+    FUEL_UNIFIED_DIR: "{{ fuel_unified_dir }}"
+    UNIFY_ONLY_PATCHES: "{{ unify_only_patches }}"
 
 - name: Show results of customizations consistency Verification
   run_once: true
@@ -60,3 +62,9 @@
     msg: "[ERROR] Verifying of customizations consistency FAILED"
   when: verify_customizations_result is defined and
         verify_customizations_result.failed
+
+- name: Use unified customizations
+  run_once: true
+  local_action: command rsync -avzrc --delete  "{{ fuel_unified_dir }}/." "{{ fuel_patches_dir }}/00-customizations"
+  when: use_current_customizations is defined and
+        use_current_customizations

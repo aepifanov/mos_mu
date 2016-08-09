@@ -19,22 +19,24 @@
   when: rollback is undefined or
         not rollback
 
-- name: Use current customizations
-  script: files/use_customizations.sh
+- name: Rollback current customizations
+  script: files/rollback_customizations.sh
   environment:
     CUSTOM_DIR: "{{ custom_dir }}"
     PATCHES_DIR: "{{ patches_dir }}/00-customizations"
-  when: use_current_customizations is defined and
-        use_current_customizations
+  when: rollback is defined and
+        rollback
 
 - name: Verify patches
   script: files/verify_patches.sh
   ignore_errors: True
+  run_once: not rollback
   environment:
     APT_CONF: "{{ apt_conf }}"
     PATCHES_DIR: "{{ patches_dir }}"
     VERIFICATION_DIR: "{{ verification_dir }}"
     PKG_VER_FOR_VERIFICATION: "{{ pkg_ver_for_verifiacation }}"
+    IGNORE_APPLIED_PATCHES: "{{ ignore_applied_patches }}"
   register: verify_patches_result
 
 - name: Show results of Patches Verification
