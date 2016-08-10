@@ -149,12 +149,14 @@ case ${RET} in
     0)
         ;;
     1)
+        echo ""
         echo "Some packages customized not on all nodes."
         echo "Please make sure that these customizations are correct and"
         echo "than you can use the following flag:"
         echo '-e {"unify_only_patches":true}'
         ;;
     2)
+        echo ""
         echo "Some packages have different customizations on different nodes."
         echo "Please resolve this issue:"
         echo " 1. Identify which customization should be used"

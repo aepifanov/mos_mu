@@ -26,6 +26,8 @@
 
     - include: tasks/gather_customizations.yml
 
+    - include: tasks/verify_customizations.yml
+
     - include: tasks/verify_patches.yml
 
     - include: tasks/apt_upgrade.yml

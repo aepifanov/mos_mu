@@ -81,7 +81,7 @@ for PATCH in ${PATCHES}; do
         #    patching file usr/lib/python2.7/dist-packages/......
         #    Reversed (or previously applied) patch detected!  Skipping patch.
         #    2 out of 2 hunks ignored
-        PATCH_RES=$(grep -Ev "patching|Skipping|ignored" <<< "${PATCH_RES}")
+        PATCH_RES=$(grep -Ev "patching|Skipping|ignored" <<< "${PATCH_OUT}")
         if [ -n "${PATCH_RES}" ]; then
             echo "[ERROR]  Failed to apply ${PATCH}"
             let "RET|=8"
@@ -97,14 +97,16 @@ case "${RET}" in
     2)
         ;;
     4)
-        echo "Some patches look as already applied"
+        echo ""
+        echo "Some patches look as already applied."
         echo "Please make sure that these patches were included in MU"
         echo "If you sure that it is, you can use the following flag:"
         echo ' {"ignore_applied_patches":true}'
         echo "for ignoring these patches."
         ;;
     *)
-        echo "Some patches failed to apply"
+        echo ""
+        echo "Some patches failed to apply."
         echo "Please resolve this issue:"
         echo " 1. Go on the failed nodes and in 'verification' folder"
         echo " 2. Handle the issue with patch applying."

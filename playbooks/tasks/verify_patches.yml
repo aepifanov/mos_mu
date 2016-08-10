@@ -1,18 +1,11 @@
 ---
 
-- name: Check if patches were gathered
-  run_once: true
-  delegate_to: localhost
-  stat:
+- name: Make sure patches directory exists on Fuel
+  file:
     path: "{{ fuel_patches_dir }}"
-  register: fuel_patches_directory
-
-- name: Show message if no patches exist
+    state: directory
   run_once: true
   delegate_to: localhost
-  debug:
-    msg: "no patches found"
-  when: not fuel_patches_directory.stat.exists
 
 - name: Clean patches folder
   file:
@@ -30,16 +23,16 @@
     dest: "{{ patches_dir}}"
     delete: true
     recursive: true
-  when: fuel_patches_directory.stat.exists and
-        (rollback is undefined or not rollback)
+  when: rollback is undefined or
+        not rollback
 
 - name: Rollback current customizations
   script: files/rollback_customizations.sh
   environment:
     CUSTOM_DIR: "{{ custom_dir }}"
     PATCHES_DIR: "{{ patches_dir }}/00-customizations"
-  when: fuel_patches_directory.stat.exists and
-        (rollback is defined and rollback)
+  when: rollback is defined and
+        rollback
 
 - name: Verify patches
   script: files/verify_patches.sh
@@ -52,18 +45,15 @@
     PKG_VER_FOR_VERIFICATION: "{{ pkg_ver_for_verifiacation }}"
     IGNORE_APPLIED_PATCHES: "{{ ignore_applied_patches }}"
   register: verify_patches_result
-  when: fuel_patches_directory.stat.exists
 
 - name: Show results of Patches Verification
   debug:
     msg: "{{ verify_patches_result.stdout_lines }}"
-  when: fuel_patches_directory.stat.exists and
-        (verify_patches_result is defined and
-        verify_patches_result.changed)
+  when: verify_patches_result is defined and
+        verify_patches_result.changed
 
 - name: Fail if patches verifying failed
   fail:
     msg: "[ERROR] Verifying of patches FAILED"
-  when: fuel_patches_directory.stat.exists and
-        (verify_patches_result is defined and
-        verify_patches_result.failed)
+  when: verify_patches_result is defined and
+        verify_patches_result.failed

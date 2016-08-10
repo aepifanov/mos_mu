@@ -11,5 +11,7 @@
       when: apt_update is defined and
             apt_update
 
+    - include: tasks/verify_customizations.yml
+
     - include: tasks/verify_patches.yml
 
