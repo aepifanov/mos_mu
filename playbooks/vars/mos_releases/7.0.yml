@@ -3,7 +3,7 @@
 env_release: "7.0"
 fuel_url: "http://mirror.fuel-infra.org/mos-repos/ubuntu"
 apt_repos:
-  - name: "latest"
+  - name: "GA"
     url: "{{ fuel_url }}/7.0"
     repo: "mos7.0"
     type: "main restricted"
@@ -22,10 +22,6 @@ apt_repos:
   - name: "mu-4"
     url: "{{ fuel_url }}/7.0-mu-4"
     repo: "mos7.0-updates"
-    type: "main restricted"
-  - name: "GA"
-    url: "{{ fuel_url }}/7.0-release"
-    repo: "mos7.0"
     type: "main restricted"
 apt_sources_lists:
   - name: "fuel"
