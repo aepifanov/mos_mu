@@ -27,13 +27,6 @@ function md5_verify()
     return 0
 }
 
-RET=0
-set_return_code()
-{
-    NEW_RET=$1
-    [ -z "${NEW_RET}" ] && return 0
-    (( "${NEW_RET}" > "${RET}")) && { RET="${NEW_RET}"; }
-}
 
 # Get list of all installed packages and check md5 sum for them
 CUSTOMIZED_PKGS=""
@@ -41,11 +34,11 @@ ALL_PKGS=$(dpkg-query -W -f='${Package}\n') || exit 2
 # We work only with python packages
 PYTHON_PKGS=$(echo "${ALL_PKGS}" | grep "python-")
 
+RET=0
 for PKG in ${PYTHON_PKGS}; do
     md5_verify "${PKG}"
     case $? in
         0)
-            set_return_code 0
             ;;
         1)
             [[ "${CUSTOMIZED_PKGS}" != "" ]] &&
@@ -56,11 +49,11 @@ for PKG in ${PYTHON_PKGS}; do
             echo "${PKG_POLICY}" | grep -F "***" -A1 | grep Packages &> /dev/null
             if [ $? != 0 ]; then
                 echo "Unidentified package: \"${PKG}\" was installed not from the configured repositories."
-                set_return_code 1
+                let "RET|=1"
             fi
             ;;
         *)
-            set_return_code 2
+            let "RET|=2"
             ;;
     esac
 done

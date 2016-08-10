@@ -53,31 +53,30 @@ for PATCH in ${PATCHES}; do
             continue; }
     [ -d "usr" ] ||
         ar p "${PKG_NAME}" data.tar.xz | tar xJ || {
+            echo "[ERROR]  Failed to unpack ${PKG}";
             let "RET|=2";
             continue; }
 
     # Verify patch applying
-    cd "${PKG_PATH}" || exit 2
+    cd "${PKG_PATH}" ||
+        { exit 2
+        echo "[ERROR]  Failed to enter to the folder ${PKG_PATH}";}
+
     cp -f "${PATCHES_DIR}/${PATCH}" .
     PATCH_FILENAME=${PATCH##*/}
     PATCH_OUT=$(patch -p1 -N -r- -d "${VERS}" < "${PATCH_FILENAME}")
     RES=$?
     echo -e "${PATCH_OUT}"
-    if (( "${RES}" == 0 )); then
+    if (( ${RES} != 0 )); then
         if [ ${IGNORE_APPLIED_PATCHES,,} != "true" ]; then
             PATCH_RES=$(grep -E "Skipping|ignored" <<< "${PATCH_OUT}")
             if [ -n "${PATCH_RES}" ]; then
-                echo "Some patches look as already applied"
-                echo "Please make sure that these patches were included in MU"
-                echo "If you sure that it is, you can use the following flag:"
-                echo ' {"ignore_applied_patches":true}'
-                echo "ignoring these patches"
+                echo "[ERROR]  Failed to apply ${PATCH}"
+                let "RET|=4"
+                continue
             fi
-            echo "[ERROR]  Failed to apply ${PATCH}"
-            let "RET|=4"
-            continue
         fi
-        # !!?? Need to be tested
+        # FIXME: Need to be tested and modified !?
         # Only the following lines should present in output:
         #    patching file usr/lib/python2.7/dist-packages/......
         #    Reversed (or previously applied) patch detected!  Skipping patch.
@@ -85,11 +84,35 @@ for PATCH in ${PATCHES}; do
         PATCH_RES=$(grep -Ev "patching|Skipping|ignored" <<< "${PATCH_RES}")
         if [ -n "${PATCH_RES}" ]; then
             echo "[ERROR]  Failed to apply ${PATCH}"
-            let "RET|=4"
+            let "RET|=8"
             continue
         fi
     fi
     echo "[OK]     Applied successfully"
 done
+
+case "${RET}" in
+    0)
+        ;;
+    2)
+        ;;
+    4)
+        echo "Some patches look as already applied"
+        echo "Please make sure that these patches were included in MU"
+        echo "If you sure that it is, you can use the following flag:"
+        echo ' {"ignore_applied_patches":true}'
+        echo "for ignoring these patches."
+        ;;
+    *)
+        echo "Some patches failed to apply"
+        echo "Please resolve this issue:"
+        echo " 1. Go on the failed nodes and in 'verification' folder"
+        echo " 2. Handle the issue with patch applying."
+        echo " 3. Copy this patch  to 'patches' folder"
+        echo ' 4. use -e {"use_current_customizations":false} for skipping'
+        echo "    verification and using of gathered customizations."
+        ;;
+
+esac
 
 exit "${RET}"

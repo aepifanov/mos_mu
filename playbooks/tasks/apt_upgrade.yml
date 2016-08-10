@@ -10,7 +10,7 @@
   environment:
     DEBIAN_FRONTEND: noninteractive
 
-- name: APT reinstall cusmotomized packages
+- name: APT reinstall customized packages
   command: "apt-get -y -c {{ apt_conf }} install --reinstall {{ item }}"
   environment:
     DEBIAN_FRONTEND: noninteractive

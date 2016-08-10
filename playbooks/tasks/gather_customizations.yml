@@ -7,7 +7,7 @@
 
 - name: Make sure customizations directory exists
   file:
-    path: "{{ custom_dir}}"
+    path: "{{ custom_dir }}"
     state: directory
   when: not customizations_dir.stat.exists
 
@@ -38,6 +38,21 @@
   when: customizations_result is defined and
         customizations_result.changed
 
+- name: Make sure backup customizations directory exists
+  run_once: true
+  delegate_to: localhost
+  file:
+    path: "{{ fuel_custom_backup_dir }}"
+    state: directory
+  when: customizations_result is defined and
+        customizations_result.changed
+
+- name: Make a backup of gathered customizations
+  run_once: true
+  local_action: shell tar -czf "{{ fuel_custom_backup_dir }}"/customizations-$(date +%m.%d.%y_%H-%M-%S).tgz "{{ fuel_custom_dir }}"
+  when: customizations_result is defined and
+        customizations_result.changed
+
 - name: Verify customizations consistency
   register: verify_customizations_result
   run_once: true
@@ -49,6 +64,8 @@
     FUEL_PROCESSED_DIR: "{{ fuel_processed_dir }}"
     FUEL_UNIFIED_DIR: "{{ fuel_unified_dir }}"
     UNIFY_ONLY_PATCHES: "{{ unify_only_patches }}"
+  when: use_current_customizations is defined and
+        use_current_customizations
 
 - name: Show results of customizations consistency Verification
   run_once: true
@@ -66,5 +83,5 @@
 - name: Use unified customizations
   run_once: true
   local_action: command rsync -avzrc --delete  "{{ fuel_unified_dir }}/." "{{ fuel_patches_dir }}/00-customizations"
-  when: use_current_customizations is defined and
-        use_current_customizations
+  when: verify_customizations_result is defined and
+        not verify_customizations_result.failed

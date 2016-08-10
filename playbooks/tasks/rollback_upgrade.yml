@@ -10,7 +10,7 @@
   environment:
     DEBIAN_FRONTEND: noninteractive
 
-- name: APT reinstall cusmotomized packages
+- name: APT reinstall customized packages
   command: "apt-get -y -c {{ apt_conf }} -o Dir::Etc::sourcelist={{ apt_src_dir }}/{{ rollback }}.list -o Dir::Etc::sourceparts='-' install --reinstall {{ item }}"
   environment:
     DEBIAN_FRONTEND: noninteractive

@@ -1,5 +1,11 @@
 #!/bin/bash
 
+
+# Return:
+# 0 - Ok
+# 1 - Some packages customized not on all nodes
+# 2 - Some packages have different customizations on different nodes
+
 FUEL_CUSTOM_DIR=${1:-$FUEL_CUSTOM_DIR}
 FUEL_CUSTOM_DIR=${FUEL_CUSTOM_DIR:?"FUEL_CUSTOM_DIR is undefined!"}
 FUEL_PATCHES_DIR=${2:-$FUEL_PATCHES_DIR}
@@ -33,9 +39,6 @@ for NODE in ${ALL_NODES}; do
     done
 done
 
-cd "${FUEL_PROCESSED_DIR}" || exit 0
-ALL_PKGS=$(ls | sort)
-
 
 MD5_ARRAY=()
 get_array_id_for_md5()
@@ -53,8 +56,12 @@ get_array_id_for_md5()
 }
 
 
-RET=0
+cd "${FUEL_PROCESSED_DIR}" || exit 0
+ALL_PKGS=$(ls | sort)
+# If no customizations exit
+[ -z ${ALL_PKGS} ] && exit 0
 
+RET=0
 ARRAY=()
 imax=$(echo ${ALL_PKGS} | wc -w)
 jmax=$(echo ${ALL_NODES} | wc -w)
@@ -102,7 +109,6 @@ for PKG in ${ALL_PKGS}; do
         esac
         ((j++))
     done
-    set -x
     case ${ST} in
         0)
             cp "${FILE_PATCH} ${FUEL_UNIFIED_DIR}"
@@ -112,7 +118,6 @@ for PKG in ${ALL_PKGS}; do
                 cp "${FILE_PATCH}" "${FUEL_UNIFIED_DIR}"
             fi
     esac
-    set +x
     ((i++))
 done
 
@@ -139,4 +144,26 @@ if [ "${UNIFY_ONLY_PATCHES,,}" == "true" ]; then
     (( ${RET} == 1 )) &&
         RET=0
 fi
+
+case ${RET} in
+    0)
+        ;;
+    1)
+        echo "Some packages customized not on all nodes."
+        echo "Please make sure that these customizations are correct and"
+        echo "than you can use the following flag:"
+        echo '-e {"unify_only_patches":true}'
+        ;;
+    2)
+        echo "Some packages have different customizations on different nodes."
+        echo "Please resolve this issue:"
+        echo " 1. Identify which customization should be used"
+        echo " 2. Copy them to 'patches' folder"
+        echo ' 3. use -e {"use_current_customizations":false} for skipping'
+        echo "    verification and using of gathered customizations."
+        ;;
+    *)
+        ;;
+esac
+
 exit ${RET}

@@ -41,6 +41,7 @@ apt_src_dir:      "{{ apt_dir }}/sources.list.d"
 
 fuel_dir:           "/root/fuel_mos_mu"
 fuel_custom_dir:    "{{ fuel_dir }}/customizations"
+fuel_custom_backup_dir: "{{ fuel_dir }}/customizations_backup"
 fuel_patches_dir:   "{{ fuel_dir }}/patches"
 fuel_processed_dir: "{{ fuel_dir }}/processed"
 fuel_unified_dir:   "{{ fuel_dir }}/unified"

@@ -15,16 +15,19 @@ for PATCH in ${PATCHES}; do
     PATCH_OUT=$(patch -p1 -N -r- -d / < "${PATCH}")
     RES=$?
     echo -e "${PATCH_OUT}"
-    if (( "${RES}" == 0 )); then
+    if (( "${RES}" != 0 )); then
         if [ ${IGNORE_APPLIED_PATCHES,,} != "true" ]; then
-            echo "[ERROR]  Failed to apply ${PATCH}"
-            let "RET|=1"
-            continue
+            PATCH_RES=$(grep -E "Skipping|ignored" <<< "${PATCH_OUT}")
+            if [ -n "${PATCH_RES}" ]; then
+                echo "[ERROR]  Failed to apply ${PATCH}"
+                let "RET|=1"
+                continue
+            fi
         fi
         PATCH_RES=$(grep -Ev "patching|Skipping|ignored" <<< "${PATCH_RES}")
         if [ -n "${PATCH_RES}" ]; then
             echo "[ERROR]  Failed to apply ${PATCH}"
-            let "RET|=1"
+            let "RET|=2"
             continue
         fi
     fi

@@ -17,9 +17,6 @@
     dest: "{{ apt_src_dir }}/{{ item.name }}.list"
     force: yes
   with_items: "{{ apt_repos }}"
-  when: rollback is undefined or
-        not rollback or
-        item.name == rollback
 
 - name: Copy configured sources.lists
   copy:
@@ -27,9 +24,6 @@
     src: "{{ item.path }}"
     dest: "{{ apt_src_dir }}/{{ item.name }}.list"
   with_items: "{{ apt_sources_lists }}"
-  when: rollback is undefined or
-        not rollback or
-        item.name == rollback
 
 - name: Copy apt.conf
   template:

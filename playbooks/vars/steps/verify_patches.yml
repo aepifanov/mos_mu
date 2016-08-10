@@ -27,4 +27,4 @@ pkg_ver_for_verifiacation: "Candidate"
 
 # Ignore already applied patches
 # Disable by default since it might be double checked for avoiding any issues
-ignore_applied_patches: "False"
+ignore_applied_patches: false
