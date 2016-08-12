@@ -33,7 +33,7 @@ fi
 ar p "${CACHED_PKG_FILE}" data.tar.xz | tar xJ
 
 cd "${EXTRACTED_PKG}" || exit 1
-diff -Nur -x "*.pyc" -x "*.rej" "./${VERS}/${INSTALLED_PKG}" "${INSTALLED_PKG}" > "${DIFF}"
+diff -NrU 10 -x "*.pyc" -x "*.rej" "./${VERS}/${INSTALLED_PKG}" "${INSTALLED_PKG}" > "${DIFF}"
 case $? in
     [1])
         exit 0

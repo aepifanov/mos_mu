@@ -13,8 +13,8 @@
 #
 # !!! WARNING !!!
 
-# Perform apt-get update
-apt_update: true
+# Perform force apt-get update
+apt_update: false
 
 # Unify only patches for package
 # Patch will be unified (copied to unified folder) if
@@ -33,7 +33,7 @@ use_current_customizations: true
 # If you want istall MU you shoud use 'Candidate'
 # If you want just appy new patch on the current installation
 # you need to use 'Installed' and enable 'use_current_customizations"
-pkg_ver_for_verifiacation: "Candidate"
+pkg_ver_for_verification: "Candidate"
 
 # Ignore already applied patches
 # Disable by default since it might be double checked for avoiding any issues

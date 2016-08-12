@@ -13,8 +13,8 @@
 #
 # !!! WARNING !!!
 
-# Perform apt-get update
-apt_update: true
+# Perform force apt-get update
+apt_update: false
 
 # Clean gathered customizations on nodes and Fuel
 #

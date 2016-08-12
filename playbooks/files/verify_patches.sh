@@ -64,7 +64,7 @@ for PATCH in ${PATCHES}; do
 
     cp -f "${PATCHES_DIR}/${PATCH}" .
     PATCH_FILENAME=${PATCH##*/}
-    PATCH_OUT=$(patch -p1 -N -r- -d "${VERS}" < "${PATCH_FILENAME}")
+    PATCH_OUT=$(patch -p1 -Nu -r- -d "${VERS}" < "${PATCH_FILENAME}")
     RES=$?
     echo -e "${PATCH_OUT}"
     if (( ${RES} != 0 )); then

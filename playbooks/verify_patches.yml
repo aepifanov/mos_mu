@@ -8,8 +8,6 @@
 
   tasks:
     - include: tasks/apt_update.yml
-      when: apt_update is defined and
-            apt_update
 
     - include: tasks/verify_customizations.yml
 

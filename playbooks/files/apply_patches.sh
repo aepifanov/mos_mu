@@ -12,7 +12,7 @@ RET=0
 PATCHES=$(find . -type f -name "*.patch" | sort)
 for PATCH in ${PATCHES}; do
     echo -e "\n-------- ${PATCH}"
-    PATCH_OUT=$(patch -p1 -N -r- -d / < "${PATCH}")
+    PATCH_OUT=$(patch -p1 -Nu -r- -d / < "${PATCH}")
     RES=$?
     echo -e "${PATCH_OUT}"
     if (( "${RES}" != 0 )); then

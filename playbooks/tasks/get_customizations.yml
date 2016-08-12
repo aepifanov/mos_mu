@@ -1,0 +1,31 @@
+---
+
+- include: tasks/get_current_mu.yml
+
+- name: Clean customizations on Fuel
+  file:
+    path: "{{ fuel_custom_dir }}"
+    state: absent
+  delegate_to: localhost
+  run_once: true
+  when: gather_customizations is defined and
+        gather_customizations
+
+- name: Clean customizations
+  file:
+    path: "{{ custom_dir }}"
+    state: absent
+  when: gather_customizations is defined and
+        gather_customizations
+
+- name: Check if customizations were already gathered
+  stat:
+    path: "{{ custom_dir }}"
+  register: customizations_dir
+
+- include: tasks/verify_md5.yml
+  when: not customizations_dir.stat.exists
+
+- include: tasks/gather_customizations.yml
+  when: not customizations_dir.stat.exists
+

@@ -13,14 +13,11 @@
 #
 # !!! WARNING !!!
 
-# Perform apt-get update
-apt_update: true
+# Perform force apt-get update
+apt_update: false
 
-# Clean gathered customizations on nodes and Fuel
-#
-# Be carefull, you can loose your INITIAL customizations
-# if you perform it after failed upgrade or applying some patches!!!
-clean_customizations: false
+# Perform force gathering customizations
+gather_customizations: false
 
 # Which packet should be used for verification
 # - Installed
@@ -29,14 +26,8 @@ clean_customizations: false
 # If you want istall MU you shoud use 'Candidate'
 # If you want just appy new patch on the current installation
 # you need to use 'Installed' and enable 'use_current_customizations"
-pkg_ver_for_verifiacation: "Candidate"
+pkg_ver_for_verification: "Candidate"
 
 # Ignore already applied patches
 # Disable by default since it might be double checked for avoiding any issues
 ignore_applied_patches: false
-
-# Rollback on the specified release
-rollback: false
-
-# Apply all patches from patches folder
-apply_patches: true

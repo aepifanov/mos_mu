@@ -1,36 +1,15 @@
 ---
 
-- name: Clean APT files on host
+- name: Clean APT files
   file:
     path: "{{ apt_dir }}"
     state: absent
+  when: apt_update
 
-- name: Create APT config directory
-  file:
-    path: "{{ apt_src_dir }}"
-    state: directory
-  when: env_release == mos_release
+- name: Check if customizations were already gathered
+  stat:
+    path: "{{ apt_dir }}"
+  register: apt_directory
 
-- name: Generate sources.lists for configured repos
-  template:
-    src: "sources.list.j2"
-    dest: "{{ apt_src_dir }}/{{ item.name }}.list"
-    force: yes
-  with_items: "{{ apt_repos }}"
-
-- name: Copy configured sources.lists
-  copy:
-    remote_src: True
-    src: "{{ item.path }}"
-    dest: "{{ apt_src_dir }}/{{ item.name }}.list"
-  with_items: "{{ apt_sources_lists }}"
-
-- name: Copy apt.conf
-  template:
-    src: "apt.conf.j2"
-    dest: "{{ apt_conf }}"
-    force: yes
-
-- name: APT Update
-  command: apt-get -c {{ apt_conf }} update
-
+- include: tasks/apt_update_action.yml
+  when: not apt_directory.stat.exists

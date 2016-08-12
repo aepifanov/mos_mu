@@ -9,24 +9,14 @@
 
   tasks:
     - include: tasks/apt_update.yml
-      when: apt_update is defined and
-            apt_update
 
-    - include: tasks/verify_md5.yml
-
-    - include: tasks/clean_customizations.yml
-      when: clean_customizations is defined and
-            clean_customizations
-
-    - include: tasks/gather_customizations.yml
+    - include: tasks/get_customizations.yml
 
     - include: tasks/verify_patches.yml
 
     - include: tasks/rollback_upgrade.yml
 
     - include: tasks/apply_patches.yml
-      when: apply_patches is defined and
-            apply_patches
 
 - include: restart_services.yml
 

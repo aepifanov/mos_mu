@@ -1,22 +1,16 @@
 ---
 
-- name: Check if customizations were gathered
-  stat:
-    path: "{{ custom_dir }}"
-  register: customizations_dir
 
 - name: Make sure customizations directory exists
   file:
     path: "{{ custom_dir }}"
     state: directory
-  when: not customizations_dir.stat.exists
 
 - name: Make sure customizations directory for this node exists on Fuel
   file:
     path: "{{ fuel_custom_dir }}/{{ ansible_hostname }}/"
     state: directory
   delegate_to: localhost
-  when: not customizations_dir.stat.exists
 
 - name: Gather package customizations
   script: files/get_package_customizations.sh {{ item }}
@@ -25,8 +19,7 @@
     APT_CONF: "{{ apt_conf }}"
     CUSTOM_DIR: "{{ custom_dir }}"
   with_items: "{{ md5_verify_result.stdout_lines }}"
-  when: not customizations_dir.stat.exists and
-        md5_verify_result is defined and
+  when: md5_verify_result is defined and
         md5_verify_result.stdout != ""
 
 - name: Download customizations to Fuel
@@ -35,8 +28,7 @@
     dest: "{{ fuel_custom_dir }}/{{ ansible_hostname }}/"
     flat: true
   with_items: "{{ md5_verify_result.stdout_lines }}"
-  when: customizations_result is defined and
-        customizations_result.changed
+  when: customizations_result is defined
 
 - name: Make sure backup customizations directory exists
   run_once: true
@@ -44,12 +36,8 @@
   file:
     path: "{{ fuel_custom_backup_dir }}"
     state: directory
-  when: customizations_result is defined and
-        customizations_result.changed
+  when: customizations_result is defined
 
 - name: Make a backup of gathered customizations
   run_once: true
   local_action: shell tar -czf "{{ fuel_custom_backup_dir }}"/customizations-$(date +%m.%d.%y_%H-%M-%S).tgz "{{ fuel_custom_dir }}"
-  when: customizations_result is defined and
-        customizations_result.changed
-
