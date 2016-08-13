@@ -43,12 +43,16 @@ def get_inventory_json():
         inventory['_meta'] = {}
         inventory['_meta']['hostvars'] = {}
     for node in nodes_list:
+        if node['status'] != "ready":
+            continue
+        if node['online'] != True:
+            continue
         inventory['_meta']['hostvars'][node['fqdn']] = {}
         host_meta = inventory['_meta']['hostvars'][node['fqdn']]
         host_meta['ansible_host'] = node['ip']
         if node['cluster']:
             host_meta['mos_release'] = cluster_release[node['cluster']]
-            cluster = 'cluster_%d' % node['cluster']
+            cluster = 'env_%d' % node['cluster']
             if cluster not in inventory:
                 inventory[cluster] = {}
                 inventory[cluster]['hosts'] = []

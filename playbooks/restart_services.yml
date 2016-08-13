@@ -1,5 +1,5 @@
 ---
-- hosts: compute
+- hosts: env_{{ env_id }}:&compute
   vars_files:
     - "vars/mos_releases/{{ mos_release }}.yml"
   tasks:
@@ -10,7 +10,7 @@
     service: name={{ item }} state=restarted
     with_items: "{{ compute_services }}"
 
-- hosts: cinder
+- hosts: env_{{ env_id }}:&cinder
   vars_files:
     - "vars/mos_releases/{{ mos_release }}.yml"
   tasks:
@@ -21,7 +21,7 @@
     service: name={{ item }} state=restarted
     with_items: "{{ cinder_services }}"
 
-- hosts: controller
+- hosts: env_{{ env_id }}:&controller
   vars_files:
     - "vars/mos_releases/{{ mos_release }}.yml"
   tasks:

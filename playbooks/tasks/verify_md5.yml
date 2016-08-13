@@ -13,10 +13,3 @@
     msg: "{{ md5_verify_result.stdout_lines }}"
   when: md5_verify_result is defined and
         md5_verify_result.changed
-
-#- name: Show Warnings
-#  fail:
-#    msg: "[ERROR] The following package have update, but they are customized.\n{{ md5_verify_result.stderr }}"
-#  when: md5_verify_result is defined and
-#        md5_verify_result.stderr != ""
-

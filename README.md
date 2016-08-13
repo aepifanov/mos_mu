@@ -40,12 +40,12 @@ Usage:
 
 For the first step we would recommend to gather current customizations:
 ```
-ansible-playbook playbooks/gather_customizations.yml --limit="cluster_1"
+ansible-playbook playbooks/gather_customizations.yml -e '{"env_id":<env_id>}'
 ```
 
 Then check that all customizations are applied on new versions
 ```
-ansible-playbook playbooks/verify_patches.yml --limit="cluster_1"
+ansible-playbook playbooks/verify_patches.yml -e '{"env_id":<env_id>}'
 ```
 
 It is also strongly recommended to identify and copy common customizations in
@@ -54,7 +54,7 @@ manage patches to successfully execute previous **verify_patches.yml** step.
 
 Then you can continue to apply MU on environment
 ```
-ansible-playbook playbooks/apply_mu.yml --limit="cluster_1" -e '{"use_curret_customization":false}'
+ansible-playbook playbooks/apply_mu.yml -e '{"env_id":<env_id>}'
 ```
 
 This playbook contains all previous steps as well, so it might be used from
@@ -68,5 +68,5 @@ Rollback:
 Rollback (actually pseudo rollback) playbook can return your cluster on any
 specified release and apply gathered customizations:
 ```
-ansible-playbook playbooks/rollback.yml --limit="cluster_1" -e '{"rollback":"mu-1"}'
+ansible-playbook playbooks/rollback.yml -e '{"env_id":1,"rollback":"mu-1"}'
 ```

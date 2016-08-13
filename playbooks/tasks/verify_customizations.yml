@@ -18,7 +18,8 @@
   run_once: true
   debug:
     msg: "{{ verify_customizations_result.stdout_lines }}"
-  when: verify_customizations_result is defined
+  when: verify_customizations_result is defined and
+        verify_customizations_result.stdout != ""
 
 - name: Fail if verifying of customizations consistency failed
   run_once: true

@@ -1,9 +1,4 @@
 ---
-#####################
-#
-# Steps configuration
-#
-#####################
 
 # !!! WARNING !!!
 #
@@ -18,6 +13,9 @@ apt_update: false
 
 # Perform force gathering customizations
 gather_customizations: false
+
+# Verify patches once (not on all nodes)
+verify_patches_once: false
 
 # Which packet should be used for verification
 # - Installed

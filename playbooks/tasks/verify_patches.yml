@@ -1,12 +1,5 @@
 ---
 
-- name: Make sure patches directory exists on Fuel
-  file:
-    path: "{{ fuel_patches_dir }}"
-    state: directory
-  run_once: true
-  delegate_to: localhost
-
 - name: Clean patches folder
   file:
     path: "{{ patches_dir }}"
@@ -25,7 +18,7 @@
     recursive: true
   when: rollback is undefined
 
-- name: Roll out only gathered customizations
+- name: Roll out only local gathered customizations
   script: files/rollback_customizations.sh
   environment:
     CUSTOM_DIR: "{{ custom_dir }}"
@@ -35,7 +28,7 @@
 - name: Verify patches
   script: files/verify_patches.sh
   ignore_errors: True
-  run_once: not rollback
+  run_once: "{{ verify_patches_once }}"
   environment:
     APT_CONF: "{{ apt_conf }}"
     PATCHES_DIR: "{{ patches_dir }}"
@@ -47,11 +40,13 @@
 - name: Show results of Patches Verification
   debug:
     msg: "{{ verify_patches_result.stdout_lines }}"
+  run_once: "{{ verify_patches_once }}"
   when: verify_patches_result is defined and
-        verify_patches_result.changed
+        verify_patches_result.stdout != ""
 
 - name: Fail if patches verifying failed
   fail:
     msg: "[ERROR] Verifying of patches FAILED"
+  run_once: "{{ verify_patches_once }}"
   when: verify_patches_result is defined and
         verify_patches_result.failed

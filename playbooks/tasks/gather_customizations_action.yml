@@ -1,0 +1,43 @@
+---
+
+
+- name: Make sure customizations directory for this node exists on Fuel
+  file:
+    path: "{{ fuel_custom_dir }}/{{ ansible_hostname }}"
+    state: directory
+  delegate_to: localhost
+
+- name: Make sure customizations directory exists
+  file:
+    path: "{{ custom_dir }}"
+    state: directory
+
+- name: Gather package customizations
+  script: files/get_package_customizations.sh {{ item }}
+  register: customizations_result
+  environment:
+    APT_CONF: "{{ apt_conf }}"
+    CUSTOM_DIR: "{{ custom_dir }}"
+  with_items: "{{ md5_verify_result.stdout_lines }}"
+  when: md5_verify_result is defined and
+        md5_verify_result.changed
+
+- name: Download customizations to Fuel
+  fetch:
+    src:  "{{ custom_dir }}/{{ item }}/{{ item }}_customization.patch"
+    dest: "{{ fuel_custom_dir }}/{{ ansible_hostname }}/"
+    flat: true
+  with_items: "{{ md5_verify_result.stdout_lines }}"
+  when: customizations_result is defined
+
+- name: Make sure that directory for customizations backups exists on Fuel
+  run_once: true
+  delegate_to: localhost
+  file:
+    path: "{{ fuel_custom_backup_dir }}"
+    state: directory
+  when: customizations_result is defined
+
+- name: Make a backup of gathered customizations on Fuel
+  run_once: true
+  local_action: shell tar -czf "{{ fuel_custom_backup_dir }}"/customizations-$(date +%m.%d.%y_%H-%M-%S).tgz "{{ fuel_custom_dir }}"

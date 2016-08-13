@@ -1,6 +1,7 @@
 ---
 
-- hosts: all:!fuel
+- hosts: env_{{ env_id }}
+  any_errors_fatal: true
 
   vars_files:
     - "vars/mos_releases/{{ mos_release }}.yml"

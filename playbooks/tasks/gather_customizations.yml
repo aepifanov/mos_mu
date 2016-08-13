@@ -1,43 +1,38 @@
 ---
 
+- include: tasks/get_current_mu.yml
 
-- name: Make sure customizations directory exists
+- include: tasks/verify_md5.yml
+
+- name: Make sure patches directory exists on Fuel
+  file:
+    path: "{{ fuel_patches_dir }}"
+    state: directory
+  run_once: true
+  delegate_to: localhost
+
+- name: Clean customizations on Fuel
+  file:
+    path: "{{ fuel_custom_dir }}"
+    state: absent
+  delegate_to: localhost
+  run_once: true
+  when: gather_customizations is defined and
+        gather_customizations
+
+- name: Clean customizations
   file:
     path: "{{ custom_dir }}"
-    state: directory
+    state: absent
+  when: gather_customizations is defined and
+        gather_customizations
 
-- name: Make sure customizations directory for this node exists on Fuel
-  file:
+- name: Check if customizations were already gathered
+  stat:
     path: "{{ fuel_custom_dir }}/{{ ansible_hostname }}/"
-    state: directory
+  register: customizations
   delegate_to: localhost
 
-- name: Gather package customizations
-  script: files/get_package_customizations.sh {{ item }}
-  register: customizations_result
-  environment:
-    APT_CONF: "{{ apt_conf }}"
-    CUSTOM_DIR: "{{ custom_dir }}"
-  with_items: "{{ md5_verify_result.stdout_lines }}"
-  when: md5_verify_result is defined and
-        md5_verify_result.stdout != ""
+- include: tasks/gather_customizations_action.yml
+  when: not customizations.stat.exists
 
-- name: Download customizations to Fuel
-  fetch:
-    src:  "{{ custom_dir }}/{{ item }}/{{ item }}_customization.patch"
-    dest: "{{ fuel_custom_dir }}/{{ ansible_hostname }}/"
-    flat: true
-  with_items: "{{ md5_verify_result.stdout_lines }}"
-  when: customizations_result is defined
-
-- name: Make sure backup customizations directory exists
-  run_once: true
-  delegate_to: localhost
-  file:
-    path: "{{ fuel_custom_backup_dir }}"
-    state: directory
-  when: customizations_result is defined
-
-- name: Make a backup of gathered customizations
-  run_once: true
-  local_action: shell tar -czf "{{ fuel_custom_backup_dir }}"/customizations-$(date +%m.%d.%y_%H-%M-%S).tgz "{{ fuel_custom_dir }}"
