@@ -1,0 +1,27 @@
+---
+
+- name: Pacemaker status check
+  register: pcs_check_result
+  check_pacemaker:
+  when: "'controller' in group_names"
+
+- name: OpenStack services status check
+  script: files/os_health_check.sh
+  run_once: true
+  ignore_errors: true
+  register: os_health_check_result
+  when: "'controller' in group_names"
+
+- name: Show results of OpenStack health check
+  run_once: true
+  debug:
+    msg: "{{ os_health_check_result.stdout_lines }}"
+  when: os_health_check_result is defined and
+        os_health_check_result.stdout != ""
+
+- name: Fail if OpenStack health check failed
+  run_once: true
+  fail:
+    msg: "[ERROR] OpenStack services Health check FAILED"
+  when: os_health_check_result is defined and
+        os_health_check_result.failed

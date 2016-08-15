@@ -8,6 +8,10 @@
     - "vars/steps/gather_customizations.yml"
 
   tasks:
+    - include: tasks/health_checks.yml
+      when: health_check is defined and
+            health_check
+
     - include: tasks/apt_update.yml
 
     - include: tasks/gather_customizations.yml

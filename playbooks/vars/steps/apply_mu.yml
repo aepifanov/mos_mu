@@ -8,6 +8,10 @@
 #
 # !!! WARNING !!!
 
+# This option allows to control health check step
+# Use this option with caution
+health_check: true
+
 # Perform force apt-get update
 apt_update: false
 
@@ -39,3 +43,4 @@ pkg_ver_for_verification: "Candidate"
 # Ignore already applied patches
 # Disable by default since it might be double checked for avoiding any issues
 ignore_applied_patches: false
+
