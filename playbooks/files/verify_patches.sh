@@ -23,17 +23,14 @@ for PATCH in ${PATCHES}; do
     PKG=""
     # Get Package name and make sure that all affect the only one package
     for FILE in ${FILES}; do
-        PACK=$(dpkg -S "${FILE}") || {
-            echo "[WARN]    ${PATCH} will be skipped since target file '${FILE}' is absent";
-            rm "${PATCH}"
-            break; }
+        PACK=$(dpkg -S "${FILE}")
         PACK=$(echo -e "${PACK}" | awk '{print $1}')
         PACK=${PACK/\:/}
         [ -z "${PKG}" ] && { PKG="${PACK}"; continue; }
         [[ "${PACK}" == "${PKG}" ]] && continue
         echo "[ERROR]  ${PATCH} affects more than one package"
         let "RET=|1"
-        continue
+        continue 2
     done
 
     # Download new version and extract it
@@ -91,30 +88,23 @@ for PATCH in ${PATCHES}; do
     echo "[OK]     Applied successfully"
 done
 
-case "${RET}" in
-    0)
-        ;;
-    2)
-        ;;
-    4)
-        echo ""
-        echo "Some patches look as already applied."
-        echo "Please make sure that these patches were included in MU"
-        echo "If you sure that it is, you can use the following flag:"
-        echo ' {"ignore_applied_patches":true}'
-        echo "for ignoring these patches."
-        ;;
-    *)
-        echo ""
-        echo "Some patches failed to apply."
-        echo "Please resolve this issue:"
-        echo " 1. Go on the failed nodes and in 'verification' folder"
-        echo " 2. Handle the issue with patch applying."
-        echo " 3. Copy this patch  to 'patches' folder"
-        echo ' 4. use -e {"use_current_customizations":false} for skipping'
-        echo "    verification and using of gathered customizations."
-        ;;
-
-esac
+if (( (${RET}&4) == 4 )); then
+    echo ""
+    echo "Some patches look as already applied."
+    echo "Please make sure that these patches were included in MU"
+    echo "If you sure that it is, you can use the following flag:"
+    echo ' {"ignore_applied_patches":true}'
+    echo "for ignoring these patches."
+fi
+if (( (${RET}&8) == 8 )); then
+    echo ""
+    echo "Some patches failed to apply."
+    echo "Please resolve this issue:"
+    echo " 1. Go on the failed nodes in 'verification' folder"
+    echo " 2. Handle the issue with patch applying."
+    echo " 3. Copy this patch  to 'patches' folder"
+    echo ' 4. use -e {"use_current_customizations":false} for skipping'
+    echo "    verification and using of gathered customizations."
+fi
 
 exit "${RET}"

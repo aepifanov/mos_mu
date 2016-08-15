@@ -8,7 +8,7 @@
   environment:
     FUEL_CUSTOM_DIR: "{{ fuel_custom_dir }}"
     FUEL_PATCHES_DIR: "{{ fuel_patches_dir }}"
-    FUEL_PROCESSED_DIR: "{{ fuel_processed_dir }}"
+    FUEL_VERIFICATION_DIR: "{{ fuel_custom_verification }}"
     FUEL_UNIFIED_DIR: "{{ fuel_unified_dir }}"
     UNIFY_ONLY_PATCHES: "{{ unify_only_patches }}"
   when: use_current_customizations is defined and
