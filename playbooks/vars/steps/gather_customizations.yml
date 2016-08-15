@@ -8,6 +8,10 @@
 #
 # !!! WARNING !!!
 
+# This option allows to control health check step
+# Use this option with caution
+health_check: true
+
 # Perform force apt-get update
 apt_update: false
 
@@ -16,4 +20,3 @@ apt_update: false
 # Be carefull, you can loose your INITIAL customizations
 # if you perform it after failed upgrade or applying some patches!!!
 clean_customizations: false
-

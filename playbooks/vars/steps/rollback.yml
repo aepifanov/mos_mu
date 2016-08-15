@@ -8,6 +8,10 @@
 #
 # !!! WARNING !!!
 
+# This option allows to control health check step
+# Use this option with caution
+health_check: true
+
 # Perform force apt-get update
 apt_update: false
 
