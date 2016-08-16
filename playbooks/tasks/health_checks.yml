@@ -1,27 +1,55 @@
 ---
 
-- name: Pacemaker status check
+- name: Fuel status check
+  script: files/health_check_fuel.sh
+  environment:
+      ENV_ID: "{{ env_id }}"
+  run_once: true
+  ignore_errors: true
+  delegate_to: localhost
+  register: health_check_fuel_result
+
+- name: Show health of Fuel
+  run_once: true
+  debug:
+    msg: "{{ health_check_fuel_result.stdout_lines }}"
+  when: health_check_fuel_result is defined and
+        health_check_fuel_result.stdout != ""
+
+- name: Free disk space checking on nodes
+  shell: df -h | sed 's/%//' | awk '/dev/ {if ($5 > 90) {print $0; exit 1}}'
+  ignore_errors: true
+  register: disk_check_results
+
+- name: Show results of disk space checking
+  debug:
+    msg: "{{ health_check_os_result.stdout_lines }}"
+  when: disk_check_results.stdout != ""
+
+- name: Pacemaker status checking
   register: pcs_check_result
+  ignore_errors: true
   check_pacemaker:
   when: "'controller' in group_names"
 
-- name: OpenStack services status check
-  script: files/os_health_check.sh
+- name: OpenStack services status checking
+  script: files/health_check_os.sh
   run_once: true
   ignore_errors: true
-  register: os_health_check_result
+  register: health_check_os_result
   when: "'controller' in group_names"
 
-- name: Show results of OpenStack health check
+- name: Show health of Core OpenStack services
   run_once: true
   debug:
-    msg: "{{ os_health_check_result.stdout_lines }}"
-  when: os_health_check_result is defined and
-        os_health_check_result.stdout != ""
+    msg: "{{ health_check_os_result.stdout_lines }}"
+  when: health_check_os_result is defined and
+        health_check_os_result.stdout != ""
 
-- name: Fail if OpenStack health check failed
+- name: Fail if health check failed
   run_once: true
   fail:
     msg: "[ERROR] OpenStack services Health check FAILED"
-  when: os_health_check_result is defined and
-        os_health_check_result.failed
+  when: (health_check_os_result is defined and health_check_os_result.failed) or
+        disk_check_results.failed
+        pcs_check_result.failed
