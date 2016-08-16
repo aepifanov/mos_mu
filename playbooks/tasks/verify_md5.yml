@@ -1,15 +1,18 @@
 ---
 
 - name: Check MD5 sum for installed packages
-  script: files/verify_packages_ubuntu.sh
+  script: files/verify_md5_packages_ubuntu.sh
   environment:
     APT_CONF: "{{ apt_conf }}"
+  ignore_errors: true
   register: md5_verify_result
-  changed_when: md5_verify_result.stdout != "" and
-                md5_verify_result.rc == 0
 
 - name: Show results of MD5 sum verification
   debug:
     msg: "{{ md5_verify_result.stdout_lines }}"
-  when: md5_verify_result is defined and
-        md5_verify_result.changed
+  when: md5_verify_result.stdout != ""
+
+- name: Fail if MD5 verification failed
+  fail:
+    msg: "[ERROR] MD5 sum Verificationof FAILED"
+  when: md5_verify_result.rc != 0

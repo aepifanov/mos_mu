@@ -20,8 +20,9 @@ function md5_verify()
     cd / || return 2
 
     RESULT=$(nice -n 19 ionice -c 3 dpkg -V "${PKG}")
-    [ $? -eq 0 ] ||
+    (( $? != 0 )) &&
         return 2
+    RESULT=$(echo -e "${RESULT}" | awk '{if ($2 != "c") print $2}')
     [ -n "${RESULT}" ]  &&
         return 1
     return 0
@@ -30,12 +31,10 @@ function md5_verify()
 
 # Get list of all installed packages and check md5 sum for them
 CUSTOMIZED_PKGS=""
-ALL_PKGS=$(dpkg-query -W -f='${Package}\n') || exit 2
-# We work only with python packages
-PYTHON_PKGS=$(echo "${ALL_PKGS}" | grep "python-")
+ALL_PKGS=$(dpkg-query -W -f='${Package}\n') || exit -1
 
 RET=0
-for PKG in ${PYTHON_PKGS}; do
+for PKG in ${ALL_PKGS}; do
     md5_verify "${PKG}"
     case $? in
         0)
@@ -45,7 +44,7 @@ for PKG in ${PYTHON_PKGS}; do
                 CUSTOMIZED_PKGS+="\n"
             CUSTOMIZED_PKGS+="${PKG}"
 
-            PKG_POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}") || exit 2
+            PKG_POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}") || exit -1
             echo "${PKG_POLICY}" | grep -F "***" -A1 | grep Packages &> /dev/null
             if [ $? != 0 ]; then
                 echo "Unidentified package: \"${PKG}\" was installed not from the configured repositories."

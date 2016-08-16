@@ -19,7 +19,7 @@ PATCHES=$(find . -type f -name "*.patch" |sort)
 for PATCH in ${PATCHES}; do
     cd "${PATCHES_DIR}" || exit 2
     echo -e "\n-------- ${PATCH}"
-    FILES=$(cat "${PATCH}" | awk '/diff/ {getline; getline; print $2}')
+    FILES=$(cat "${PATCH}" | awk '/\+\+\+/ {print $2}')
     PKG=""
     # Get Package name and make sure that all affect the only one package
     for FILE in ${FILES}; do

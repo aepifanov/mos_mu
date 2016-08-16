@@ -24,7 +24,7 @@
 - name: Fail if verifying of customizations consistency failed
   run_once: true
   fail:
-    msg: "[ERROR] Verifying of customizations consistency FAILED"
+    msg: "[ERROR] Verification of customizations consistency FAILED"
   when: verify_customizations_result is defined and
         verify_customizations_result.failed
 

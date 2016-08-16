@@ -40,4 +40,4 @@
 
 - name: Make a backup of gathered customizations on Fuel
   run_once: true
-  local_action: shell tar -czf "{{ fuel_custom_backup_dir }}"/customizations-$(date +%m.%d.%y_%H-%M-%S).tgz "{{ fuel_custom_dir }}"
+  local_action: shell tar -czf "{{ fuel_custom_backup_dir }}"/customizations__$(date +%m.%d.%y__%H-%M-%S).tgz "{{ fuel_custom_dir }}"
