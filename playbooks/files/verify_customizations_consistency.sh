@@ -1,4 +1,4 @@
-VERIFICATION#!/bin/bash
+#!/bin/bash
 
 
 # Return:
@@ -59,7 +59,7 @@ get_array_id_for_md5()
 cd "${FUEL_VERIFICATION_DIR}" || exit 0
 ALL_PKGS=$(ls | sort)
 # If no customizations exit
-[ -z ${ALL_PKGS} ] && exit 0
+[ -z "${ALL_PKGS}" ] && exit 0
 
 RET=0
 ARRAY=()
