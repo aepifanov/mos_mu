@@ -57,6 +57,17 @@ for PKG in ${ALL_PKGS}; do
     esac
 done
 
+# Make sure that all upgradable packages were installed from configured repos
+ALL_PKGS=$(apt-get -c "${APT_CONF}" --just-print upgrade | grep "Inst" | awk '{print $2}' ) || exit -1
+for PKG in ${ALL_PKGS}; do
+    PKG_POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}") || exit -1
+    echo "${PKG_POLICY}" | grep -F "***" -A1 | grep Packages &> /dev/null
+    if [ $? != 0 ]; then
+        echo "Unidentified package: \"${PKG}\" was installed not from the configured repositories."
+        let "RET|=1"
+    fi
+done
+
 [ -z "${CUSTOMIZED_PKGS}" ] || echo -e "${CUSTOMIZED_PKGS}"
 
 exit "${RET}"
