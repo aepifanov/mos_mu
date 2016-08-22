@@ -12,7 +12,7 @@ RET=0
 PATCHES=$(find . -type f -name "*.patch" | sort)
 for PATCH in ${PATCHES}; do
     echo -e "\n-------- ${PATCH}"
-    FILES=$(cat "${PATCH}" | awk '/diff/ {getline; getline; print $2}')
+    FILES=$(cat "${PATCH}" | awk '/\+\+\+/ {print $2}')
     for FILE in ${FILES}; do
         dpkg -S "${FILE}" || {
             echo "[WARN]   ${PATCH} will be skipped since target file '${FILE}' is absent";
