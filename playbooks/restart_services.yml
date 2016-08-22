@@ -8,6 +8,9 @@
     tags: compute_services
     ignore_errors: yes
     service: name={{ item }} state=restarted
+    register: restart_result
+    failed_when: restart_result | failed and
+                 "no service or tool found for" not in restart_result.msg
     with_items: "{{ compute_services }}"
 
 - hosts: env_{{ env_id }}:&cinder
@@ -19,6 +22,9 @@
     tags: cinder_services
     ignore_errors: yes
     service: name={{ item }} state=restarted
+    register: restart_result
+    failed_when: restart_result | failed and
+                 "no service or tool found for" not in restart_result.msg
     with_items: "{{ cinder_services }}"
 
 - hosts: env_{{ env_id }}:&controller
@@ -30,6 +36,9 @@
     tags: controller_services
     ignore_errors: yes
     service: name={{ item }} state=restarted
+    register: restart_result
+    failed_when: restart_result | failed and
+                 "no service or tool found for" not in restart_result.msg
     with_items: "{{ controller_services }}"
 
   - name: Restart OpenStack services under Pacemaker
