@@ -42,11 +42,24 @@ check_cinder ()
 	fi
 }
 
+check_ceph ()
+{
+    OUT=$(ceph -s)
+    echo -e "${OUT}" | grep "command not found"
+    (( $? == 0 )) && return 0
+    echo -e "${OUT}" | grep HEALTH_OK
+	if (( $? != 0 )); then
+		let 'RET|=8'
+		OUTPUT+="### ceph:\n${OUT}\n"
+	fi
+}
+
 source /root/openrc
 
 check_nova
 check_neutron
 check_cinder
+check_ceph
 
 if (( ${RET} != 0 )); then
 	echo -e "${OUTPUT}"
