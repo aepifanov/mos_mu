@@ -34,20 +34,17 @@
 
 - name: OpenStack services status checking
   script: files/health_check_os.sh
-  run_once: true
   ignore_errors: true
   register: health_check_os_result
   when: "'controller' in group_names"
 
 - name: Show health of Core OpenStack services
-  run_once: true
   debug:
     msg: "{{ health_check_os_result.stdout_lines }}"
   when: health_check_os_result is defined and
         health_check_os_result.stdout != ""
 
 - name: Fail if health check failed
-  run_once: true
   fail:
     msg: "[ERROR] OpenStack services Health check FAILED"
   when: (health_check_os_result is defined and health_check_os_result.failed) or
