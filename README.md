@@ -12,9 +12,16 @@ Any comments/suggestions are welcome :)
 Prerequisites:
 --------------
 
-- epel: `yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm`
+Add standard CentOS and Epel repos for installing Ansible:
+
 - centos: `yum -y reinstall centos-release`
+- epel: `yum -y install epel-release`
 - ansible: `yum -y install ansible`
+
+Then delete these repos for avoiding any issues with compatibility with Fuel services:
+
+- epel: `yum -y remove epel-release`
+- centos: `rm /etc/yum.repos.d/CentOS-*.repo`
 
 Install:
 --------
