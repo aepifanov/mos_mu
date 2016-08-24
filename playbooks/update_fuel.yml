@@ -5,8 +5,12 @@
     - "vars/mos_releases/{{ mos_release }}.yml"
   tasks:
 
+  - name: Make backup directory exists on Fuel
+    file:
+      path: "{{ fuel_backup_dir }}"
+      state: directory
+
   - block:
-      - name: Stop docker containers
         command: dockerctl stop all
 
       - name: Make a backup of docker containers
