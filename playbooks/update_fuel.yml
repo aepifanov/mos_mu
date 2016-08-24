@@ -11,16 +11,16 @@
       state: directory
 
   - block:
+      - name: Stop docker containers
         command: dockerctl stop all
-
-      - name: Make a backup of docker containers
-        command: dockerctl backup "{{ fuel_backup_dir }}"
 
       - name: Make a backup of docker containers data
         shell: tar -czf "{{ fuel_backup_dir }}"/fuel__$(date +%m.%d.%y__%H-%M-%S).tgz /var/lib/fuel
 
       - name: Yum update
-        command: yum update
+        yum:
+          - name: *
+          - state: latest
 
       - name: Load new Fuel images
         command: docker load -i /var/www/nailgun/docker/images/fuel-images.tar
