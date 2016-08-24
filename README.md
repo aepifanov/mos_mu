@@ -12,10 +12,19 @@ Any comments/suggestions are welcome :)
 Prerequisites:
 --------------
 
+For Ansible installing you can use this script which actually performs the set of
+steps describes below:
+```
+./install_ansible.sh
+```
+
 Add standard CentOS and Epel repos for installing Ansible:
 
 - centos: `yum -y reinstall centos-release`
 - epel: `yum -y install epel-release`
+
+Install Ansible:
+
 - ansible: `yum -y install ansible`
 
 Then delete these repos for avoiding any issues with compatibility with Fuel services:
@@ -75,5 +84,5 @@ Rollback:
 Rollback (actually pseudo rollback) playbook can return your cluster on any
 specified release and apply gathered customizations:
 ```
-ansible-playbook playbooks/rollback.yml -e '{"env_id":1,"rollback":"mu-1"}'
+ansible-playbook playbooks/rollback.yml -e '{"env_id":<env_id>,"rollback":"<release_name>"}'
 ```
