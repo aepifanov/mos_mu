@@ -12,25 +12,13 @@ Any comments/suggestions are welcome :)
 Prerequisites:
 --------------
 
-For Ansible installing you can use this script which actually performs the set of
-steps describes below:
+For Ansible installing you can use [install_ansible.sh](install_ansible.sh) script which
+actually adds standard CentOS and EPEL reposistories for installing Ansible, installs Ansible
+and then deleteis these repos for avoiding any issues with compatibility with Fuel services.
+
 ```
 ./install_ansible.sh
 ```
-
-Add standard CentOS and Epel repos for installing Ansible:
-
-- centos: `yum -y reinstall centos-release`
-- epel: `yum -y install epel-release`
-
-Install Ansible:
-
-- ansible: `yum -y install ansible`
-
-Then delete these repos for avoiding any issues with compatibility with Fuel services:
-
-- epel: `yum -y remove epel-release`
-- centos: `rm /etc/yum.repos.d/CentOS-*.repo`
 
 Install:
 --------
@@ -39,6 +27,7 @@ Clone Git repository from GitHub on Fuel Master node:
 ```
 git clone https://github.com/aepifanov/mos_mu.git
 ```
+
 Configuration file:
 -------------------
 
@@ -53,6 +42,13 @@ Documentation:
 
 Usage:
 ------
+
+First of all you need to update Fuel master node:
+```
+ansible-playbook playbooks/update_fuel.yml
+```
+
+Then you can update OpenStack environments.
 
 For the first step we would recommend to gather current customizations:
 ```

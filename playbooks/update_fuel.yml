@@ -15,12 +15,12 @@
         command: dockerctl stop all
 
       - name: Make a backup of docker containers data
-        shell: tar -czf "{{ fuel_backup_dir }}"/fuel__$(date +%m.%d.%y__%H-%M-%S).tgz /var/lib/fuel
+        shell: tar -czf "{{ fuel_backup_dir }}"/fuel_backup__$(date +%m.%d.%y__%H-%M-%S).tgz /var/lib/fuel
 
       - name: Yum update
         yum:
-          - name: *
-          - state: latest
+          name: "*"
+          state: latest
 
       - name: Load new Fuel images
         command: docker load -i /var/www/nailgun/docker/images/fuel-images.tar
