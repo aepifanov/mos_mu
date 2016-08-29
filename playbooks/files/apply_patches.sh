@@ -14,7 +14,7 @@ for PATCH in ${PATCHES}; do
     echo -e "\n-------- ${PATCH}"
     FILES=$(cat "${PATCH}" | awk '/\+\+\+/ {print $2}')
     for FILE in ${FILES}; do
-        dpkg -S "${FILE}" || {
+        dpkg -S "${FILE}" &> /dev/null || {
             echo "[WARN]   ${PATCH} will be skipped since target file '${FILE}' is absent";
             continue 2; }
     done

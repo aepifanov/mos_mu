@@ -37,7 +37,6 @@ unknown_custom_pkgs: "fail"
 # - any other mean "fail"
 unknown_upgradable_pkgs: "fail"
 
-
 # Perform force gathering customizations
 gather_customizations: false
 

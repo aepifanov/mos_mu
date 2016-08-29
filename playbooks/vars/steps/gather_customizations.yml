@@ -37,8 +37,6 @@ unknown_custom_pkgs: "fail"
 # - any other mean "fail"
 unknown_upgradable_pkgs: "fail"
 
-# Clean gathered customizations on nodes and Fuel
-#
-# Be carefull, you can loose your INITIAL customizations
-# if you perform it after failed upgrade or applying some patches!!!
-clean_customizations: false
+# Perform force gathering customizations
+gather_customizations: false
+
