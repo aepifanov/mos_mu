@@ -77,6 +77,8 @@ controller_services:
     - nova-consoleauth
     - cinder-api
     - cinder-scheduler
+    - cinder-volume
+    - cinder-backup
     - glance-api
     - glance-registry
     - neutron-server
@@ -84,12 +86,14 @@ controller_services:
     - ceilometer-collector
     - ceilometer-alarm-notifier
     - ceilometer-agent-notification
+    - sahara-all
+    - openstack-murano-api
+    - openstack-murano-engine
     - apache2
 
 compute_services:
     - nova-compute
     - neutron-plugin-openvswitch-agent
-    - neutron-metadata-agent
     - ceilometer-agent-compute
     - cinder-volume
     - cinder-backup

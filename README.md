@@ -43,14 +43,7 @@ Documentation:
 Usage:
 ------
 
-First of all you need to update Fuel master node:
-```
-ansible-playbook playbooks/update_fuel.yml
-```
-
-Then you can update OpenStack environments.
-
-For the first step we would recommend to gather current customizations:
+First of all we would recommend to gather current customizations:
 ```
 ansible-playbook playbooks/gather_customizations.yml -e '{"env_id":<env_id>}'
 ```
@@ -60,19 +53,34 @@ Then check that all customizations are applied on new versions
 ansible-playbook playbooks/verify_patches.yml -e '{"env_id":<env_id>}'
 ```
 
-It is also strongly recommended to identify and copy common customizations in
+It is also strongly recommended to identify and copy original patches to
 **patches** folder on Fuel and disable **use_current_customization** flag and
 manage patches to successfully execute previous **verify_patches.yml** step.
 
-Then you can continue to apply MU on environment
+Then you can continue to apply MU on environment.
+
+Update Fuel node:
 ```
-ansible-playbook playbooks/apply_mu.yml -e '{"env_id":<env_id>}'
+ansible-playbook playbooks/update_fuel.yml
+```
+And apply MU:
+```
+ansiblee-playbook playbooks/apply_mu.yml -e '{"env_id":<env_id>}'
 ```
 
-This playbook contains all previous steps as well, so it might be used from
-the beginning, but in this case it will apply the current customizations
+This playbook contains gathering and verifying steps and you can start from
+Fuel updateing step, but in this case it will apply the current customizations
 and patches from **patches** folder from Fuel on each node and you will
 get exactly the same customizations that were before.
+
+Full restart:
+-------------
+
+For the applying updates for some services like CEPH, Libvirt and etc we would
+recommend to restart nodes one by one manually and at the same time monitor
+thier status.
+
+Please also read the upgrade section in documentation for these services.
 
 Rollback:
 ---------
