@@ -51,9 +51,6 @@ unify_only_patches: false
 # and then veified and applied on all nodes
 use_current_customizations: true
 
-# Verify patches once (not on all nodes)
-verify_patches_once: true
-
 # Which packet should be used for verification
 # - Installed
 # - Candidate

@@ -23,6 +23,9 @@ for PATCH in ${PATCHES}; do
     PKG=""
     # Get Package name and make sure that all affect the only one package
     for FILE in ${FILES}; do
+        [ -e "${FILE}" ] ||
+            { echo "[Absent] ${FILE}";
+              continue; }
         PACK=$(dpkg -S "${FILE}")
         PACK=$(echo -e "${PACK}" | awk '{print $1}')
         PACK=${PACK/\:/}
@@ -32,6 +35,9 @@ for PATCH in ${PATCHES}; do
         let "RET=|1"
         continue 2
     done
+
+    # Check if this package is installed on this node
+    [ -z "${PKG}" ] && continue
 
     # Download new version and extract it
     PKG_PATH=${VERIFICATION_DIR}/${PKG}
