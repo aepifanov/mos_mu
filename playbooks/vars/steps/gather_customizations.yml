@@ -15,6 +15,28 @@ health_check: true
 # Perform force apt-get update
 apt_update: false
 
+# Action for customized packages which were installed not from
+# specified repositories(uknown packages).
+# Since it is useless to get diff for unknown package and
+# somtimes it is impossible.
+#
+# Possible values:
+# - "fail"      (default)
+# - "keep"      (don't update these packages)
+# - "reinstall" (update these packages, lost current packages)
+# - any other mean "fail"
+unknown_custom_pkgs: "fail"
+
+# Action for upgradable packages which were installed not from
+# specified repositories(unknown packages).
+#
+# Possible values:
+# - "fail"      (default)
+# - "keep"      (don't update these packages)
+# - "reinstall" (update these packages, lost current packages)
+# - any other mean "fail"
+unknown_upgradable_pkgs: "fail"
+
 # Clean gathered customizations on nodes and Fuel
 #
 # Be carefull, you can loose your INITIAL customizations

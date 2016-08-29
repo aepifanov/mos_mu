@@ -14,4 +14,13 @@
 
     - include: tasks/apt_update.yml
 
-    - include: tasks/gather_customizations.yml
+    - name: Save current locked packages
+      shell:  apt-mark showhold
+      register: locked_packages
+
+    - block:
+      - include: tasks/gather_customizations.yml
+
+      always:
+        - name: Restore locked packages
+          shell: apt-mark showhold | xargs apt-mark unhold; echo "{{ locked_packages.stdout }}" | xargs apt-mark hold; exit 0

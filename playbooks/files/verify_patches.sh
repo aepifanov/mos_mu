@@ -1,7 +1,7 @@
 #!/bin/bash
 
 APT_CONF=${1:-$APT_CONF}
-APT_CONF=${APT_CONF:?"APT_CONF is undefined!"}
+APT_CONF=${APT_CONF:-"/root/mos_mu/apt/apt.conf"}
 PATCHES_DIR=${2:-$PATCHES_DIR}
 PATCHES_DIR=${PATCHES_DIR:?"PATCHES_DIR is undefined!"}
 VERIFICATION_DIR=${3:-$VERIFICATION_DIR}

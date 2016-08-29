@@ -3,9 +3,9 @@
 REL="Undefined"
 
 APT_CONF=${1:-$APT_CONF}
-APT_CONF=${APT_CONF:?"APT_CONF is undefined!"}
+APT_CONF=${APT_CONF:-"/root/mos_mu/apt/apt.conf"}
 APT_SRC_DIR=${2:-$APT_SRC_DIR}
-APT_SRC_DIR=${APT_SRC_DIR:?"APT_SRC_DIR is undefined!"}
+APT_SRC_DIR=${APT_SRC_DIR:-"/root/mos_mu/apt/sources.list.d"}
 
 REPOS=$(find "${APT_SRC_DIR}" -type f -name "*.list")
 for REPO in ${REPOS}; do

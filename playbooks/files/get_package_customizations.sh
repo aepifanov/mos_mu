@@ -2,7 +2,7 @@
 
 PKG=${1?:"Please specify package name."}
 APT_CONF=${APT_CONF:-$2}
-APT_CONF=${APT_CONF:-"/etc/apt/apt.conf"}
+APT_CONF=${APT_CONF:-"/root/mos_mu/apt/apt.conf"}
 CUSTOM_DIR=${CUSTOM_DIR:-$3}
 CUSTOM_DIR=${CUSTOM_DIR:?"CUSTOM_DIR is undefined!"}
 
