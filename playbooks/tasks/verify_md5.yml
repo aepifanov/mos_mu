@@ -22,7 +22,3 @@
 - name: Remove messages and leave only packages
   shell: echo "{{ verify_result.stdout }}" | grep -v '^\['; exit 0
   register: md5_verify_result
-
-- name: Show results of MD5 sum verification
-  debug:
-    msg: "{{ md5_verify_result.stdout_lines }}"
