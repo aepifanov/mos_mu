@@ -19,7 +19,7 @@ PATCHES=$(find . -type f -name "*.patch" |sort)
 for PATCH in ${PATCHES}; do
     cd "${PATCHES_DIR}" || exit 2
     echo -e "\n-------- ${PATCH}"
-    FILES=$(cat "${PATCH}" | awk '/\+\+\+/ {print $2}')
+    FILES=$(awk '/\+\+\+/ {print $2}' "${PATCH}")
     PKG=""
     # Get Package name and make sure that all affect the only one package
     for FILE in ${FILES}; do
@@ -32,7 +32,7 @@ for PATCH in ${PATCHES}; do
         [ -z "${PKG}" ] && { PKG="${PACK}"; continue; }
         [[ "${PACK}" == "${PKG}" ]] && continue
         echo "[ERROR]  ${PATCH} affects more than one package"
-        let "RET=|1"
+        (( RET |= 1 ))
         continue 2
     done
 
@@ -52,12 +52,12 @@ for PATCH in ${PATCHES}; do
     [ -e "${PKG_NAME}" ] ||
         apt-get -q -c "${APT_CONF}" download "${PKG}" &>/dev/null || {
             echo "[ERROR]  Failed to download ${PKG}";
-            let "RET|=2";
+            (( RET |= 2));
             continue; }
     [ -d "usr" ] ||
         ar p "${PKG_NAME}" data.tar.xz | tar xJ || {
             echo "[ERROR]  Failed to unpack ${PKG}";
-            let "RET|=2";
+            (( RET |= 2));
             continue; }
 
     # Verify patch applying
@@ -70,12 +70,12 @@ for PATCH in ${PATCHES}; do
     PATCH_OUT=$(patch -p1 -Nu -r- -d "${VERS}" < "${PATCH_FILENAME}")
     RES=$?
     echo -e "${PATCH_OUT}"
-    if (( ${RES} != 0 )); then
-        if [ ${IGNORE_APPLIED_PATCHES,,} != "true" ]; then
+    if (( RES != 0 )); then
+        if [ "${IGNORE_APPLIED_PATCHES,,}" != "true" ]; then
             PATCH_RES=$(grep -E "Skipping|ignored" <<< "${PATCH_OUT}")
             if [ -n "${PATCH_RES}" ]; then
                 echo "[ERROR]  Failed to apply ${PATCH}"
-                let "RET|=4"
+                (( RET |= 4))
                 continue
             fi
         fi
@@ -87,14 +87,14 @@ for PATCH in ${PATCHES}; do
         PATCH_RES=$(grep -Ev "patching|Skipping|ignored" <<< "${PATCH_OUT}")
         if [ -n "${PATCH_RES}" ]; then
             echo "[ERROR]  Failed to apply ${PATCH}"
-            let "RET|=8"
+            (( RET |= 8))
             continue
         fi
     fi
     echo "[OK]     Applied successfully"
 done
 
-if (( (${RET}&4) == 4 )); then
+if (( (RET & 4) == 4 )); then
     echo ""
     echo "Some patches look as already applied."
     echo "Please make sure that these patches were included in MU"
@@ -102,7 +102,7 @@ if (( (${RET}&4) == 4 )); then
     echo ' {"ignore_applied_patches":true}'
     echo "for ignoring these patches."
 fi
-if (( (${RET}&8) == 8 )); then
+if (( (RET & 8) == 8 )); then
     echo ""
     echo "Some patches failed to apply."
     echo "Please resolve this issue:"

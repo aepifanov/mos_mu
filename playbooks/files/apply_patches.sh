@@ -12,7 +12,7 @@ RET=0
 PATCHES=$(find . -type f -name "*.patch" | sort)
 for PATCH in ${PATCHES}; do
     echo -e "\n-------- ${PATCH}"
-    FILES=$(cat "${PATCH}" | awk '/\+\+\+/ {print $2}')
+    FILES=$(awk '/\+\+\+/ {print $2}' "${PATCH}")
     for FILE in ${FILES}; do
         dpkg -S "${FILE}" &> /dev/null || {
             echo "[WARN]   ${PATCH} will be skipped since target file '${FILE}' is absent";
@@ -22,18 +22,18 @@ for PATCH in ${PATCHES}; do
     RES=$?
     echo -e "${PATCH_OUT}"
     if (( "${RES}" != 0 )); then
-        if [ ${IGNORE_APPLIED_PATCHES,,} != "true" ]; then
+        if [ "${IGNORE_APPLIED_PATCHES,,}" != "true" ]; then
             PATCH_RES=$(grep -E "Skipping|ignored" <<< "${PATCH_OUT}")
             if [ -n "${PATCH_RES}" ]; then
                 echo "[ERROR]  Failed to apply ${PATCH}"
-                let "RET|=1"
+                (( RET |= 1 ))
                 continue
             fi
         fi
         PATCH_RES=$(grep -Ev "patching|Skipping|ignored" <<< "${PATCH_RES}")
         if [ -n "${PATCH_RES}" ]; then
             echo "[ERROR]  Failed to apply ${PATCH}"
-            let "RET|=2"
+            (( RET |= 2 ))
             continue
         fi
     fi

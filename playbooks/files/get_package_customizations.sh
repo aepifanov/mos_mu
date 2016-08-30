@@ -38,7 +38,7 @@ for FILE in ${FILES}; do
         1)
             ;;
         *)
-            let "RET|=1"
+            (( RET |= 1 ))
             ;;
     esac
 done

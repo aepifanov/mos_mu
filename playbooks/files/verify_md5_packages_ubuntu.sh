@@ -58,7 +58,7 @@ for PKG in ${ALL_PKGS}; do
                         ;;
                     *)
                         echo "[ERROR] Unknown customized package: \"${PKG}\" was installed not from the configured repositories."
-                        let "RET|=1"
+                        (( RET |= 1 ))
                         ;;
                 esac
                 continue
@@ -70,7 +70,7 @@ for PKG in ${ALL_PKGS}; do
             CUSTOMIZED_PKGS+="${PKG}"
             ;;
         *)
-            let "RET|=2"
+            (( RET |= 2 ))
             ;;
     esac
 done
@@ -91,7 +91,7 @@ for PKG in ${ALL_PKGS}; do
                 ;;
             *)
                 echo "[ERROR] Unknown upgradable package: '${PKG}' was installed not from the configured repositories."
-                let "RET|=2"
+                (( RET |= 2 ))
                 ;;
         esac
     fi
@@ -99,7 +99,7 @@ done
 
 [ -z "${CUSTOMIZED_PKGS}" ] || echo -e "${CUSTOMIZED_PKGS}"
 
-if (( (${RET}&1) == 1 )); then
+if (( (RET & 1) == 1 )); then
     echo ""
     echo "Some customized packages were installed not from the"
     echo "configured repositories. So customizations will not be"
@@ -111,7 +111,7 @@ if (( (${RET}&1) == 1 )); then
     echo " - keep"
     echo " - reinstall"
 fi
-if (( (${RET}&2) == 2 )); then
+if (( (RET & 2) == 2 )); then
     echo ""
     echo "Some upgradable packages were installed not from the"
     echo "configured repositories."
