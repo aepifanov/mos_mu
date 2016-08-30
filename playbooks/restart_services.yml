@@ -12,20 +12,8 @@
     failed_when: restart_result | failed and
                  "no service or tool found for" not in restart_result.msg
     with_items: "{{ compute_services }}"
-
-- hosts: env_{{ env_id }}:&cinder
-  vars_files:
-    - "vars/mos_releases/{{ mos_release }}.yml"
-  tasks:
-
-  - name: Restart Cinder services on Cinder nodes
-    tags: cinder_services
-    ignore_errors: yes
-    service: name={{ item }} state=restarted
-    register: restart_result
-    failed_when: restart_result | failed and
-                 "no service or tool found for" not in restart_result.msg
-    with_items: "{{ cinder_services }}"
+    when: restart is undefined or
+          restart
 
 - hosts: env_{{ env_id }}:&controller
   vars_files:
@@ -40,6 +28,8 @@
     failed_when: restart_result | failed and
                  "no service or tool found for" not in restart_result.msg
     with_items: "{{ controller_services }}"
+    when: restart is undefined or
+          restart
 
   - name: Restart OpenStack services under Pacemaker
     tags: controller_pcs
@@ -47,3 +37,5 @@
     ignore_errors: yes
     script: files/restart_pcs_resource.sh {{ item }}
     with_items: "{{ controller_pcs_resources }}"
+    when: restart is undefined or
+          restart
