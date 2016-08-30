@@ -57,6 +57,8 @@ controller_services:
     - nova-consoleauth
     - cinder-api
     - cinder-scheduler
+    - cinder-volume
+    - cinder-backup
     - glance-api
     - glance-registry
     - neutron-server
@@ -64,6 +66,10 @@ controller_services:
     - ceilometer-collector
     - ceilometer-alarm-notifier
     - ceilometer-agent-notification
+    - sahara-api
+    - sahara-engine
+    - murano-api
+    - murano-engine
     - apache2
 
 compute_services:
@@ -72,24 +78,6 @@ compute_services:
     - neutron-plugin-openvswitch-agent
     - neutron-metadata-agent
     - ceilometer-agent-compute
-
-cinder_services:
     - cinder-volume
     - cinder-backup
-
-ceilometer_pcs_services:
-    - p_ceilometer-agent-central
-    - p_ceilometer-alarm-evaluator
-
-ceilometer_services:
-    - ceilometer-collector
-    - ceilometer-agent-notification
-    - ceilometer-alarm-notifier
-    - ceilometer-api
-
-sahara_services:
-    - sahara-api
-
-ironic_services:
-    - ironic-conductor
 
