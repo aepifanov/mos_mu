@@ -1,6 +1,11 @@
 ---
 
-- name: Create APT config directory
+- name: Create APT preferences directory
+  file:
+    path: "{{ apt_dir }}/preferences.d"
+    state: directory
+
+- name: Create APT sources.lists directory
   file:
     path: "{{ apt_src_dir }}"
     state: directory
@@ -18,6 +23,7 @@
     src: "{{ item.path }}"
     dest: "{{ apt_src_dir }}/{{ item.name }}.list"
   with_items: "{{ apt_sources_lists }}"
+  when: apt_sources_lists is defined
 
 - name: Copy apt.conf
   template:

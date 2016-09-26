@@ -1,8 +1,5 @@
 Dir {
-    Etc {
-        SourceList "-";
-        SourceParts {{ apt_dir }}/sources.list.d/;
-    }
+    Etc {{ apt_dir }};
 }
 
 APT {
