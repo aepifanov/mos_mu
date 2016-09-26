@@ -9,6 +9,15 @@
   ignore_errors: true
   register: verify_result
 
+- name: Get list of upgrdable packages
+  shell:  apt-get -c "{{ apt_conf }}" --just-print upgrade | egrep -v "Conf|Inst" | egrep "^  |graded|required"; exit 0
+  register: upgradable_pkgs
+
+- name: Show upgradable packages
+  debug:
+    msg: "{{ upgradable_pkgs.stdout_lines }}"
+  when: upgradable_pkgs.stdout != ""
+
 - name: Show results of MD5 sum verification
   debug:
     msg: "{{ verify_result.stdout_lines }}"
