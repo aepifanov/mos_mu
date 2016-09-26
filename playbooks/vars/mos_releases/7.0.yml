@@ -92,3 +92,4 @@ compute_services:
     - ceilometer-agent-compute
     - cinder-volume
     - cinder-backup
+    - libvirtd
