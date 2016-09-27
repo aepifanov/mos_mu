@@ -15,6 +15,10 @@ apt_repos:
     url: "{{ fuel_url }}/{{ env_release }}-mu-2"
     repo: "mos{{ env_release }}-updates"
     type: "main restricted"
+  - name: "mu-3"
+    url: "{{ fuel_url }}/{{ env_release }}-mu-3"
+    repo: "mos{{ env_release }}-updates"
+    type: "main restricted"
 apt_sources_lists:
   - name: "fuel"
     path: "/etc/apt/sources.list.d/mos.list"
