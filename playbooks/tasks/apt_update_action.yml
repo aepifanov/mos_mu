@@ -5,6 +5,12 @@
     path: "{{ apt_dir }}/preferences.d"
     state: directory
 
+- name: Generate sources.lists for configured repos
+  template:
+    src: "preferences.j2"
+    dest: "{{ apt_dir }}/preferences.d/mos.pref"
+    force: yes
+
 - name: Create APT sources.lists directory
   file:
     path: "{{ apt_src_dir }}"
