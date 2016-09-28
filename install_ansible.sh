@@ -8,6 +8,8 @@ yum -y install epel-release
 yum -y install ansible
 # Install tree util
 yum -y install tree
+# Install jq util
+yum -y install jq
 
 # Delete CentOS and Epel repos to avoid issues with Fuel services
 yum -y remove epel-release

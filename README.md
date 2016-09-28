@@ -28,10 +28,8 @@ Conditions and Limitations
 - should be run on Fuel Master under root
 - supports only MOS versions: 6.1, 7.0 and 8.0.
 - supports only Ubuntu
-- all nodes should have access to the configured repos (mirror.fuel-infra.org by default)
 - doesn't start puppet which means that doesn't apply fixes which are in puppet manifests
 - needs manual restart for non OpenStack services (RabbitMQ, MySQL, Libvirt, CEPH and etc)
-- focused on only standard MOS deployment. If you have custom deployment schema please review playbooks
 - patches should have absolute target path
 
 Install
@@ -75,7 +73,7 @@ ansible-playbook playbooks/gather_customizations.yml -e '{"env_id":<env_id>}'
 
 During performing all steps you can use the flags for step management.
 [Apply MU steps](playbooks/vars/steps/apply_mu.yml)
-For example you can skip health check step or repeat generation of APT  files
+For example you can skip health check step or repeat generation of APT files
 or gathering customizations one more time.
 ```
 ansible-playbook playbooks/gather_customizations.yml -e '{"env_id":<env_id>,"health_check":false,"gather_customizations":true}'
@@ -133,3 +131,18 @@ specified release and apply gathered customizations:
 ```
 ansible-playbook playbooks/rollback.yml -e '{"env_id":<env_id>,"rollback":"<release_name>"}'
 ```
+
+Local repos mirrors
+-------------------
+
+If nodes don't have access to http://mirror.fuel-infra.org/ you can create and sync
+local mirrors:
+```
+ansible-playbook playbooks/create_mirrors.yml -e '{"env_id":<env_id>}'
+```
+
+Then for the using them you to add **fuel_url** external variable:
+```
+ansible-playbook playbooks/apply_mu.yml -e '{"env_id":<env_id>,"fuel_url":"http://<FUEL_IP>:8080"}'
+```
+
