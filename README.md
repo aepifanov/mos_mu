@@ -75,8 +75,11 @@ ansible-playbook playbooks/gather_customizations.yml -e '{"env_id":<env_id>}'
 
 During performing all steps you can use the flags for step management.
 [Apply MU steps](playbooks/vars/steps/apply_mu.yml)
-For example you can skip health check step or repeat generationof APT  files
+For example you can skip health check step or repeat generation of APT  files
 or gathering customizations one more time.
+```
+ansible-playbook playbooks/gather_customizations.yml -e '{"env_id":<env_id>,"health_check":false,"gather_customizations":true}'
+```
 Sometimes playbooks can stop with failing and recommend to use
 some flags for the solving the situation, for example, when patch
 were applied not on all nodes.
