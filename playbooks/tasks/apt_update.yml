@@ -6,7 +6,7 @@
     state: absent
   when: apt_update
 
-- name: Check if customizations were already gathered
+- name: Check if APT directory already exists
   stat:
     path: "{{ apt_dir }}"
   register: apt_directory

@@ -19,12 +19,12 @@
 - name: Free disk space checking on nodes
   shell: df -h | sed 's/%//' | awk '/dev/ {if ($5 > 90) {print $0; exit 1}}'
   ignore_errors: true
-  register: disk_check_results
+  register: disk_check_result
 
-- name: Show results of disk space checking
+- name: Show result of disk space checking
   debug:
     msg: "{{ health_check_os_result.stdout_lines }}"
-  when: disk_check_results.stdout != ""
+  when: disk_check_result.stdout != ""
 
 - name: Pacemaker status checking
   register: pcs_check_result
@@ -46,7 +46,9 @@
 
 - name: Fail if health check failed
   fail:
-    msg: "[ERROR] OpenStack services Health check FAILED"
+    msg: "[ERROR] Health Check failed. Please fix the issues (descibed above).
+          For ignoring this step you can use \"health_check\" flag."
   when: (health_check_os_result is defined and health_check_os_result.failed) or
-        disk_check_results.failed or
+        health_check_fuel_result or
+        disk_check_result.failed or
         pcs_check_result.failed

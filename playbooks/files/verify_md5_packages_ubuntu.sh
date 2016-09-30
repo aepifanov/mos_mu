@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script verifies MD5 sum for all installed python packages
+# This script verifies MD5 sum for all installed packages
 # Return:
 #     0 - ok
 #     1 - some customized packets were installed not from configured repositories
