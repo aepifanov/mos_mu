@@ -1,5 +1,10 @@
 ---
 
+- name: Make sure report directory exists
+  file:
+    path: "{{ report_dir }}"
+    state: directory
+
 - name: Check MD5 sum for installed packages
   script: files/verify_md5_packages_ubuntu.sh
   environment:
@@ -10,7 +15,7 @@
   register: verify_result
 
 - name: Get list of upgrdable packages
-  shell:  apt-get -c "{{ apt_conf }}" --just-print upgrade | egrep -v "Conf|Inst" | egrep "^  |graded|required"; exit 0
+  shell:  apt-get -c "{{ apt_conf }}" --just-print upgrade | tee "{{ report_dir }}/upgraded_pkgs" | egrep -v "Conf|Inst" | egrep "^  |graded|required"; exit 0
   register: upgradable_pkgs
 
 - name: Show upgradable packages
@@ -31,3 +36,5 @@
 - name: Remove messages and leave only packages
   shell: echo "{{ verify_result.stdout }}" | grep -v '^\['; exit 0
   register: md5_verify_result
+
+- include: get_report.yml

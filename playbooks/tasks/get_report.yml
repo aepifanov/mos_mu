@@ -1,0 +1,12 @@
+---
+
+- name: Make sure report directory for this node exists on Fuel
+  file:
+    path: "{{ fuel_report_dir }}/{{ ansible_hostname }}"
+    state: directory
+  delegate_to: localhost
+
+- name: Upload customizations to Fuel
+  command: "rsync -vazrcPt {{ ansible_hostname }}:/{{ report_dir }}/ {{ fuel_report_dir }}/{{ ansible_hostname }}/"
+  delegate_to: localhost
+
