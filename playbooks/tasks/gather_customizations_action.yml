@@ -22,7 +22,7 @@
   when: md5_verify_result is defined and
         md5_verify_result.changed
 
-- name: Download customizations to Fuel
+- name: Upload customizations to Fuel
   fetch:
     src:  "{{ custom_dir }}/{{ item }}/{{ item }}_customization.patch"
     dest: "{{ fuel_custom_dir }}/{{ ansible_hostname }}/"

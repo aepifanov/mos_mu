@@ -2,6 +2,7 @@
 - hosts: fuel
   connection: local
   vars_files:
+    - "vars/common.yml"
     - "vars/mos_releases/{{ mos_release }}.yml"
   tasks:
 

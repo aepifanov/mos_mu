@@ -4,6 +4,7 @@
   any_errors_fatal: true
 
   vars_files:
+    - "vars/common.yml"
     - "vars/mos_releases/{{ mos_release }}.yml"
     - "vars/steps/verify_patches.yml"
 

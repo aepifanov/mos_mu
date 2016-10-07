@@ -23,21 +23,6 @@ apt_sources_lists:
   - name: "fuel"
     path: "/etc/apt/sources.list.d/mos.list"
 
-mos_dir:          "/root/mos_mu"
-custom_dir:       "{{ mos_dir }}/customizations"
-patches_dir:      "{{ mos_dir }}/patches"
-verification_dir: "{{ mos_dir }}/verification"
-apt_dir:          "{{ mos_dir }}/apt"
-apt_conf:         "{{ apt_dir }}/apt.conf"
-apt_src_dir:      "{{ apt_dir }}/sources.list.d"
-
-fuel_backup_dir:          "/root/fuel_mos_mu/fuel_backup"
-fuel_dir:                 "/root/fuel_mos_mu/env_{{ env_id }}"
-fuel_custom_dir:          "{{ fuel_dir }}/customizations"
-fuel_custom_backup_dir:   "{{ fuel_dir }}/customizations_backup"
-fuel_patches_dir:         "{{ fuel_dir }}/patches"
-fuel_custom_verification: "{{ fuel_dir }}/customizations_verification"
-fuel_unified_dir:         "{{ fuel_dir }}/customizations_unified"
 
 controller_pcs_resources:
     - p_heat-engine
