@@ -1,6 +1,6 @@
 #!/bin/env python
 
-from fuelclient.client import Client
+from fuelclient.client import APIClient
 import json
 import re
 from subprocess import Popen, PIPE
@@ -32,7 +32,7 @@ def get_inventory_json():
         if not ssh_exec.returncode:
             fuel_meta['mos_release'] = fuel_release.strip(' :\n\'"')
 
-    fc = Client()
+    fc = APIClient
     nodes_list = fc.get_request('nodes')
     clusters_list = fc.get_request('clusters')
     cluster_release = {}
