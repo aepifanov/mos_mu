@@ -3,13 +3,13 @@
 env_release: "9.0"
 fuel_url: "http://mirror.fuel-infra.org/mos-repos/ubuntu"
 apt_repos:
-  - name: "GA"
+  - name: "9.0"
     url: "{{ fuel_url }}/{{ env_release }}"
     repo: "mos{{ env_release }}"
     type: "main restricted"
-  - name: "mu-1"
-    url: "{{ fuel_url }}/snapshots/9.0-2016-10-03-142321"
-    repo: "mos{{ env_release }}-proposed"
+  - name: "9.1"
+    url: "{{ fuel_url }}/{{ env_release }}"
+    repo: "mos{{ env_release }}-"
     type: "main restricted"
 apt_sources_lists:
   - name: "fuel"
