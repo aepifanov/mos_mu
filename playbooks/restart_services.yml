@@ -19,7 +19,6 @@
   vars_files:
     - "vars/mos_releases/{{ mos_release }}.yml"
   tasks:
-
     - name: Restart OpenStack services on controllers
       tags: controller_services
       ignore_errors: yes
@@ -31,18 +30,25 @@
       when: restart is undefined or
             restart
 
+    - name: Get OCFs which have "remove_artifacts_on_stop_start"
+      shell: fgrep -l remove_artifacts_on_stop_start /usr/lib/ocf/resource.d/fuel/*
+      register: ocfs
+
     - block:
         - name: Disable removing artifacts for neutron on restart
           command: 'sed -i "s/ remove_artifacts_on_stop_start=\$/ remove_artifacts_on_stop_start=false #\$/g" "{{ item }}"'
-          with_items:
-            - /usr/lib/ocf/resource.d/fuel/ocf-neutron-l3-agent
-            - /usr/lib/ocf/resource.d/fuel/ocf-neutron-dhcp-agent
+          with_items: "{{ ocfs.stdout_lines }}"
+          when: ocfs is defined and
+                ocfs.stdout != ""
 
         - name: Restart OpenStack services under Pacemaker
           tags: controller_pcs
-          run_once: true
           ignore_errors: yes
           script: files/restart_pcs_resource.sh {{ item }}
+          register: restart_result
+          changed_when: restart_result.rc < 100
+          failed_when: restart_result | failed and
+                       restart_result.rc < 100
           with_items: "{{ controller_pcs_resources }}"
 
       when: restart is undefined or
@@ -50,6 +56,6 @@
       always:
         - name: Enable removing artifacts for neutron on restart
           command: 'sed -i "s/ remove_artifacts_on_stop_start=false #\$/ remove_artifacts_on_stop_start=\$/g" "{{ item }}"'
-          with_items:
-            - /usr/lib/ocf/resource.d/fuel/ocf-neutron-l3-agent
-            - /usr/lib/ocf/resource.d/fuel/ocf-neutron-dhcp-agent
+          with_items: "{{ ocfs.stdout_lines }}"
+          when: ocfs is defined and
+                ocfs.stdout != ""
