@@ -9,7 +9,7 @@ apt_repos:
     type: "main restricted"
   - name: "9.1"
     url: "{{ fuel_url }}/{{ env_release }}"
-    repo: "mos{{ env_release }}-"
+    repo: "mos{{ env_release }}-updates"
     type: "main restricted"
 apt_sources_lists:
   - name: "fuel"
@@ -18,10 +18,10 @@ apt_sources_lists:
 
 controller_pcs_resources:
     - p_heat-engine
-    - p_neutron-l3-agent
-    - p_neutron-plugin-openvswitch-agent
-    - p_neutron-dhcp-agent
-    - p_neutron-metadata-agent
+    - neutron-l3-agent
+    - neutron-openvswitch-agent
+    - neutron-dhcp-agent
+    - neutron-metadata-agent
     - p_ceilometer-agent-central
     - p_ceilometer-alarm-evaluator
 
