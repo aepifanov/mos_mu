@@ -5,6 +5,15 @@
     path: "{{ report_dir }}"
     state: directory
 
+- name: Get list of upgrdable packages
+  shell:  apt-get -c "{{ apt_conf }}" --just-print upgrade | tee "{{ report_dir }}/upgraded_pkgs" | egrep -v "Conf|Inst" | egrep "^  |graded|required"; exit 0
+  register: upgradable_pkgs
+
+- name: Show upgradable packages
+  debug:
+    msg: "{{ upgradable_pkgs.stdout_lines }}"
+  when: upgradable_pkgs.stdout != ""
+
 - name: Check MD5 sum for installed packages
   script: files/verify_md5_packages_ubuntu.sh
   environment:
@@ -14,14 +23,11 @@
   ignore_errors: true
   register: verify_result
 
-- name: Get list of upgrdable packages
-  shell:  apt-get -c "{{ apt_conf }}" --just-print upgrade | tee "{{ report_dir }}/upgraded_pkgs" | egrep -v "Conf|Inst" | egrep "^  |graded|required"; exit 0
-  register: upgradable_pkgs
-
-- name: Show upgradable packages
+- name: Show results of MD5 sum verification
   debug:
-    msg: "{{ upgradable_pkgs.stdout_lines }}"
-  when: upgradable_pkgs.stdout != ""
+    msg: "{{ verify_result.stdout_lines }}"
+  when: verify_result.stdout != "" and
+        verify_result.rc != 0
 
 - name: Fail if MD5 verification failed
   fail:
