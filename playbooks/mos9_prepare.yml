@@ -3,10 +3,8 @@
 - hosts: fuel
   connection: local
   vars:
-    - mos9_centos_repo: http://mirror.fuel-infra.org/mos-repos/centos/mos9.0-centos7/snapshots/proposed-2016-10-03-142321/x86_64
-    - mos9_GPG_KEY: http://mirror.fuel-infra.org/mos-repos/centos/mos9.0-centos7/snapshots/proposed-2016-10-03-142321/RPM-GPG-KEY-mos9.0
-    #- mos9_centos_repo: http://mirror.fuel-infra.org/mos-repos/centos/mos9.0-centos7/updates/x86_64/
-    #- mos9_GPG_KEY: http://mirror.fuel-infra.org/mos-repos/centos/mos9.0-centos7/updates/RPM-GPG-KEY-mos9.0
+    - mos9_centos_repo: http://mirror.fuel-infra.org/mos-repos/centos/mos9.0-centos7/updates/x86_64/
+    - mos9_GPG_KEY: http://mirror.fuel-infra.org/mos-repos/centos/mos9.0-centos7/updates/RPM-GPG-KEY-mos9.0
 
   vars_files:
     - "vars/common.yml"
@@ -33,5 +31,3 @@
     - name: Prepare Environment
       command: update-prepare prepare env "{{ env_id }}"
 
-    #- name: Start No Operational deploy task
-    #  command: fuel2 env redeploy --noop "{{ env_id }}"
