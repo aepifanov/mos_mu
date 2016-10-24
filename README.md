@@ -42,7 +42,7 @@ cd mos_mu
 ```
 
 For Ansible installing you can use [install_ansible.sh](install_ansible.sh) script which
-actually adds standard CentOS and EPEL reposistories, installs Ansible and then deletes
+actually adds standard CentOS and EPEL repositories, installs Ansible and then deletes
 these repos for avoiding any issues with compatibility with Fuel services.
 ```
 ./install_ansible.sh
@@ -111,13 +111,13 @@ More details you can find here:
 
 And apply MU:
 ```
-ansiblee-playbook playbooks/apply_mu.yml -e '{"env_id":<env_id>}'
+ansible-playbook playbooks/apply_mu.yml -e '{"env_id":<env_id>}'
 ```
 More details you can find here:
 [apply_mu.yml](doc/architecture.md#apply_muyml)
 
 This playbook contains gathering and verifying steps and you can start from
-Fuel updateing step, but in this case it will apply the current customizations
+Fuel updating step, but in this case it will apply the current customizations
 and patches from **patches** folder from Fuel on each node and you will
 get exactly the same customizations that were before.
 
@@ -125,7 +125,7 @@ Full restart
 ------------
 
 For the applying updates for some services like CEPH, RabbitMQ and etc we would
-recommend to restart them manually and at the same time monitor thier status.
+recommend to restart them manually and at the same time monitor their status.
 
 Which services were updated you can find in output in section
 **Show upgradable packages**
