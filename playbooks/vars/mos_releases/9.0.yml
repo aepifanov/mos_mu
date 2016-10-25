@@ -63,3 +63,22 @@ compute_services:
     - cinder-backup
     - libvirtd
 
+fuel_services:
+    - astute
+    - cobblerd
+    - mcollective
+    - nailgun
+    - nginx
+    - openstack-keystone
+    - ostf
+    - rabbitmq-server
+    - oswl_flavor_collectord
+    - oswl_image_collectord
+    - oswl_keystone_user_collectord
+    - oswl_tenant_collectord
+    - oswl_vm_collectord
+    - oswl_volume_collectord
+    - receiverd
+    - statsenderd
+    - assassind
+

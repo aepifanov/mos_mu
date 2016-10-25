@@ -25,7 +25,7 @@ def get_inventory_json():
         fuel_meta = inventory['_meta']['hostvars'][fuel_hostname]
         fuel_meta['ansible_host'] = 'localhost'
         fuel_meta['ansible_connection'] = 'local'
-        cmd = ("awk -F ':' '/release/ {print $2}' /etc/nailgun/version.yaml")
+        cmd = ("fuel --fuel-version | awk -F ':' '/release/ {print $2}'")
         ssh_cmd = ['ssh', fuel_ip, cmd]
         ssh_exec = Popen(ssh_cmd, stdout=PIPE, stderr=PIPE)
         fuel_release, err = ssh_exec.communicate()

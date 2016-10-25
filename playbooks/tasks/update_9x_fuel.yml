@@ -1,0 +1,23 @@
+- include: backup_fuel.yml
+
+- name: Yum clean all
+  command: yum clean all
+
+- name: Yum update
+  command: yum -y update
+
+- name: Systemd loads fresh units
+  command: systemctl daemon-reload
+
+- name: Re-apply puppet master node configuration
+  command: /etc/puppet/modules/fuel/examples/deploy.sh
+
+- name: Restart Postgres
+  shell: systemctl restart postgresql && sleep 42
+
+- name: Restart other Fuel services
+  service: name={{ item }} state=restarted
+  with_items: "{{ fuel_services }}"
+
+- name: Rebuild bootstrap images
+  command: fuel-bootstrap build --activate

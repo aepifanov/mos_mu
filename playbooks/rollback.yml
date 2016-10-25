@@ -9,6 +9,14 @@
     - "vars/steps/rollback.yml"
 
   tasks:
+    - name: Check mos_realease less than 9.0
+      fail:
+        msg: "[ERROR] This playbook can be ran only on MOS older than 9.0"
+      when:
+        - mos_release != "6.1"
+        - mos_release != "7.0"
+        - mos_release != "8.0"
+
     - include: tasks/health_checks.yml
       when: health_check is defined and
             health_check

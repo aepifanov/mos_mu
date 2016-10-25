@@ -10,11 +10,18 @@
     - "vars/common.yml"
 
   tasks:
+    - name: Check mos_realease is 9.x
+      fail:
+        msg: "[ERROR] This playbook can be ran only on MOS 9.x"
+      when:
+        - mos_release != "9.0"
+        - mos_release != "9.1"
+
     - name: Add new MOS9 repository
       command: yum-config-manager --add-repo="{{ mos9_centos_repo }}"
       register: result_add_repo
       failed_when: result_add_repo | failed and
-                   "as is a duplicate of an existing repo" not in result_add_repo.msg
+                   "duplicate of an existing repo" not in result_add_repo.msg
 
     - name: Download GPG KEY
       command: rpm --import "{{ mos9_GPG_KEY }}"
@@ -23,11 +30,61 @@
       command: yum clean all
 
     - name: Install Cudet package
-      command: yum install -y python-cudet
+      yum:
+        name: python-cudet
+        state: latest
 
-    - name: Prepare Master
-      command: update-prepare prepare master
+    - name: Update special packages
+      yum:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+          - fuel-nailgun
+          - fuel-utils
+          - python-fuelclient
+          - rubygem-astute
+      register: result_nailgun_update
 
-    - name: Prepare Environment
-      command: update-prepare prepare env "{{ env_id }}"
+    - name: Reload systemd
+      command: systemctl daemon-reload
+
+    - name: Migrate Nailgun DB
+      command: nailgun_syncdb
+
+    - name: Update version
+      yum:
+        name: fuel-release
+        state: latest
+
+    - name: Get services list for Nailgun
+      shell: rpm -ql "$(rpm -q fuel-nailgun)" | grep '^/usr/lib/systemd/system/\w*.service$' | awk -F'/' '{print $NF}' | sed 's/.service$//'
+      register: nailgun_services
+
+    - name: Restart Nailgun services
+      service: name={{ item }} state=restarted
+      with_items: "{{ nailgun_services.stdout_lines }}"
+      when: nailgun_services.stdout != "" and
+            result_nailgun_update.changed
+
+- hosts: env_{{ env_id }}
+  any_errors_fatal: true
+  vars_files:
+    - "vars/common.yml"
+
+  tasks:
+  - name: Fix apt-preferences
+    command: sed -i -e 's|n=mos9.0-updates|n=mos9.0|' /etc/apt/preferences.d/mos-updates.pref
+
+  - name: Update MCollective
+    apt:
+      update_cache: yes
+      name: "{{ item }}"
+    with_items:
+      - nailgun-agent
+      - nailgun-mcagents
+
+  - name: Restart MCollective
+    service:
+      name: mcollective
+      state: restarted
 
