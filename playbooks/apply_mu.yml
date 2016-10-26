@@ -45,3 +45,5 @@
           shell: apt-mark showhold | xargs apt-mark unhold; echo "{{ locked_packages.stdout }}" | xargs apt-mark hold; exit 0
 
 - include: restart_services.yml
+
+- include: health_check.yml

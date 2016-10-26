@@ -21,3 +21,5 @@
     - include: tasks/apply_patches.yml
 
 - include: restart_services.yml
+
+- include: health_check.yml
