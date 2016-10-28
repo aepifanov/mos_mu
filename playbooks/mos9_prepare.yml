@@ -34,10 +34,10 @@
         name: python-cudet
         state: latest
 
-    - name: Fixing bug #1616119
+    - name: Fixing bug 1616119
       shell: sed -i "s/\$\.dpdk/\$\.get\('dpdk'\)/g" /etc/puppet/modules/osnailyfacter/modular/netconfig/tasks.yaml /etc/puppet/modules/openstack_tasks/examples/roles/tasks.yaml
 
-    - name: Sync puppet manifests for bug #1616119
+    - name: Sync puppet manifests for bug 1616119
       command: fuel rel --sync-deployment-tasks --dir /etc/puppet
 
     - name: Update special packages
@@ -85,6 +85,7 @@
     apt:
       update_cache: yes
       name: "{{ item }}"
+      state: latest
     with_items:
       - nailgun-agent
       - nailgun-mcagents
