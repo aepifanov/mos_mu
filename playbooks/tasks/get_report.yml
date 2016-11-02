@@ -6,7 +6,7 @@
     state: directory
   delegate_to: localhost
 
-- name: Upload customizations to Fuel
+- name: Upload reports to Fuel
   command: "rsync -vazrcPt {{ ansible_hostname }}:/{{ report_dir }}/ {{ fuel_report_dir }}/{{ ansible_hostname }}/"
   delegate_to: localhost
 
