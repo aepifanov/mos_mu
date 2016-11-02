@@ -22,7 +22,7 @@ The task ID is specified in the output of the configuration check command.
 
 Then verify the task summary:
 ```
-fuel2 task history show <TASK_ID> --include-summary -f yaml | python ./parse_report.py
+fuel2 task history show <TASK_ID> --include-summary -f yaml | python ./tool/parse_report.py
 ```
 
 The Noop run reports are stored on each OpenStack node in the
