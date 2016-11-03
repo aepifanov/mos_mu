@@ -3,8 +3,11 @@
 - hosts: fuel
   connection: local
   vars:
-    - mos9_centos_repo: http://mirror.fuel-infra.org/mos-repos/centos/mos9.0-centos7/updates/x86_64/
-    - mos9_GPG_KEY: http://mirror.fuel-infra.org/mos-repos/centos/mos9.0-centos7/updates/RPM-GPG-KEY-mos9.0
+    - mos9_centos_repo: http://mirror.fuel-infra.org/mos-repos/centos/mos9.0-centos7/snapshots/proposed-latest/x86_64/
+    - mos9_GPG_KEY: http://mirror.fuel-infra.org/mos-repos/centos/mos9.0-centos7/snapshots/proposed-latest/RPM-GPG-KEY-mos9.0
+
+    #- mos9_centos_repo: http://mirror.fuel-infra.org/mos-repos/centos/mos9.0-centos7/updates/x86_64/
+    #- mos9_GPG_KEY: http://mirror.fuel-infra.org/mos-repos/centos/mos9.0-centos7/updates/RPM-GPG-KEY-mos9.0
 
   vars_files:
     - "vars/common.yml"
@@ -16,6 +19,7 @@
       when:
         - mos_release != "9.0"
         - mos_release != "9.1"
+        - mos_release != "9.2"
 
     - name: Add new MOS9 repository
       command: yum-config-manager --add-repo="{{ mos9_centos_repo }}"
