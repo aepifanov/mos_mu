@@ -6,15 +6,14 @@ TIMEOUT=${2:-600}
 STATUS=$(pcs resource show "${RESOURCE}") ||
     { echo "WARNING: Resource ${RESOURCE} is not present!";
     exit 100;}
-
-pcs resource cleanup "${RESOURCE}" --wait="${TIMEOUT}"
+STATUS+=$(pcs resource show clone_"${RESOURCE}")
 
 STATUS=$(echo "${STATUS}" | fgrep "target-role=Stopped") &&
     { echo "WARNING: Resource ${RESOURCE} is stopped!";
     exit 1;}
 
-sleep 5
+pcs resource cleanup "${RESOURCE}" --wait="${TIMEOUT}"
 
-pcs resource debug-stop "${RESOURCE}" ||
+pcs resource disable "${RESOURCE}" --wait="${TIMEOUT}"   ||
     { echo "ERROR: Resource ${RESOURCE} failed to stop";
     exit 2;}
