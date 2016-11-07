@@ -1,22 +1,14 @@
 ---
 
-env_release: "8.0"
+env_release: "9.0"
 fuel_url: "http://mirror.fuel-infra.org/mos-repos/ubuntu"
 apt_repos:
-  - name: "GA"
+  - name: "9.0"
     url: "{{ fuel_url }}/{{ env_release }}"
     repo: "mos{{ env_release }}"
     type: "main restricted"
-  - name: "mu-1"
-    url: "{{ fuel_url }}/{{ env_release }}-mu-1"
-    repo: "mos{{ env_release }}-updates"
-    type: "main restricted"
-  - name: "mu-2"
-    url: "{{ fuel_url }}/{{ env_release }}-mu-2"
-    repo: "mos{{ env_release }}-updates"
-    type: "main restricted"
-  - name: "mu-3"
-    url: "{{ fuel_url }}/{{ env_release }}-mu-3"
+  - name: "9.1"
+    url: "{{ fuel_url }}/{{ env_release }}"
     repo: "mos{{ env_release }}-updates"
     type: "main restricted"
 apt_sources_lists:
@@ -26,11 +18,10 @@ apt_sources_lists:
 
 controller_pcs_resources:
     - p_heat-engine
-    - p_neutron-l3-agent
-    - p_neutron-vpn-agent
-    - p_neutron-plugin-openvswitch-agent
-    - p_neutron-dhcp-agent
-    - p_neutron-metadata-agent
+    - neutron-l3-agent
+    - neutron-openvswitch-agent
+    - neutron-dhcp-agent
+    - neutron-metadata-agent
     - p_ceilometer-agent-central
     - p_ceilometer-alarm-evaluator
 
@@ -71,4 +62,23 @@ compute_services:
     - cinder-volume
     - cinder-backup
     - libvirtd
+
+fuel_services:
+    - astute
+    - cobblerd
+    - mcollective
+    - nailgun
+    - nginx
+    - openstack-keystone
+    - ostf
+    - rabbitmq-server
+    - oswl_flavor_collectord
+    - oswl_image_collectord
+    - oswl_keystone_user_collectord
+    - oswl_tenant_collectord
+    - oswl_vm_collectord
+    - oswl_volume_collectord
+    - receiverd
+    - statsenderd
+    - assassind
 

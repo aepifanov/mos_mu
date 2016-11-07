@@ -1,0 +1,40 @@
+---
+
+- name: Make sure report directory exists
+  file:
+    path: "{{ report_dir }}"
+    state: directory
+
+- name: Get list of upgrdable packages
+  shell:  apt-get -c "{{ apt_conf }}" --just-print upgrade | tee "{{ report_dir }}/upgraded_pkgs" | egrep -v "Conf|Inst" | egrep "^  |graded|required"; exit 0
+  register: upgradable_pkgs
+
+- name: Show upgradable packages
+  debug:
+    msg: "{{ upgradable_pkgs.stdout_lines }}"
+  when: upgradable_pkgs.stdout != ""
+
+- name: Check MD5 sum for installed packages
+  script: files/verify_md5_packages_ubuntu.sh
+  environment:
+    APT_CONF: "{{ apt_conf }}"
+    UNKNOWN_CUSTOM_PKGS: "{{ unknown_custom_pkgs }}"
+    UNKNOWN_UPGRADABLE_PKGS: "{{ unknown_upgradable_pkgs }}"
+  ignore_errors: true
+  register: verify_result
+
+- name: Show results of MD5 sum verification
+  debug:
+    msg: "{{ verify_result.stdout_lines }}"
+  when: verify_result.stdout != "" and
+        verify_result.rc != 0
+
+- name: Fail if MD5 verification failed
+  fail:
+    msg: "[ERROR] MD5 sum Verificationof FAILED"
+  when: verify_result.rc != 0
+
+- name: Remove messages and leave only packages
+  shell: echo "{{ verify_result.stdout }}" | grep -v '^\[' | grep -v '^W\:' > "{{ report_dir }}/md5_results"; exit 0
+
+- include: get_report.yml

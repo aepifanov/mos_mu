@@ -27,6 +27,10 @@ apt_repos:
     url: "{{ fuel_url }}/{{ env_release }}-mu-5"
     repo: "mos{{ env_release }}-updates"
     type: "main restricted"
+  - name: "mu-6"
+    url: "{{ fuel_url }}/{{ env_release }}-mu-6"
+    repo: "mos{{ env_release }}-updates"
+    type: "main restricted"
 apt_sources_lists:
   - name: "fuel"
     path: "/etc/apt/sources.list.d/mos.list"
@@ -34,6 +38,7 @@ apt_sources_lists:
 controller_pcs_resources:
     - p_heat-engine
     - p_neutron-l3-agent
+    - p_neutron-vpn-agent
     - p_neutron-plugin-openvswitch-agent
     - p_neutron-dhcp-agent
     - p_neutron-metadata-agent

@@ -1,5 +1,17 @@
 ---
 
+- name: Read results of MD5 Sum verification
+  command: cat "{{ report_dir }}/md5_results"
+  register: md5_verify_result
+
+- name: APT reinstall customized packages
+  command: "apt-get -y -c {{ apt_conf }} install --reinstall {{ item }}"
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+  with_items: "{{ md5_verify_result.stdout_lines }}"
+  when: md5_verify_result is defined and
+        md5_verify_result.stout != ""
+
 - name: Apply patches
   ignore_errors: true
   script: files/apply_patches.sh

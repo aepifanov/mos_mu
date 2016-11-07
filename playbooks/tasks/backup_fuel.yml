@@ -1,0 +1,2 @@
+- name: Make a backup of docker containers data
+  shell: tar -czf "{{ fuel_backup_dir }}"/fuel_backup__$(date +%m.%d.%y__%H-%M-%S).tgz /var/lib/fuel

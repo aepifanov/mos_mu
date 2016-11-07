@@ -1,0 +1,25 @@
+---
+
+- hosts: env_{{ env_id }}
+  any_errors_fatal: true
+  vars:
+      steps: "apply_mu"
+
+  vars_files:
+    - "vars/common.yml"
+    - "vars/mos_releases/{{ mos_release }}.yml"
+    - "vars/steps/{{ steps }}.yml"
+
+  tasks:
+    - name: Check mos_realease is 9.x
+      fail:
+        msg: "[ERROR] This playbook can be ran only on MOS 9.x"
+      when:
+        - mos_release != "9.0"
+        - mos_release != "9.1"
+
+    - include: tasks/apply_patches.yml
+
+- include: restart_services.yml
+
+- include: health_check.yml

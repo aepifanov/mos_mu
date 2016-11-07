@@ -41,3 +41,12 @@
 - name: Make a backup of gathered customizations on Fuel
   run_once: true
   local_action: shell tar -czf "{{ fuel_custom_backup_dir }}"/customizations__$(date +%m.%d.%y__%H-%M-%S).tgz "{{ fuel_custom_dir }}"
+
+- name: Make a backup of /etc
+  shell: tar -czf "{{ report_dir }}"/etc.tgz /etc/
+
+- include: tasks/get_report.yml
+
+- name: Make a backup of reports on Fuel
+  run_once: true
+  local_action: shell tar -czf "{{ fuel_custom_backup_dir }}"/reports__$(date +%m.%d.%y__%H-%M-%S).tgz "{{ fuel_report_dir }}"

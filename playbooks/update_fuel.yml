@@ -4,29 +4,18 @@
   vars_files:
     - "vars/common.yml"
     - "vars/mos_releases/{{ mos_release }}.yml"
-  tasks:
 
+  tasks:
   - name: Make backup directory exists on Fuel
     file:
       path: "{{ fuel_backup_dir }}"
       state: directory
 
-  - block:
-      - name: Stop docker containers
-        command: dockerctl stop all
+  - include: tasks/update_old_fuel.yml
+    when: mos_release == "6.1" or
+          mos_release == "7.0" or
+          mos_release == "8.0"
 
-      - name: Make a backup of docker containers data
-        shell: tar -czf "{{ fuel_backup_dir }}"/fuel_backup__$(date +%m.%d.%y__%H-%M-%S).tgz /var/lib/fuel
-
-      - name: Yum update
-        command: yum -y update
-
-      - name: Load new Fuel images
-        command: docker load -i /var/www/nailgun/docker/images/fuel-images.tar
-
-      - name: Destroy docker containers
-        command: dockerctl destroy all
-
-    always:
-      - name: Start docker containers
-        command: dockerctl start all
+  - include: tasks/update_9x_fuel.yml
+    when: mos_release == "9.0" or
+          mos_release == "9.1"

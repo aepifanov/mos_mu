@@ -1,6 +1,6 @@
 #!/bin/env python
 
-from fuelclient.client import Client
+from fuelclient.client import APIClient
 import json
 import re
 from subprocess import Popen, PIPE
@@ -25,14 +25,14 @@ def get_inventory_json():
         fuel_meta = inventory['_meta']['hostvars'][fuel_hostname]
         fuel_meta['ansible_host'] = 'localhost'
         fuel_meta['ansible_connection'] = 'local'
-        cmd = ("awk -F ':' '/release/ {print $2}' /etc/nailgun/version.yaml")
+        cmd = ("fuel --fuel-version | awk -F ':' '/release/ {print $2}'")
         ssh_cmd = ['ssh', fuel_ip, cmd]
         ssh_exec = Popen(ssh_cmd, stdout=PIPE, stderr=PIPE)
         fuel_release, err = ssh_exec.communicate()
         if not ssh_exec.returncode:
             fuel_meta['mos_release'] = fuel_release.strip(' :\n\'"')
 
-    fc = Client()
+    fc = APIClient
     nodes_list = fc.get_request('nodes')
     clusters_list = fc.get_request('clusters')
     cluster_release = {}

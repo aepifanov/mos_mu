@@ -1,0 +1,19 @@
+- block:
+    - name: Stop docker containers
+      command: dockerctl stop all
+
+    - include: backup_fuel.yml
+
+    - name: Yum update
+      command: yum -y update
+
+    - name: Load new Fuel images
+      command: docker load -i /var/www/nailgun/docker/images/fuel-images.tar
+
+    - name: Destroy docker containers
+      command: dockerctl destroy all
+
+  always:
+    - name: Start docker containers
+      command: dockerctl start all
+
