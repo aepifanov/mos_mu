@@ -1,0 +1,71 @@
+---
+
+# !!! WARNING !!!
+#
+# Before modifiyng PLEASE read the documenation
+# and make sure that you completly understand what
+# means each step and how it impacts other steps
+#
+
+# This option allows to control health check step
+# Use this option with caution
+#
+#health_check: false
+
+# This option is used to control addition of defined
+# temporary ceph_repo to existing apt config. You
+# have to manually configure correct preference
+# values for added repo if it uses custom package
+# labeling scheme (i.e. Fuel doesn't configures
+# preferences for packages in specified repo at all
+# or doesn't do it correctly)
+#
+#add_ceph_repo: false
+
+# This option is used to define temporary ceph repo
+#
+#ceph_repo: "deb http://mirror.fuel-infra.org/mos-repos/ubuntu/snapshots/9.0-latest/ mos9.0-proposed main restricted"
+
+# A list of ceph/radosgw packages and libraries from
+# MOS repo. This list will be used to search for
+# installed ceph packages and update them.
+ceph_packages:
+  - ceph-common-dbg
+  - ceph-common
+  - ceph-dbg
+  - ceph-fs-common-dbg
+  - ceph-fs-common
+  - ceph-fuse-dbg
+  - ceph-fuse
+  - ceph-mds-dbg
+  - ceph-mds
+  - ceph-resource-agents
+  - ceph-test-dbg
+  - ceph-test
+  - ceph
+  - libcephfs-dev
+  - libcephfs-java
+  - libcephfs-jni-dbg
+  - libcephfs-jni
+  - libcephfs1-dbg
+  - libcephfs1
+  - librados-dev
+  - librados2-dbg
+  - librados2
+  - libradosstriper-dev
+  - libradosstriper1-dbg
+  - libradosstriper1
+  - librbd-dev
+  - librbd1-dbg
+  - librbd1
+  - python-ceph
+  - python-cephfs
+  - python-rados
+  - python-rbd
+  - radosgw-dbg
+# We will update radosgw separately
+#  - radosgw
+  - rbd-fuse-dbg
+  - rbd-fuse
+  - rest-bench-dbg
+  - rest-bench
