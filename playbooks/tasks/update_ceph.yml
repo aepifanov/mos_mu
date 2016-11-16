@@ -1,0 +1,16 @@
+---
+
+- name: Check if Package is installed
+  shell: |
+    apt-cache policy {{ item }} | grep Installed | grep -v none 1>/dev/null; echo $?
+  register: is_installed
+  with_items: "{{ ceph_packages }}"
+
+#- debug: msg="pkg_name={{item.item}}, shell.stdout={{item.stdout}}"
+#  with_items: "{{ is_installed.results }}"
+
+- name: Update Package only if installed
+  apt: name={{ item.item }}
+    state=latest
+  when: item.stdout == "0"
+  with_items: "{{ is_installed.results }}"
