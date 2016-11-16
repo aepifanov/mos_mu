@@ -14,6 +14,7 @@ VERS=${VERS_ORIG/\:/\%3a}
 
 PKG_FILE="${PKG}_${VERS}_all.deb"
 CACHED_PKG_FILE="/var/cache/apt/archives/${PKG_FILE}"
+ORIG_PKG="${CACHED_PKG_FILE}"
 
 DIFF="${EXTRACTED_PKG}/${PKG}_customization.patch"
 
@@ -25,9 +26,9 @@ cd "${EXTRACTED_PKG}/${VERS}"     && rm -rf ./*
 
 if ! [ -e "${CACHED_PKG_FILE}" ]; then
     apt-get -c "${APT_CONF}" download "${PKG}=${VERS_ORIG}" || exit -1
-    CACHED_PKG_FILE=${PKG_NAME}
+    ORIG_PKG=${PKG_FILE}
 fi
-ar p "${CACHED_PKG_FILE}" data.tar.xz | tar xJ || exit -1
+ar p "${ORIG_PKG}" data.tar.xz | tar xJ || exit -1
 
 cd "${EXTRACTED_PKG}" || exit -1
 RET=0
