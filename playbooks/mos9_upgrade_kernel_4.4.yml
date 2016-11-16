@@ -1,0 +1,17 @@
+---
+- hosts: fuel
+  connection: local
+  tasks:
+
+    - name: Upgrade kernel data on Fuel
+      script: files/mos9_env_kernel_upgrade.sh
+      environment:
+          ENV_ID: "{{ env_id }}"
+
+- hosts: env_{{ env_id }}
+  any_errors_fatal: true
+  tasks:
+
+    - name: Upgrade kernel on node
+      script: files/mos9_node_kernel_upgrade.sh
+
