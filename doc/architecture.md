@@ -11,6 +11,7 @@
    - [apply_mu.yml](#apply_muyml)
    - [restart_services.yml](#restart_servicesyml)
    - [rollback.yml](#rollbackyml)
+   - [update_ceph.yml](#update_cephyml)
  - [Tasks](#tasks)
    - [health_checks.yml](health_checksyml)
    - [apt_update.yml](#apt_updateyml)
@@ -23,6 +24,8 @@
    - [apt_upgrade.yml](#apt_upgradeyml)
    - [apply_patches.yml](#apply_patchesyml)
    - [rollback_upgrade.yml](#rollback_upgradeyml)
+   - [update_ceph.yml](#tasksupdate_cephyml)
+   - [restart_ceph.yml](#restart_cephyml)
 
 
 Inventory
@@ -298,6 +301,31 @@ and then include one more playbook:
 Uses [vars/steps/rollback.yml](../playbooks/vars/steps/rollback.yml) set of
 flags.
 
+[update_ceph.yml](../playbooks/update_ceph.yml)
+-----------------------------------------
+This is a separate playbook that uses some ideas and solutions introduced in
+ceph-ansible project to update ceph installations deployed by Fuel.
+
+Runs the following tasks:
+* [health_checks.yml](#health_checksyml)
+* [update_ceph.yml](#tasksupdate_cephyml)
+* [restart_ceph.yml](#restart_cephyml)
+
+MON, OSD and RGW nodes are updated one-by-one. The following features are used
+to protect data and achieve zero downtime:
+* Quorum is checked after MONs services restart to ensure that updated host
+came up and running.
+* scrub and deep-scrub operations are stopped during OSDs update.
+* noout flag is used to activate maintenance mode for a cluster.
+* Clusters health is checked to ensure that updated OSD came up and running.
+* Any failure during any update play will stop the whole update process.
+
+This playbook should be runned with env_id specified using standard flag **-e**.
+For example: `-e '{"env_id":1}'`.
+
+Uses [vars/steps/update_ceph.yml](../playbooks/vars/steps/apply_mu.yml) set
+of flags.
+
 
 Tasks
 =====
@@ -421,4 +449,14 @@ Runs the following tasks:
 * Correct dependencies.
 * Perform APT upgrade using only specified in variable **rollback** MU name.
 * Reinstall customized packages
+
+[tasks/update_ceph.yml](../playbooks/tasks/update_ceph.yml)
+---------------------------------------------------------------
+* Gather a list of installed ceph packages.
+* Update all listed packages one-by-one.
+
+[restart_ceph.yml](../playbooks/tasks/restart_ceph.yml)
+---------------------------------------------------------------
+* Restart specific ceph services.
+* Ensure that restart finished correctly and services are up and running
 
