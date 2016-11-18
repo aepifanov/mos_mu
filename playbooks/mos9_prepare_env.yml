@@ -1,0 +1,25 @@
+---
+
+- hosts: env_{{ env_id }}
+  any_errors_fatal: true
+  vars_files:
+    - "vars/common.yml"
+
+  tasks:
+  - name: Fix apt-preferences
+    command: sed -i -e 's|n=mos9.0-updates|n=mos9.0|' /etc/apt/preferences.d/mos-updates.pref
+
+  - name: Update MCollective
+    apt:
+      update_cache: yes
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - nailgun-agent
+      - nailgun-mcagents
+
+  - name: Restart MCollective
+    service:
+      name: mcollective
+      state: restarted
+

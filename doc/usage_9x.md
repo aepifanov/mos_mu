@@ -7,7 +7,13 @@ Usage for MOS 9.x
 
 For the first step you should make a perform a preparation playbook:
 ```
-ansible-playbook playbooks/mos9_prepare.yml -e '{"env_id":<env_id>}'
+ansible-playbook playbooks/mos9_prepare_fuel.yml
+```
+
+and then for each environment:
+
+```
+ansible-playbook playbooks/mos9_prepare_env.yml -e '{"env_id":<env_id>}'
 ```
 
 2. Check configuration customizations
@@ -103,7 +109,13 @@ To verify the update progress, use the Fuel web UI Dashboard tab or run
 `fuel2 task show <TASK_ID>`. The task ID is specified in the output of the
 `fuel2 update –env <ENV_ID>` install command.
 
-7. Apply patches
+7. Upgrade kernel on 4.4
+------------------------
+```
+ansible-playbook playbooks/mos9_upgrade_kernel_4.4.yml -e '{"env_id":<env_id>}'
+```
+
+8. Apply patches
 ----------------
 ```
 ansible-playbook playbooks/mos9_apply_patches.yml -e '{"env_id":<env_id>}'
