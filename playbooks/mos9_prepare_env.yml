@@ -4,10 +4,22 @@
   any_errors_fatal: true
   vars_files:
     - "vars/common.yml"
+    - "vars/mos_releases/{{ mos_release }}.yml"
 
   tasks:
   - name: Fix apt-preferences
     command: sed -i -e 's|n=mos9.0-updates|n=mos9.0|' /etc/apt/preferences.d/mos-updates.pref
+
+  - name: Add MOS 9.2 repo
+    apt_repository:
+      filename="mos9.2"
+      repo="deb {{ fuel_url }}/snapshots/{{ snapshot_repo }} mos9.0-proposed main restricted"
+      state=present
+      update_cache=yes
+
+  - name: Add MOS 9.2 repo key
+    apt_key:
+        url={{ fuel_url }}/snapshots/{{ snapshot_repo }}/archive-mos9.0-proposed.key
 
   - name: Update MCollective
     apt:
