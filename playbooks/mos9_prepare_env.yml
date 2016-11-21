@@ -17,6 +17,12 @@
       state=present
       update_cache=yes
 
+  - name: Generate preferences configuration for MOS 9.2 repo
+    template:
+      src: "proposed.j2"
+      dest: "/etc/apt/preferences.d/mos-proposed.pref"
+      force: yes
+
   - name: Add MOS 9.2 repo key
     apt_key:
         url={{ fuel_url }}/snapshots/{{ snapshot_repo }}/archive-mos9.0-proposed.key
