@@ -1,0 +1,8 @@
+---
+- hosts: fuel
+  connection: local
+  tasks:
+
+    - name: Upgrade kernel data on Fuel
+      script: files/mos9_fuel_kernel_upgrade.sh
+
