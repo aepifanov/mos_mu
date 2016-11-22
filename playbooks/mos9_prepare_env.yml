@@ -1,5 +1,25 @@
 ---
 
+- hosts: fuel
+  connection: local
+  any_errors_fatal: true
+  vars_files:
+    - "vars/common.yml"
+    - "vars/mos_releases/{{ mos_release }}.yml"
+
+  tasks:
+  - name: Add MOS 9.2 repo
+    script: files/add_repo_to_env.sh
+    environment:
+      ENV_ID: "{{ env_id }}"
+      NAME: "mos9.2"
+      TYPE: "deb"
+      URL: "{{ fuel_url }}/snapshots/{{ snapshot_repo }}"
+      SUITE: "mos9.0-proposed"
+      SECTION: "main restricted"
+      PRIORITY: "1050"
+
+
 - hosts: env_{{ env_id }}
   any_errors_fatal: true
   vars_files:
@@ -9,19 +29,6 @@
   tasks:
   - name: Fix apt-preferences
     command: sed -i -e 's|n=mos9.0-updates|n=mos9.0|' /etc/apt/preferences.d/mos-updates.pref
-
-  - name: Add MOS 9.2 repo
-    apt_repository:
-      filename="mos9.2"
-      repo="deb {{ fuel_url }}/snapshots/{{ snapshot_repo }} mos9.0-proposed main restricted"
-      state=present
-      update_cache=yes
-
-  - name: Generate preferences configuration for MOS 9.2 repo
-    template:
-      src: "proposed.j2"
-      dest: "/etc/apt/preferences.d/mos-proposed.pref"
-      force: yes
 
   - name: Add MOS 9.2 repo key
     apt_key:
