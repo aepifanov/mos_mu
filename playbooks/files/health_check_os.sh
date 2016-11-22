@@ -44,9 +44,9 @@ check_cinder ()
 
 check_ceph ()
 {
+    type ceph || return 0
+
     OUT=$(ceph -s)
-    echo -e "${OUT}" | grep "command not found"
-    (( $? == 0 )) && return 0
     echo -e "${OUT}" | grep HEALTH_OK
 	if (( $? != 0 )); then
 		(( RET |= 8 ))
