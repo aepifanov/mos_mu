@@ -6,6 +6,7 @@
       steps: "update_ceph"
 
   vars_files:
+    - "vars/ceph.yml"
     - "vars/common.yml"
     - "vars/mos_releases/{{ mos_release }}.yml"
     - "vars/steps/{{ steps }}.yml"
@@ -34,6 +35,7 @@
       steps: "update_ceph"
 
   vars_files:
+    - "vars/ceph.yml"
     - "vars/common.yml"
     - "vars/steps/{{ steps }}.yml"
 
@@ -42,8 +44,9 @@
 
   post_tasks:
     - include: tasks/restart_ceph.yml
-      vars:
-        - restart_mon: "yes"
+      when:
+        - restart_ceph is defined
+        - restart_ceph
 
 - hosts: env_{{ env_id }}:&ceph-osd
   any_errors_fatal: true
@@ -52,6 +55,7 @@
       steps: "update_ceph"
 
   vars_files:
+    - "vars/ceph.yml"
     - "vars/common.yml"
     - "vars/steps/{{ steps }}.yml"
 
@@ -69,8 +73,9 @@
 
   post_tasks:
     - include: tasks/restart_ceph.yml
-      vars:
-        - restart_osd: "yes"
+      when:
+        - restart_ceph is defined
+        - restart_ceph
 
 
 - hosts: env_{{ env_id }}:&controller
@@ -80,11 +85,11 @@
       steps: "update_ceph"
 
   vars_files:
+    - "vars/ceph.yml"
     - "vars/common.yml"
     - "vars/steps/{{ steps }}.yml"
 
   tasks:
-
     - name: Update radosgw package
       apt: name=radosgw
         state=latest
@@ -92,8 +97,9 @@
 
   post_tasks:
     - include: tasks/restart_ceph.yml
-      vars:
-        - restart_rgw: "yes"
+      when:
+        - restart_ceph is defined
+        - restart_ceph
 
 
 - hosts: env_{{ env_id }}:!controller:!ceph-osd
@@ -102,6 +108,7 @@
       steps: "update_ceph"
 
   vars_files:
+    - "vars/ceph.yml"
     - "vars/common.yml"
     - "vars/steps/{{ steps }}.yml"
 

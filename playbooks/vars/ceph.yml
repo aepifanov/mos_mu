@@ -1,0 +1,48 @@
+---
+# This option is used to define temporary ceph repo
+#
+#ceph_repo: "deb http://mirror.fuel-infra.org/mos-repos/ubuntu/snapshots/9.0-latest/ mos9.0-proposed main restricted"
+
+# A list of ceph/radosgw packages and libraries from
+# MOS repo. This list will be used to search for
+# installed ceph packages and update them.
+ceph_packages:
+  - ceph-common-dbg
+  - ceph-common
+  - ceph-dbg
+  - ceph-fs-common-dbg
+  - ceph-fs-common
+  - ceph-fuse-dbg
+  - ceph-fuse
+  - ceph-mds-dbg
+  - ceph-mds
+  - ceph-resource-agents
+  - ceph-test-dbg
+  - ceph-test
+  - ceph
+  - libcephfs-dev
+  - libcephfs-java
+  - libcephfs-jni-dbg
+  - libcephfs-jni
+  - libcephfs1-dbg
+  - libcephfs1
+  - librados-dev
+  - librados2-dbg
+  - librados2
+  - libradosstriper-dev
+  - libradosstriper1-dbg
+  - libradosstriper1
+  - librbd-dev
+  - librbd1-dbg
+  - librbd1
+  - python-ceph
+  - python-cephfs
+  - python-rados
+  - python-rbd
+  - radosgw-dbg
+# We will update radosgw separately
+#  - radosgw
+  - rbd-fuse-dbg
+  - rbd-fuse
+  - rest-bench-dbg
+  - rest-bench
