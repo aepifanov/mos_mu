@@ -23,4 +23,4 @@
 #add_ceph_repo: false
 
 # Restart ceph services
-#restart_ceph: true
+restart_ceph: true

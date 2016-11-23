@@ -1,6 +1,8 @@
 ---
 - hosts: fuel
   connection: local
+  vars:
+      rebuild_bootstrap: true
   vars_files:
     - "vars/common.yml"
     - "vars/mos_releases/{{ mos_release }}.yml"
@@ -18,4 +20,5 @@
 
   - include: tasks/update_9x_fuel.yml
     when: mos_release == "9.0" or
-          mos_release == "9.1"
+          mos_release == "9.1" or
+          mos_release == "9.2"

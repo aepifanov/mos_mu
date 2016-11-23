@@ -85,7 +85,7 @@ manage patches to successfully execute previous **verify_patches.yml** step.
 
 Update the Fuel Master node packages, services, and configuration:
 ```
-ansible-playbook playbooks/update_fuel.yml
+ansible-playbook playbooks/update_fuel.yml -e '{"rebuild_bootstrap":false}'
 ```
 More details you can find here:
 [update_fuel.yml](doc/architecture.md#update_fuelyml)
@@ -115,7 +115,13 @@ To verify the update progress, use the Fuel web UI Dashboard tab or run
 ansible-playbook playbooks/mos9_upgrade_kernel_4.4.yml -e '{"env_id":<env_id>}'
 ```
 
-8. Apply patches
+8. Update CEPH
+------------------------
+```
+ansible-playbook playbooks/update_ceph -e '{"env_id":<env_id>,"restart_ceph":false}'
+```
+
+9. Apply patches
 ----------------
 ```
 ansible-playbook playbooks/mos9_apply_patches.yml -e '{"env_id":<env_id>}'
@@ -126,16 +132,14 @@ More details you can find here:
 This playbook apply gathered customizations and patches from **patches** folder
 from Fuel on each node and then restarts OpenStack services.
 
-Full restart
-------------
+10. Full restart
+----------------
 
-For the applying updates for some services like CEPH, QEMU and etc we would
-recommend to restart them manually and at the same time monitor thier status.
-
-Which services were updated you can find in output in section
-**Show upgradable packages**
-
-Please also read the upgrade section in documentation for these services.
+For the applying updates for kernel 4.4 and some services like  CEPH, QEMU and etc
+it is requered to restart all nodes in environment.
+```
+ansible-playbook playbooks/restart_env.yml -e '{"env_id":<env_id>}'
+```
 
 Rollback
 --------

@@ -21,3 +21,6 @@
 
 - name: Rebuild bootstrap images
   command: fuel-bootstrap build --activate
+  when:
+    - rebuild_bootstrap is defined
+    - rebuild_bootstrap
