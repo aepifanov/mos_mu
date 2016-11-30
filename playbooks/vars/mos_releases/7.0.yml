@@ -38,7 +38,6 @@ apt_sources_lists:
 controller_pcs_resources:
     - p_heat-engine
     - p_neutron-l3-agent
-    - p_neutron-vpn-agent
     - p_neutron-plugin-openvswitch-agent
     - p_neutron-dhcp-agent
     - p_neutron-metadata-agent
