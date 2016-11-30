@@ -5,12 +5,17 @@
     name: ceph-mon
     state: restarted
     args: id={{ ansible_hostname }}
+  when:
+    - restart_mon is defined
+    - restart_mon == "yes"
 
 - name: select a running monitor
   set_fact: mon_host={{ item }}
   with_items: "{{ groups['controller'] }}"
   when:
     - item != inventory_hostname
+    - restart_mon is defined
+    - restart_mon == "yes"
 
 - name: waiting for the monitor to join the quorum...
   vars:
@@ -24,12 +29,18 @@
   retries: "{{ health_mon_check_retries }}"
   delay: "{{ health_mon_check_delay }}"
   delegate_to: "{{ mon_host }}"
+  when:
+    - restart_mon is defined
+    - restart_mon == "yes"
 
 
 - name: restart ceph osds
   service:
     name: ceph-osd-all
     state: restarted
+  when:
+    - restart_osd is defined
+    - restart_osd == "yes"
 
 - name: waiting for clean pgs...
   vars:
@@ -42,6 +53,9 @@
   retries: "{{ health_osd_check_retries }}"
   delay: "{{ health_osd_check_delay }}"
   delegate_to: "{{ groups['controller'][0] }}"
+  when:
+    - restart_osd is defined
+    - restart_osd == "yes"
 
 
 - name: unset osd flags
@@ -51,9 +65,15 @@
     - noscrub
     - nodeep-scrub
   delegate_to: "{{ groups['controller'][0] }}"
+  when:
+    - restart_osd is defined
+    - restart_osd == "yes"
 
 
 - name: restart rados gateway server(s)
   service:
     name: radosgw-all
     state: restarted
+  when:
+    - restart_rgw is defined
+    - restart_rgw == "yes"

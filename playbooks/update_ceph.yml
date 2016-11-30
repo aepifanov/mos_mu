@@ -44,6 +44,8 @@
 
   post_tasks:
     - include: tasks/restart_ceph.yml
+      vars:
+        restart_mon: "yes"
       when:
         - restart_ceph is defined
         - restart_ceph
@@ -73,6 +75,8 @@
 
   post_tasks:
     - include: tasks/restart_ceph.yml
+      vars:
+        restart_osd: "yes"
       when:
         - restart_ceph is defined
         - restart_ceph
@@ -96,6 +100,8 @@
 
   post_tasks:
     - include: tasks/restart_ceph.yml
+      vars:
+        restart_rgw: "yes"
       when:
         - restart_ceph is defined
         - restart_ceph
