@@ -113,7 +113,7 @@ To verify the update progress, use the Fuel web UI Dashboard tab or run
 ------------------------
 Upgrade kernel for bootstrap on Fuel master node:
 ```
-ansible-playbook playbooks/mos9_fuel_upgrade_kernel_4.4.yml -e '{"env_id":<env_id>}'
+ansible-playbook playbooks/mos9_fuel_upgrade_kernel_4.4.yml
 ```
 Upgrade kernel on all nodes for each environment:
 ```
