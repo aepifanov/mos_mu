@@ -15,3 +15,6 @@ STATUS=$(echo "${STATUS}" | fgrep "target-role=Stopped") ||
 pcs resource enable "${RESOURCE}" --wait="${TIMEOUT}"    ||
     { echo "ERROR: Resource ${RESOURCE} failed to start";
     exit 2;}
+
+pcs resource cleanup "${RESOURCE}" --wait="${TIMEOUT}"
+
