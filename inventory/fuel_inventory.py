@@ -11,25 +11,19 @@ def get_inventory_json():
         ip_regex = r'^[a-z]+://(?P<server_address>[^:]+)[:/]'
         re_match = re.search(ip_regex, fuel_client.root)
         fuel_ip = re_match.groupdict()['server_address']
-        ssh_cmd = ['ssh', '-q', fuel_ip, 'hostname']
-        ssh_exec = Popen(ssh_cmd, stdout=PIPE, stderr=PIPE)
-        fuel_hostname, err = ssh_exec.communicate()
-        if ssh_exec.returncode:
-            raise Exception(('Could not determine hostname of Fuel server;'
-                             ' Command: "ssh %s hostname"; Error: %s') %
-                            (fuel_ip, err.rstrip()))
-
+        cmd = ['hostname']
+        cmd_exec = Popen(cmd, stdout=PIPE, stderr=PIPE)
+        fuel_hostname, err = cmd_exec.communicate()
         fuel_hostname = fuel_hostname.strip()
         inventory['fuel'] = {'hosts': [fuel_hostname]}
         inventory['_meta']['hostvars'][fuel_hostname] = {}
         fuel_meta = inventory['_meta']['hostvars'][fuel_hostname]
         fuel_meta['ansible_host'] = 'localhost'
         fuel_meta['ansible_connection'] = 'local'
-        cmd = ("fuel --fuel-version 2>&1 | awk -F ':' '/^release/ {print $2}'")
-        ssh_cmd = ['ssh', fuel_ip, cmd]
-        ssh_exec = Popen(ssh_cmd, stdout=PIPE, stderr=PIPE)
-        fuel_release, err = ssh_exec.communicate()
-        if not ssh_exec.returncode:
+        cmd = "fuel --fuel-version 2>&1 | awk -F ':' '/^release/ {print $2}'"
+        cmd_exec = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
+        fuel_release, err = cmd_exec.communicate()
+        if not cmd_exec.returncode:
             fuel_meta['mos_release'] = fuel_release.strip(' :\n\'"')
 
     fc = APIClient
