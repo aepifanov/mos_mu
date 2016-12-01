@@ -44,10 +44,10 @@ check_cinder ()
 
 check_ceph ()
 {
-    type ceph || return 0
+    type ceph &> /dev/null || return 0
 
     OUT=$(ceph -s)
-    echo -e "${OUT}" | grep HEALTH_OK
+    echo -e "${OUT}" | grep HEALTH_OK &> /dev/null
 	if (( $? != 0 )); then
 		(( RET |= 8 ))
 		OUTPUT+="### ceph:\n${OUT}\n"
