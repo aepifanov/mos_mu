@@ -15,7 +15,7 @@ apt_update: false
 # Patch will be unified (copied to unified folder) if
 # - it is the same on some nodes
 # - no customizations for the other nodes
-unify_only_patches: false
+unify_only_patches: true
 
 # All unified customizations will be copied to patches folder
 # and then veified and applied on all nodes
