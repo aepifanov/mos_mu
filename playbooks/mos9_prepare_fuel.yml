@@ -39,6 +39,16 @@
     - name: Reload systemd
       command: systemctl daemon-reload
 
+    - name: Get services list for Nailgun
+      shell: rpm -ql "$(rpm -q fuel-nailgun)" | grep '^/usr/lib/systemd/system/\w*.service$' | awk -F'/' '{print $NF}' | sed 's/.service$//'
+      register: nailgun_services
+
+    - name: Stop Nailgun serivces
+      service: name={{ item }} state=stopped
+      with_items: "{{ nailgun_services.stdout_lines }}"
+      when: nailgun_services.stdout != "" and
+            result_nailgun_update.changed
+
     - name: Migrate Nailgun DB
       command: nailgun_syncdb
 
@@ -47,12 +57,8 @@
         name: fuel-release
         state: latest
 
-    - name: Get services list for Nailgun
-      shell: rpm -ql "$(rpm -q fuel-nailgun)" | grep '^/usr/lib/systemd/system/\w*.service$' | awk -F'/' '{print $NF}' | sed 's/.service$//'
-      register: nailgun_services
-
-    - name: Restart Nailgun services
-      service: name={{ item }} state=restarted
+    - name: Start Nailgun services
+      service: name={{ item }} state=started
       with_items: "{{ nailgun_services.stdout_lines }}"
       when: nailgun_services.stdout != "" and
             result_nailgun_update.changed
