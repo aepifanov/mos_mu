@@ -111,8 +111,13 @@ To verify the update progress, use the Fuel web UI Dashboard tab or run
 
 7. Upgrade kernel on 4.4
 ------------------------
+Upgrade kernel for bootstrap on Fuel master node:
 ```
-ansible-playbook playbooks/mos9_upgrade_kernel_4.4.yml -e '{"env_id":<env_id>}'
+ansible-playbook playbooks/mos9_fuel_upgrade_kernel_4.4.yml -e '{"env_id":<env_id>}'
+```
+Upgrade kernel on all nodes for each environment:
+```
+ansible-playbook playbooks/mos9_env_upgrade_kernel_4.4.yml -e '{"env_id":<env_id>}'
 ```
 
 8. Update CEPH
@@ -155,8 +160,8 @@ local mirrors:
 ansible-playbook playbooks/create_mirrors.yml -e '{"env_id":<env_id>}'
 ```
 
-Then for the using them you to add **fuel_url** external variable:
+Then for the using them you to add **fuel_url** external variable like:
 ```
-ansible-playbook playbooks/apply_mu.yml -e '{"env_id":<env_id>,"fuel_url":"http://<FUEL_IP>:8080"}'
+ansible-playbook playbooks/apply_patches.yml -e '{"env_id":<env_id>,"fuel_url":"http://<FUEL_IP>:8080"}'
 ```
 
