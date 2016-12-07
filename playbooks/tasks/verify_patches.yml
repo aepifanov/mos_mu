@@ -39,11 +39,13 @@
 - name: Show results of Patches Verification
   debug:
     msg: "{{ verify_patches_result.stdout_lines }}"
-  when: verify_patches_result is defined and
-        verify_patches_result.stdout != ""
+  when:
+    - verify_patches_result is defined
+    - verify_patches_result.stdout != ""
 
 - name: Fail if patches verifying failed
   fail:
     msg: "[ERROR] Verifying of patches FAILED"
-  when: verify_patches_result is defined and
-        verify_patches_result.failed
+  when:
+    - verify_patches_result is defined
+    - verify_patches_result | failed

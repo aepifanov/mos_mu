@@ -17,15 +17,17 @@
     state: absent
   delegate_to: localhost
   run_once: true
-  when: gather_customizations is defined and
-        gather_customizations
+  when:
+    - gather_customizations is defined
+    - gather_customizations
 
 - name: Clean customizations
   file:
     path: "{{ custom_dir }}"
     state: absent
-  when: gather_customizations is defined and
-        gather_customizations
+  when:
+    - gather_customizations is defined
+    - gather_customizations
 
 - name: Check if customizations were already gathered
   stat:

@@ -23,11 +23,13 @@
 - name: Show results of Patches Applying
   debug:
     msg: "{{ apply_patches_result.stdout_lines }}"
-  when: apply_patches_result is defined and
-        apply_patches_result.stdout != ""
+  when:
+    - apply_patches_result is defined
+    - apply_patches_result.stdout != ""
 
 - name: Fail if patches applying failed
   fail:
     msg: "[ERROR] Applying of patches FAILED"
-  when: apply_patches_result is defined and
-        apply_patches_result.failed
+  when:
+    - apply_patches_result is defined
+    - apply_patches_result | failed
