@@ -18,8 +18,9 @@
         - mos_release != "8.0"
 
     - include: tasks/health_checks.yml
-      when: health_check is defined and
-            health_check
+      when:
+        - health_check is defined
+        - health_check
 
     - include: tasks/apt_update.yml
 

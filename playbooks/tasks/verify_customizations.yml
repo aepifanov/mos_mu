@@ -11,25 +11,29 @@
     FUEL_VERIFICATION_DIR: "{{ fuel_custom_verification }}"
     FUEL_UNIFIED_DIR: "{{ fuel_unified_dir }}"
     UNIFY_ONLY_PATCHES: "{{ unify_only_patches }}"
-  when: use_current_customizations is defined and
-        use_current_customizations
+  when:
+    - use_current_customizations is defined
+    - use_current_customizations
 
 - name: Show results of customizations consistency Verification
   run_once: true
   debug:
     msg: "{{ verify_customizations_result.stdout_lines }}"
-  when: verify_customizations_result is defined and
-        verify_customizations_result.stdout != ""
+  when:
+    - verify_customizations_result is defined
+    - verify_customizations_result.stdout != ""
 
 - name: Fail if verifying of customizations consistency failed
   run_once: true
   fail:
     msg: "[ERROR] Verification of customizations consistency FAILED"
-  when: verify_customizations_result is defined and
-        verify_customizations_result.failed
+  when:
+    - verify_customizations_result is defined
+    - verify_customizations_result | failed
 
 - name: Use unified customizations
   run_once: true
   local_action: command rsync -avzrc --delete  "{{ fuel_unified_dir }}/." "{{ fuel_patches_dir }}/00-customizations"
-  when: verify_customizations_result is defined and
-        verify_customizations_result.rc == 0
+  when:
+    - verify_customizations_result is defined
+    - verify_customizations_result.rc == 0
