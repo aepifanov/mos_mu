@@ -87,7 +87,7 @@ for PKG in ${ALL_PKGS}; do
                 apt-mark hold "${PKG}" &> /dev/null
                 ;;
             "reinstall")
-                echo "[REINSTALL] Unknown upgradable package '${PKG}' will be reinstalled on the available version."
+                echo "[REINSTALL] Unknown upgradable package '${PKG}' will be reinstalled on the new available version."
                 ;;
             *)
                 echo "[ERROR] Unknown upgradable package: '${PKG}' was installed not from the configured repositories."
