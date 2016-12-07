@@ -24,3 +24,7 @@
     msg: "{{ md5_verify_result.stdout_lines }}"
   when: md5_verify_result.stdout != ""
 
+- name: Remove messages and leave only packages
+  shell: echo "{{ md5_verify_result.stdout }}" | grep -v '^\[' | grep -v '^W\:'; exit 0
+  register: md5_verify_result
+

@@ -10,8 +10,41 @@ PKG_VER_FOR_VERIFICATION=${4:-$PKG_VER_FOR_VERIFICATION}
 PKG_VER_FOR_VERIFICATION=${PKG_VER_FOR_VERIFICATION:?"PKG_VER_FOR_VERIFICATION is undefined!"}
 IGNORE_APPLIED_PATCHES=${5:-$IGNORE_APPLIED_PATCHES}
 IGNORE_APPLIED_PATCHES=${IGNORE_APPLIED_PATCHES:-"False"}
+KEEP_PKGS=${KEEP_PKGS:-$5}
+
+
+# Get patackage name from patch
+# Global vars:
+#   OUT - Error or Warning messages
+#   PKG - Package name
+get_pkg_name_from_patch()
+{
+    OUT=""
+    PKG=""
+    local RET=0
+    local PATCH=${1:?"Please specify patch's filename"}
+    local FILES=$(awk '/\+\+\+/ {print $2}' "${PATCH}")
+    # Get Package name and make sure that all affect the only one package
+    for FILE in ${FILES}; do
+        [ -e "${FILE}" ] || {
+            OUT+="[WARN]   ${FILE} skipped since it is absent";
+            continue; }
+        PACK=$(dpkg -S "${FILE}")
+        PACK=$(echo -e "${PACK}" | awk '{print $1}')
+        PACK=${PACK/\:/}
+        [ -z "${PKG}" ] && {
+            PKG="${PACK}";
+            continue; }
+        [[ "${PACK}" != "${PKG}" ]] && {
+            (( RET |= 1 ));
+            OUT+="[ERROR]  Affect more than one package: ${PKG} != ${PACK} (${FILE})"; }
+    done
+    return "${RET}"
+}
 
 cd "${PATCHES_DIR}" &>/dev/null || exit 0
+
+HOLD_PKGS=$(apt-mark showhold)
 
 RET=0
 # Check patches
@@ -19,25 +52,20 @@ PATCHES=$(find . -type f -name "*.patch" |sort)
 for PATCH in ${PATCHES}; do
     cd "${PATCHES_DIR}" || exit 2
     echo -e "\n-------- ${PATCH}"
-    FILES=$(awk '/\+\+\+/ {print $2}' "${PATCH}")
-    PKG=""
-    # Get Package name and make sure that all affect the only one package
-    for FILE in ${FILES}; do
-        [ -e "${FILE}" ] ||
-            { echo "[Absent] ${FILE}";
-              continue; }
-        PACK=$(dpkg -S "${FILE}")
-        PACK=$(echo -e "${PACK}" | awk '{print $1}')
-        PACK=${PACK/\:/}
-        [ -z "${PKG}" ] && { PKG="${PACK}"; continue; }
-        [[ "${PACK}" == "${PKG}" ]] && continue
-        echo "[ERROR]  ${PATCH} affects more than one package"
-        (( RET |= 1 ))
-        continue 2
-    done
-
-    # Check if this package is installed on this node
-    [ -z "${PKG}" ] && continue
+    get_pkg_name_from_patch "${PATCH}"
+    RS=$?
+    [ -z "${OUT}" ] ||
+        echo -e "${OUT}"
+    (( RS != 0 ))  && {
+        (( RET |= 1 ));
+        continue; }
+    # Whether package is installed on this node
+    [ -z "${PKG}" ] &&
+        continue
+    # Whether this package should be keeped
+    echo "${KEEP_PKGS} ${HOLD_PKGS}" | grep ${PKG} &>/dev/null  && {
+        echo "[SKIP]   ${PKG} is on hold";
+        continue; }
 
     # Download new version and extract it
     PKG_PATH=${VERIFICATION_DIR}/${PKG}
@@ -91,7 +119,7 @@ for PATCH in ${PATCHES}; do
             continue
         fi
     fi
-    echo "[OK]     Applied successfully"
+    echo "[OK]     ${PKG} is customized successfully"
 done
 
 if (( (RET & 4) == 4 )); then

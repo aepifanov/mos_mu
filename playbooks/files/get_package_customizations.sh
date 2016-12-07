@@ -5,6 +5,10 @@ APT_CONF=${APT_CONF:-$2}
 APT_CONF=${APT_CONF:-"/root/mos_mu/apt/apt.conf"}
 CUSTOM_DIR=${CUSTOM_DIR:-$3}
 CUSTOM_DIR=${CUSTOM_DIR:?"CUSTOM_DIR is undefined!"}
+KEEP_PKGS=${KEEP_PKGS:-$4}
+
+HOLD_PKGS=$(apt-mark showhold)
+echo "${KEEP_PKGS} ${HOLD_PKGS}" | grep ${PKG} && exit 100
 
 EXTRACTED_PKG="${CUSTOM_DIR}/${PKG}"
 
@@ -34,7 +38,10 @@ cd "${EXTRACTED_PKG}" || exit -1
 RET=0
 FILES=$(dpkg -V "${PKG}" |  awk '{if ($2 != "c") print $2}')
 for FILE in ${FILES}; do
-    diff -NrU 5 -x "*.pyc" -x "*.rej" "./${VERS}/${FILE}" "${FILE}" >> "${DIFF}"
+    file "${FILE}" | grep text &> /dev/null || {
+        echo "[WARN] File ${FILE} is not text and will be ignored and might replaced during the update procedure";
+        continue; }
+    diff -NrU 5 "./${VERS}/${FILE}" "${FILE}" >> "${DIFF}"
     case $? in
         1)
             ;;
