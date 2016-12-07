@@ -1,0 +1,10 @@
+---
+
+- hosts: env_{{ env_id }}
+  any_errors_fatal: true
+
+  vars_files:
+    - "vars/common.yml"
+
+  tasks:
+    - include: tasks/get_current_mu.yml
