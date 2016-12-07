@@ -11,8 +11,8 @@
   register: md5_results
 
 - include: verify_md5_action.yml
-  when: gather_customizations is defined and
-        gather_customizations or
+  when: md5_check is defined and
+        md5_check or
         not md5_results.stat.exists
 
 - name: Read results of MD5 Sum verification
