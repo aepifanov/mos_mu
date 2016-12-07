@@ -1,6 +1,7 @@
 ---
 
 mos_dir:                  "/root/mos_mu"
+backup_dir:               "{{ mos_dir }}/backup"
 report_dir:               "{{ mos_dir }}/report"
 custom_dir:               "{{ mos_dir }}/customizations"
 patches_dir:              "{{ mos_dir }}/patches"
@@ -17,3 +18,5 @@ fuel_custom_backup_dir:   "{{ fuel_dir }}/customizations_backup"
 fuel_patches_dir:         "{{ fuel_dir }}/patches"
 fuel_custom_verification: "{{ fuel_dir }}/customizations_verification"
 fuel_unified_dir:         "{{ fuel_dir }}/customizations_unified"
+
+keep_pkgs:                ""

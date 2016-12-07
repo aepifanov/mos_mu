@@ -18,9 +18,15 @@
   environment:
     APT_CONF: "{{ apt_conf }}"
     CUSTOM_DIR: "{{ custom_dir }}"
+    KEEP_PKGS: "{{ keep_pkgs }}"
   with_items: "{{ md5_verify_result.stdout_lines }}"
-  when: md5_verify_result is defined and
-        md5_verify_result.changed
+  changed_when: customizations_result.rc == 0
+  failed_when:
+    - customizations_result | failed
+    - customizations_result.rc < 100
+  when:
+    - md5_verify_result is defined
+    - md5_verify_result.changed
 
 - name: Upload customizations to Fuel
   fetch:
@@ -41,9 +47,6 @@
 - name: Make a backup of gathered customizations on Fuel
   run_once: true
   local_action: shell tar -czf "{{ fuel_custom_backup_dir }}"/customizations__$(date +%m.%d.%y__%H-%M-%S).tgz "{{ fuel_custom_dir }}"
-
-- name: Make a backup of /etc
-  shell: tar -czf "{{ report_dir }}"/etc.tgz /etc/
 
 - include: tasks/get_report.yml
 

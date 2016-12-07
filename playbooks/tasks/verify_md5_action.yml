@@ -5,8 +5,10 @@
     path: "{{ report_dir }}"
     state: directory
 
+- include: tasks/get_current_mu.yml
+
 - name: Get list of upgrdable packages
-  shell:  apt-get -c "{{ apt_conf }}" --just-print upgrade | tee "{{ report_dir }}/upgraded_pkgs" | egrep -v "Conf|Inst" | egrep "^  |graded|required"; exit 0
+  shell:  apt-get -c "{{ apt_conf }}" --assume-no  upgrade | tee "{{ report_dir }}/upgraded_pkgs"; exit 0
   register: upgradable_pkgs
 
 - name: Show upgradable packages
@@ -34,7 +36,13 @@
     msg: "[ERROR] MD5 sum Verificationof FAILED"
   when: verify_result.rc != 0
 
-- name: Remove messages and leave only packages
-  shell: echo "{{ verify_result.stdout }}" | grep -v '^\[' | grep -v '^W\:' > "{{ report_dir }}/md5_results"; exit 0
+- name: Store the MD5 verivication
+  shell: echo "{{ verify_result.stdout }}" > "{{ report_dir }}/md5_results"; exit 0
 
-- include: get_report.yml
+- name: Make sure backup directory exists
+  file:
+    path: "{{ backup_dir }}"
+    state: directory
+
+- name: Make a backup of /etc
+  shell: tar -czf "{{ backup_dir }}"/etc.tgz /etc/

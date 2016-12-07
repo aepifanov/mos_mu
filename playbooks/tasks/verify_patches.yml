@@ -34,6 +34,7 @@
     VERIFICATION_DIR: "{{ verification_dir }}"
     PKG_VER_FOR_VERIFICATION: "{{ pkg_ver_for_verification }}"
     IGNORE_APPLIED_PATCHES: "{{ ignore_applied_patches }}"
+    KEEP_PKGS: "{{ keep_pkgs }}"
   register: verify_patches_result
 
 - name: Show results of Patches Verification
@@ -42,6 +43,9 @@
   when:
     - verify_patches_result is defined
     - verify_patches_result.stdout != ""
+
+- name: Store list of packages which will be customized
+  shell: echo "{{ verify_patches_result.stdout }}" | awk '/customized successfully/ {print $2}' > "{{ report_dir }}/reinstall_pkgs"; exit 0
 
 - name: Fail if patches verifying failed
   fail:
