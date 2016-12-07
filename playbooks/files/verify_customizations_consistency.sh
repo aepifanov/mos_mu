@@ -133,7 +133,7 @@ for NODE in ${ALL_NODES}; do
 done
 
 echo -e "Legenda:
- '-' - no patch(customizations) for package on this node
+ '-' - no patch (customization) for the package on this node
  'x' - ID of patch\n"
 echo -e "${OUT}" | column -t
 
