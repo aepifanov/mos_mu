@@ -1,11 +1,13 @@
 ---
-- hosts: fuel
-  connection: local
+- hosts: env_{{ env_id }}
   vars_files:
     - "vars/mos_releases/{{ mos_release }}.yml"
   tasks:
 
     - name: Create and sync local mirrors
       script: files/create_mirrors.sh
+      run_once: true
+      delegate_to: localhost
       environment:
         REPOS: "{{ apt_repos }}"
+        OS: "{{ os_platform }}"
