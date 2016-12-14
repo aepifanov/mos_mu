@@ -20,19 +20,5 @@ cd /tmp
 fuel env --env ${ENV_ID} --attributes --download
 cp cluster_${ENV_ID}/attributes.yaml cluster_${ENV_ID}/attributes_orig.yaml
 fgrep "${NAME}" cluster_${ENV_ID}/attributes_orig.yaml && exit 0
-REPO="      - name: ${NAME}
-        priority: ${PRIORITY}
-        section: ${SECTION}
-        suite: ${SUITE}
-        type: ${TYPE}
-        uri: ${URL}"
-awk -v repo="${REPO}" '/type: custom_repo_configuration/ {
-    print;
-    getline;
-    print;
-    print repo;
-    next;}1' cluster_${ENV_ID}/attributes_orig.yaml > cluster_${ENV_ID}/attributes.yaml
+$(dirname $0)/add_repo_to_env.py cluster_${ENV_ID}/attributes.yaml ${NAME} ${PRIORITY} ${SECTION} ${SUITE} ${TYPE} ${URL}
 fuel env --env ${ENV_ID} --attributes --upload
-
-
-
