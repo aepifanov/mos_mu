@@ -42,7 +42,7 @@ cd mos_mu
 ```
 
 For Ansible installing you can use [install_ansible.sh](install_ansible.sh) script which
-actually adds standard CentOS and EPEL reposistories, installs Ansible and then deletes
+actually adds standard CentOS and EPEL repositories, installs Ansible and then deletes
 these repos for avoiding any issues with compatibility with Fuel services.
 ```
 ./install_ansible.sh

@@ -94,9 +94,11 @@
     - "vars/steps/{{ steps }}.yml"
 
   tasks:
-    - include: tasks/update_ceph.yml
-      vars:
-        - ceph_packages: radosgw
+
+    - name: Update radosgw package
+      apt: name=radosgw
+        state=latest
+        update_cache=yes
 
   post_tasks:
     - include: tasks/restart_ceph.yml
