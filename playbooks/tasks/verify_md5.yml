@@ -15,14 +15,28 @@
         md5_check or
         not md5_results.stat.exists
 
-- name: Read results of MD5 Sum verification
-  command: cat "{{ report_dir }}/md5_results"
+- name: Verify all customized and upgradable packages
+  script: files/verify_upgradable_packages.sh
+  environment:
+    APT_CONF: "{{ apt_conf }}"
+    CUSTOM_PKGS_FILE: "{{ report_dir }}/md5_results"
+    UNKNOWN_CUSTOM_PKGS: "{{ unknown_custom_pkgs }}"
+    UNKNOWN_UPGRADABLE_PKGS: "{{ unknown_upgradable_pkgs }}"
+  ignore_errors: true
   register: md5_verify_result
 
 - name: Show results of MD5 sum verification
   debug:
     msg: "{{ md5_verify_result.stdout_lines }}"
   when: md5_verify_result.stdout != ""
+
+- name: Store the MD5 verivication
+  shell: echo "{{ md5_verify_result.stdout }}" > "{{ report_dir }}/pkgs_verification_results"; exit 0
+
+- name: Fail if verification failed
+  fail:
+    msg: "[ERROR] Verification FAILED"
+  when: md5_verify_result.rc != 0
 
 - name: Remove messages and leave only packages
   shell: echo "{{ md5_verify_result.stdout }}" | grep -v '^\[' | grep -v '^W\:'; exit 0
