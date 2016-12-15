@@ -16,7 +16,7 @@ LINK_DEST="--link-dest=${OS}"
 for REPO in $URLS; do
     NAME=${REPO##*/}
     RSYNC_URL=${REPO/http:\/\/mirror.fuel-infra.org/rsync:\/\/mirror.fuel-infra.org\/mirror}
-    rsync -vvrczIP --chmod=Dugo+x "${LINK_DEST}" "${RSYNC_URL}/" "${NAME}"
+    rsync -vvrczIP --chmod=Dugo+x "${LINK_DEST}" "${RSYNC_URL}/" "${NAME}" || exit 1
     LINK_DEST="--link-dest=../${NAME}/"
 done
 
