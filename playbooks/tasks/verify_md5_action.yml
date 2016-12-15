@@ -8,7 +8,7 @@
 - include: tasks/get_current_mu.yml
 
 - name: Get list of upgrdable packages
-  shell:  apt-get -c "{{ apt_conf }}" upgrade  --just-print | egrep -v "Conf|Inst" | tee "{{ report_dir }}/upgraded_pkgs"; exit 0
+  shell:  apt-get -c "{{ apt_conf }}" upgrade  --just-print | egrep -v "Conf|Inst" | tee "{{ report_dir }}/upgradable_pkgs"; exit 0
   register: upgradable_pkgs
 
 - name: Show upgradable packages
@@ -33,7 +33,7 @@
 
 - name: Fail if MD5 verification failed
   fail:
-    msg: "[ERROR] MD5 sum Verificationof FAILED"
+    msg: "[ERROR] MD5 sum Verification FAILED"
   when: verify_result.rc != 0
 
 - name: Store the MD5 verivication
