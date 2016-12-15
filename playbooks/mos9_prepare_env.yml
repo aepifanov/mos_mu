@@ -29,6 +29,7 @@
   tasks:
   - name: Fix apt-preferences
     command: sed -i -e 's|n=mos9.0-updates|n=mos9.0|' /etc/apt/preferences.d/mos-updates.pref
+    ignore_errors: true
 
   - name: Add MOS 9.2 repo key
     apt_key:
