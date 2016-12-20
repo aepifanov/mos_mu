@@ -12,8 +12,12 @@
 
   tasks:
 
+    - name: Check if CEPH is deployed on this env
+      local_action: shell fuel node --env-id {{ env_id }} | grep ceph-osd
+      run_once: true
+
     - include: tasks/health_checks.yml
-      when: health_check is defined and
+      when: health_check is undefined or
             health_check
 
     - name: create ceph_repo

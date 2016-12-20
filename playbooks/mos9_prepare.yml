@@ -20,8 +20,9 @@
     - name: Add new MOS9 repository
       command: yum-config-manager --add-repo="{{ mos9_centos_repo }}"
       register: result_add_repo
-      failed_when: result_add_repo | failed and
-                   "duplicate of an existing repo" not in result_add_repo.msg
+      failed_when:
+        - result_add_repo | failed
+        - "duplicate of an existing repo" not in result_add_repo.msg
 
     - name: Download GPG KEY
       command: rpm --import "{{ mos9_GPG_KEY }}"
@@ -69,8 +70,9 @@
     - name: Restart Nailgun services
       service: name={{ item }} state=restarted
       with_items: "{{ nailgun_services.stdout_lines }}"
-      when: nailgun_services.stdout != "" and
-            result_nailgun_update.changed
+      when:
+        - nailgun_services.stdout != ""
+        - result_nailgun_update.changed
 
 - hosts: env_{{ env_id }}
   any_errors_fatal: true

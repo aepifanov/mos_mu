@@ -12,5 +12,6 @@
 - name: Update Package only if installed
   apt: name={{ item.item }}
     state=latest
-  when: item.stdout == "0"
   with_items: "{{ is_installed.results }}"
+  when:
+    - item.stdout == "0"

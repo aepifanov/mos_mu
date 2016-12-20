@@ -34,5 +34,6 @@
   delegate_to: localhost
 
 - include: tasks/gather_customizations_action.yml
-  when: not customizations.stat.exists
+  when:
+    - not customizations.stat.exists
 
