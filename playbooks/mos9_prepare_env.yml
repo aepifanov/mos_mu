@@ -9,7 +9,7 @@
 
   tasks:
   - name: Add MOS 9.2 repo
-    script: files/add_repo_to_env.sh
+    script: files/add_repo_to_env.py
     environment:
       ENV_ID: "{{ env_id }}"
       NAME: "mos9.2"
