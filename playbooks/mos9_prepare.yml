@@ -22,7 +22,7 @@
       register: result_add_repo
       failed_when:
         - result_add_repo | failed
-        - "duplicate of an existing repo" not in result_add_repo.msg
+        - "'duplicate of an existing repo' not in result_add_repo.msg"
 
     - name: Download GPG KEY
       command: rpm --import "{{ mos9_GPG_KEY }}"
