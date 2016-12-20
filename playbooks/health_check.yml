@@ -9,7 +9,6 @@
   tasks:
 
     - include: tasks/health_checks.yml
-      when:
-        - health_check is defined
-        - health_check
+      when: health_check is undefined or
+            health_check
 

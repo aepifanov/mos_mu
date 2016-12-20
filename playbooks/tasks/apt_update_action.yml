@@ -29,7 +29,8 @@
     src: "{{ item.path }}"
     dest: "{{ apt_src_dir }}/{{ item.name }}.list"
   with_items: "{{ apt_sources_lists }}"
-  when: apt_sources_lists is defined
+  when:
+    - apt_sources_lists is defined
 
 - name: Copy apt.conf
   template:

@@ -4,7 +4,9 @@
   file:
     path: "{{ apt_dir }}"
     state: absent
-  when: apt_update
+  when:
+    - apt_update is defined
+    - apt_update
 
 - name: Check if APT directory already exists
   stat:
@@ -12,4 +14,5 @@
   register: apt_directory
 
 - include: tasks/apt_update_action.yml
-  when: not apt_directory.stat.exists
+  when:
+    - not apt_directory.stat.exists

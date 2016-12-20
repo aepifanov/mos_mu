@@ -46,8 +46,9 @@
     - name: Stop Nailgun serivces
       service: name={{ item }} state=stopped
       with_items: "{{ nailgun_services.stdout_lines }}"
-      when: nailgun_services.stdout != "" and
-            result_nailgun_update.changed
+      when:
+        - nailgun_services.stdout != ""
+        - result_nailgun_update.changed
 
     - name: Migrate Nailgun DB
       command: nailgun_syncdb
@@ -60,5 +61,6 @@
     - name: Start Nailgun services
       service: name={{ item }} state=started
       with_items: "{{ nailgun_services.stdout_lines }}"
-      when: nailgun_services.stdout != "" and
-            result_nailgun_update.changed
+      when:
+        - nailgun_services.stdout != ""
+        - result_nailgun_update.changed

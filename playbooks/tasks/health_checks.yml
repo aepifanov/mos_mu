@@ -18,43 +18,49 @@
   register: pcs_check_result
   ignore_errors: true
   check_pacemaker:
-  when: "'controller' in group_names"
+  when:
+    - "'controller' in group_names"
 
 - name: OpenStack services status checking
   script: files/health_check_os.sh
   ignore_errors: true
   register: health_check_os_result
-  when: "'controller' in group_names"
+  when:
+    - "'controller' in group_names"
 
 
 - name: Show health of Fuel
   run_once: true
   debug:
     msg: "{{ health_check_fuel_result.stdout_lines }}"
-  when: health_check_fuel_result|failed
+  when:
+    - health_check_fuel_result | failed
 
 - name: Show result of disk space checking
   debug:
     msg: "{{ disk_check_result.stdout_lines }}"
-  when: disk_check_result|failed
+  when:
+    - disk_check_result | failed
 
 - name: Show result of Pacemaker status
   debug:
     msg: "{{ pcs_check_result.msg }}"
-  when: pcs_check_result|failed
+  when:
+    - pcs_check_result | failed
 
 - name: Show health of Core OpenStack services
   debug:
     msg: "{{ health_check_os_result.stdout_lines }}"
-  when: health_check_os_result|failed
+  when:
+    - health_check_os_result | failed
 
 
 - name: Fail if health check failed
   fail:
     msg: "[ERROR] Health Check failed. Please fix the issues (descibed above).
           For ignoring this step you can use \"health_check\" flag."
-  when: health_check_fuel_result|failed or
-        disk_check_result|failed or
-        pcs_check_result|failed or
-        health_check_os_result|failed
+  when: pcs_check_result | failed or
+        disk_check_result | failed or
+        health_check_os_result | failed or
+        health_check_fuel_result | failed
 

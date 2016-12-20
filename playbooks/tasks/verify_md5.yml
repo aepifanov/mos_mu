@@ -11,9 +11,9 @@
   register: md5_results
 
 - include: verify_md5_action.yml
-  when: md5_check is defined and
-        md5_check or
-        not md5_results.stat.exists
+  when: not md5_results.stat.exists or
+        md5_check is defined and
+        md5_check
 
 - name: Verify all customized and upgradable packages
   script: files/verify_upgradable_packages.sh
@@ -28,7 +28,8 @@
 - name: Show results of MD5 sum verification
   debug:
     msg: "{{ md5_verify_result.stdout_lines }}"
-  when: md5_verify_result.stdout != ""
+  when:
+    - md5_verify_result.stdout != ""
 
 - name: Store the MD5 verivication
   shell: echo "{{ md5_verify_result.stdout }}" > "{{ report_dir }}/pkgs_verification_results"; exit 0
@@ -36,7 +37,8 @@
 - name: Fail if verification failed
   fail:
     msg: "[ERROR] Verification FAILED"
-  when: md5_verify_result.rc != 0
+  when:
+    - md5_verify_result.rc != 0
 
 - name: Remove messages and leave only packages
   shell: echo "{{ md5_verify_result.stdout }}" | grep -v '^\[' | grep -v '^W\:'; exit 0

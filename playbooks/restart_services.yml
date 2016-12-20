@@ -9,8 +9,9 @@
       ignore_errors: yes
       service: name={{ item }} state=restarted
       register: restart_result
-      failed_when: restart_result | failed and
-                   "no service or tool found for" not in restart_result.msg
+      failed_when:
+        - restart_result | failed
+        - "no service or tool found for" not in restart_result.msg
       with_items: "{{ compute_services }}"
       when: restart is undefined or
             restart
@@ -24,8 +25,9 @@
       ignore_errors: yes
       service: name={{ item }} state=restarted
       register: restart_result
-      failed_when: restart_result | failed and
-                   "no service or tool found for" not in restart_result.msg
+      failed_when:
+        - restart_result | failed
+        - "no service or tool found for" not in restart_result.msg
       with_items: "{{ controller_services }}"
       when: restart is undefined or
             restart
@@ -40,8 +42,9 @@
           tags: controller_pcs
           command: 'sed -i "s/ remove_artifacts_on_stop_start=\$/ remove_artifacts_on_stop_start=false #\$/g" "{{ item }}"'
           with_items: "{{ ocfs.stdout_lines }}"
-          when: ocfs is defined and
-                ocfs.stdout != ""
+          when:
+            - ocfs is defined
+            - ocfs.stdout != ""
 
         - name: Stop OpenStack services under Pacemaker
           tags: controller_pcs
@@ -49,9 +52,11 @@
           ignore_errors: yes
           script: files/pcs_resource_stop.sh {{ item }}
           register: stop_result
-          changed_when: stop_result.rc < 100
-          failed_when: stop_result | failed and
-                       stop_result.rc < 100
+          changed_when:
+            - stop_result.rc < 100
+          failed_when:
+            - stop_result | failed
+            - stop_result.rc < 100
           with_items: "{{ controller_pcs_resources }}"
 
         - name: Force Stop OpenStack services under Pacemaker
@@ -59,9 +64,11 @@
           ignore_errors: yes
           script: files/pcs_resource_stop_force.sh {{ item }}
           register: fstop_result
-          changed_when: fstop_result.rc < 100
-          failed_when: fstop_result | failed and
-                       fstop_result.rc < 100
+          changed_when:
+            - fstop_result.rc < 100
+          failed_when:
+            - fstop_result | failed
+            - fstop_result.rc < 100
           with_items: "{{ controller_pcs_resources }}"
 
         - name: Start OpenStack services under Pacemaker
@@ -70,9 +77,11 @@
           ignore_errors: yes
           script: files/pcs_resource_start.sh {{ item }}
           register: start_result
-          changed_when: start_result.rc < 100
-          failed_when: start_result | failed and
-                       start_result.rc < 100
+          changed_when:
+            - start_result.rc < 100
+          failed_when:
+            - start_result | failed
+            - start_result.rc < 100
           with_items: "{{ controller_pcs_resources }}"
 
       when: restart is undefined or
@@ -82,5 +91,6 @@
           tags: controller_pcs
           command: 'sed -i "s/ remove_artifacts_on_stop_start=false #\$/ remove_artifacts_on_stop_start=\$/g" "{{ item }}"'
           with_items: "{{ ocfs.stdout_lines }}"
-          when: ocfs is defined and
-                ocfs.stdout != ""
+          when:
+            - ocfs is defined
+            - ocfs.stdout != ""

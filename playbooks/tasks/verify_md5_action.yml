@@ -14,7 +14,8 @@
 - name: Show upgradable packages
   debug:
     msg: "{{ upgradable_pkgs.stdout_lines }}"
-  when: upgradable_pkgs.stdout != ""
+  when:
+    - upgradable_pkgs.stdout != ""
 
 - name: Check MD5 sum for installed packages
   script: files/verify_md5_packages_ubuntu.sh
@@ -28,13 +29,15 @@
 - name: Show results of MD5 sum verification
   debug:
     msg: "{{ verify_result.stdout_lines }}"
-  when: verify_result.stdout != "" and
-        verify_result.rc != 0
+  when:
+    - verify_result.stdout != ""
+    - verify_result.rc != 0
 
 - name: Fail if MD5 verification failed
   fail:
     msg: "[ERROR] MD5 sum Verification FAILED"
-  when: verify_result.rc != 0
+  when:
+    - verify_result.rc != 0
 
 - name: Store the MD5 verivication
   shell: echo "{{ verify_result.stdout }}" > "{{ report_dir }}/md5_results"; exit 0

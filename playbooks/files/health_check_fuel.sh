@@ -8,7 +8,7 @@ OUTPUT=""
 
 check_env ()
 {
-    OUT=$(fuel node --env "${ENV_ID}" |  grep -E -v "status|---" | awk -F '|' 'BEGIN{ret=0} {input=$0;gsub(/ /,"");  if ($2 != "ready" || $9 != "True") {print input; ret=1;}} END{exit ret;}')
+    OUT=$(fuel node --env "${ENV_ID}" |  grep -E -v "status|---" | awk -F '|' 'BEGIN{ret=0} {input=$0;gsub(/ /,"");  if ($2 != "ready" || ($9 != "True" && $9 != 1)) {print input; ret=1;}} END{exit ret;}')
 	if (( $? != 0 )); then
         (( RET |= 1 ))
 		OUTPUT+="### Environment ${ENV_ID}:\n${OUT}\n"

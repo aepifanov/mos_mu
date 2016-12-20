@@ -20,7 +20,8 @@
     CUSTOM_DIR: "{{ custom_dir }}"
     KEEP_PKGS: "{{ keep_pkgs }}"
   with_items: "{{ md5_verify_result.stdout_lines }}"
-  changed_when: customizations_result.rc == 0
+  changed_when:
+    - customizations_result.rc == 0
   failed_when:
     - customizations_result | failed
     - customizations_result.rc < 100
@@ -34,7 +35,8 @@
     dest: "{{ fuel_custom_dir }}/{{ ansible_hostname }}/"
     flat: true
   with_items: "{{ md5_verify_result.stdout_lines }}"
-  when: customizations_result is defined
+  when:
+    - customizations_result is defined
 
 - name: Make sure that directory for customizations backups exists on Fuel
   run_once: true
@@ -42,7 +44,8 @@
   file:
     path: "{{ fuel_custom_backup_dir }}"
     state: directory
-  when: customizations_result is defined
+  when:
+    - customizations_result is defined
 
 - name: Make a backup of gathered customizations on Fuel
   run_once: true
