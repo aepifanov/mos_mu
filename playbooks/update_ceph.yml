@@ -12,10 +12,19 @@
     - "vars/steps/{{ steps }}.yml"
 
   tasks:
-
     - name: Check if CEPH is deployed on this env
       local_action: shell fuel node --env-id {{ env_id }} | grep ceph-osd
       run_once: true
+      ignore_errors: true
+      register: ceph_exist
+
+    - name: Exit, if CEPH is not deployed on the env
+      fail:
+        msg: >
+            "Exiting update_ceph.yml playbook, CEPH is not deployed on this env."
+      run_once: true
+      when:
+        - ceph_exist.rc != 0
 
     - include: tasks/health_checks.yml
       when: health_check is undefined or
