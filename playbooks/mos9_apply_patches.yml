@@ -18,6 +18,9 @@
         - mos_release != "9.0"
         - mos_release != "9.1"
 
+    - name: APT Update
+      command: apt-get -c {{ apt_conf }} update
+
     - include: tasks/apply_patches.yml
 
 - include: restart_services.yml
