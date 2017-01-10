@@ -19,6 +19,21 @@
   service: name={{ item }} state=restarted
   with_items: "{{ fuel_services }}"
 
+- name: Disable UCA release
+  disable_release:
+    release: "Mitaka on Ubuntu+UCA 14.04"
+
+- name: Add MOS 9.2 repos
+  add_repo_to_release:
+    release: "Mitaka on Ubuntu 14.04"
+    name: "{{ item.name }}"
+    url: "{{ item.url }}"
+    suite: "{{ item.suite }}"
+    section: "{{ item.section }}"
+    type: "{{ item.type }}"
+    priority: "{{ item.priority }}"
+  with_items: "{{ mos92_repos }}"
+
 - name: Rebuild bootstrap images
   command: fuel-bootstrap build --activate
   when:
