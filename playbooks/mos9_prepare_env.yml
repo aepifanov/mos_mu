@@ -8,16 +8,16 @@
     - "vars/mos_releases/{{ mos_release }}.yml"
 
   tasks:
-  - name: Add MOS 9.2 repo
-    script: files/add_repo_to_env.py
-    environment:
-      ENV_ID: "{{ env_id }}"
-      NAME: "mos9.2"
-      TYPE: "deb"
-      URL: "{{ fuel_url }}/snapshots/{{ snapshot_repo }}"
-      SUITE: "mos9.0-proposed"
-      SECTION: "main restricted"
-      PRIORITY: "1050"
+  - name: Add MOS 9.2 repos
+    add_repo_to_env:
+      env_id: "{{ env_id }}"
+      name: "{{ item.name }}"
+      url: "{{ item.url }}"
+      suite: "{{ item.suite }}"
+      section: "{{ item.section }}"
+      type: "{{ item.type }}"
+      priority: "{{ item.priority }}"
+    with_items: "{{ mos92_repos }}"
 
 
 - hosts: env_{{ env_id }}

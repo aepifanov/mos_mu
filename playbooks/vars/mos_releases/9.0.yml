@@ -1,5 +1,6 @@
 ---
-snapshot_repo: "9.0-latest"
+snapshot_repo: "9.2"
+snapshot_suite: "mos9.0-updates"
 
 env_release: "9.0"
 fuel_url: "http://mirror.fuel-infra.org/mos-repos/ubuntu"
@@ -12,13 +13,33 @@ apt_repos:
     url: "{{ fuel_url }}/9.1"
     repo: "mos{{ env_release }}-updates"
     type: "main restricted"
-  - name: "latest"
-    url: "{{ fuel_url }}/snapshots/{{ snapshot_repo }}"
+  - name: "9.2"
+    url: "{{ fuel_url }}/{{ snapshot_repo }}"
     repo: "mos{{ env_release }}-updates"
     type: "main restricted"
 apt_sources_lists:
   - name: "fuel"
     path: "/etc/apt/sources.list.d/mos.list"
+
+mos92_repos:
+  - name: "mos9.2-updates"
+    url: "{{ fuel_url }}/{{ snapshot_repo }}"
+    suite: "{{ snapshot_suite }}"
+    section: "main restricted"
+    type: "deb"
+    priority: 1050
+  - name: "mos9.2-security"
+    url: "{{ fuel_url }}/{{ snapshot_repo }}"
+    suite: "mos9.0-security"
+    section: "main restricted"
+    type: "deb"
+    priority: 1050
+  - name: "mos9.2-holdback"
+    url: "{{ fuel_url }}/{{ snapshot_repo }}"
+    suite: "mos9.0-holdback"
+    section: "main restricted"
+    type: "deb"
+    priority: 1100
 
 
 controller_pcs_resources:
