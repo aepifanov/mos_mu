@@ -31,9 +31,9 @@
     command: sed -i -e 's|n=mos9.0-updates|n=mos9.0|' /etc/apt/preferences.d/mos-updates.pref
     ignore_errors: true
 
-  - name: Add MOS 9.2 repo key
-    apt_key:
-        url={{ fuel_url }}/snapshots/{{ snapshot_repo }}/archive-mos9.0-proposed.key
+  - name: Fix domain name in Neutron conf
+    command: sed -i -e 's|domain_id=Default|domain_name=Default|' /etc/neutron/neutron.conf
+    ignore_errors: true
 
   - name: Update MCollective
     apt:
@@ -49,3 +49,4 @@
       name: mcollective
       state: restarted
 
+- include: restart_services.yml
