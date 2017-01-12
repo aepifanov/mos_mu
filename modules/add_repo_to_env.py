@@ -49,7 +49,7 @@ def main():
 
     os.chdir("/tmp")
 
-    run_or_die("fue env --env {} --attributes --download".format(env_id))
+    run_or_die("fuel env --env {} --attributes --download".format(env_id))
     shutil.copyfile(filename, filename+".orig")
 
     with io.open(filename, "r") as ifile:
