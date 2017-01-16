@@ -44,14 +44,30 @@ check_cinder ()
 
 check_ceph ()
 {
-    type ceph &> /dev/null || return 0
+	type ceph &> /dev/null ||
+		return 0
 
-    OUT=$(ceph -s)
-    echo -e "${OUT}" | grep HEALTH_OK &> /dev/null
-	if (( $? != 0 )); then
-		(( RET |= 8 ))
-		OUTPUT+="### ceph:\n${OUT}\n"
-	fi
+	OUT=$(ceph health)
+	echo -e "${OUT}" | grep HEALTH_OK &> /dev/null &&
+		return 0
+
+	RS=$(echo "${OUT}" | awk -F ';' '{
+		exc[0] = "too many PGs per OSD"
+		for (i=1; i<=NF; i++) {
+			skip = 0
+			for (e in exc) {
+				if (match ($i, exc[e]) != 0)
+					skip = 1
+			}
+			if ( skip == 0 )
+				print $i;
+		}
+	}')
+	[ -z "${RS}" ] &&
+		return 0
+
+	(( RET |= 8 ))
+	OUTPUT+="### ceph:\n${OUT}\n"
 }
 
 source /root/openrc
