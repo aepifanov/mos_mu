@@ -34,6 +34,9 @@
     priority: "{{ item.priority }}"
   with_items: "{{ mos92_repos }}"
 
+- name: Update Ubuntu template for building Mirrors
+  shell: sed -i -e 's/mos-repos\/ubuntu\/$mos_version/mos-repos\/ubuntu\/9.2/g' /usr/share/fuel-mirror/ubuntu.yaml
+
 - name: Rebuild bootstrap images
   command: fuel-bootstrap build --activate
   when:

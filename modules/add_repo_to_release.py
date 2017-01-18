@@ -20,8 +20,8 @@ def repo_exists(repos, name):
     for repo in repos:
         if 'name' in repo:
             if repo['name'] == name:
-                return True
-    return False
+                return repo
+    return None
 
 
 def main():
@@ -63,10 +63,13 @@ def main():
     with io.open(filename, "r") as ifile:
         data = yaml.load(ifile)
 
-    if repo_exists(data, name):
-        module.exit_json(changed=False, result=0)
-
-    data.append(
+    repo = repo_exists(data, name)
+    if repo:
+        if repo['uri'] == url:
+            module.exit_json(changed=False, result=0)
+        repo['uri'] = url
+    else:
+        data.append(
             {'name': name,
              'priority': priority,
              'section': section,

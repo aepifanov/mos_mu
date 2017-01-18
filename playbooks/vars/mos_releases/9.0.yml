@@ -22,19 +22,19 @@ apt_sources_lists:
     path: "/etc/apt/sources.list.d/mos.list"
 
 mos92_repos:
-  - name: "mos9.2-updates"
+  - name: "mos-updates"
     url: "{{ fuel_url }}/{{ snapshot_repo }}"
     suite: "{{ snapshot_suite }}"
     section: "main restricted"
     type: "deb"
     priority: 1050
-  - name: "mos9.2-security"
+  - name: "mos-security"
     url: "{{ fuel_url }}/{{ snapshot_repo }}"
     suite: "mos9.0-security"
     section: "main restricted"
     type: "deb"
     priority: 1050
-  - name: "mos9.2-holdback"
+  - name: "mos-holdback"
     url: "{{ fuel_url }}/{{ snapshot_repo }}"
     suite: "mos9.0-holdback"
     section: "main restricted"

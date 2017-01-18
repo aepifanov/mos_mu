@@ -19,8 +19,8 @@ def repo_exists(repos, name):
     for repo in repos:
         if 'name' in repo:
             if repo['name'] == name:
-                return True
-    return False
+                return repo
+    return None
 
 
 def main():
@@ -53,13 +53,16 @@ def main():
     shutil.copyfile(filename, filename+".orig")
 
     with io.open(filename, "r") as ifile:
-        data = yaml.load(ifile)
+        data_ = yaml.load(ifile)
 
-    if repo_exists(data['editable']['repo_setup']['repos']['value'], name):
-        print "Repo with name " + name + " already exists"
-        module.exit_json(changed=False, result=0)
-
-    data['editable']['repo_setup']['repos']['value'].append(
+    data = data_['editable']['repo_setup']['repos']['value']
+    repo = repo_exists(data, name)
+    if repo:
+        if repo['uri'] == url:
+            module.exit_json(changed=False, result=0)
+        repo['uri'] = url
+    else:
+        data.append(
             {'name': name,
              'priority': priority,
              'section': section,
@@ -68,7 +71,7 @@ def main():
              'uri': url})
 
     with io.open(filename, "w") as ofile:
-        yaml.dump(data, ofile, default_flow_style=False)
+        yaml.dump(data_, ofile, default_flow_style=False)
 
     run_or_die("fuel env --env {} --attributes --upload".format(env_id))
 

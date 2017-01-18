@@ -99,7 +99,7 @@ automatically.
 ---------------------
 Update the Fuel Slave nodes using the command below:
 ```
-fuel2 update --env <ENV_ID> install --repos mos9.2
+fuel2 update --env <ENV_ID> install
 ```
 Optionally, add the --restart-rabbit and --restart-mysql arguments to the
 command to restart RabbitMQ and MySQL automatically. Otherwise, these services
