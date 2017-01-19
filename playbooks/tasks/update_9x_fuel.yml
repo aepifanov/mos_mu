@@ -34,6 +34,18 @@
     priority: "{{ item.priority }}"
   with_items: "{{ mos92_repos }}"
 
+- name: Add MOS 9.2 proposed repo
+  add_repo_to_release:
+    release: "Mitaka on Ubuntu 14.04"
+    name: "{{ item.name }}"
+    url: "{{ item.url }}"
+    suite: "{{ item.suite }}"
+    section: "{{ item.section }}"
+    type: "{{ item.type }}"
+    priority: "{{ item.priority }}"
+  with_items: "{{ mos92_proposed_repo }}"
+  when: snapshot_repo != "9.2"
+
 - name: Update Ubuntu template for building Mirrors
   shell: sed -i -e 's/mos-repos\/ubuntu\/$mos_version/mos-repos\/ubuntu\/9.2/g' /usr/share/fuel-mirror/ubuntu.yaml
 
