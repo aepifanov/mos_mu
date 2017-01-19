@@ -65,9 +65,11 @@ def main():
 
     repo = repo_exists(data, name)
     if repo:
-        if repo['uri'] == url:
+        if repo['uri'] == url and \
+           repo['suite'] == suite:
             module.exit_json(changed=False, result=0)
         repo['uri'] = url
+        repo['suite'] = suite
     else:
         data.append(
             {'name': name,
