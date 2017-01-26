@@ -120,10 +120,14 @@ packages: &packages
      - "irqbalance"
      - "language-pack-en"
      - "libapache2-mod-fastcgi"
+     - "libmysqlclient18"
+     - "libicu-dev"
      - "libnss3-tools"
      - "linux-firmware-nonfree"
      - "linux-headers-generic-lts-trusty"
+     - "linux-headers-generic-lts-xenial"
      - "linux-image-generic-lts-trusty"
+     - "linux-image-generic-lts-xenial"
      - "live-boot"
      - "livecd-rootfs"
      - "mc"
@@ -158,6 +162,7 @@ packages: &packages
      - "xmlstarlet"
      - "tftpd-hpa"
      - "syslinux"
+     - "systemd-shim"
 
 
 groups:
