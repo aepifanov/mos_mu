@@ -8,6 +8,11 @@
     - "vars/mos_releases/{{ mos_release }}.yml"
 
   tasks:
+  - name: Remove 9.0-holdback LP1663728
+    remove_repo_by_name:
+      env_id: "{{ env_id }}"
+      name: "mos-holdback"
+
   - name: Add MOS 9.2 repos
     add_repo_to_env:
       env_id: "{{ env_id }}"
