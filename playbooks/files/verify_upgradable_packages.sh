@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script verifies MD5 sum for all installed packages
+# This script verifies customized packages
 # Return:
 #     0 - ok
 #     1 - some customized packets were installed not from configured repositories
@@ -25,7 +25,7 @@ CUSTOM_PKGS=$(cat "${CUSTOM_PKGS_FILE}" | tr -d '\r')
 for PKG in ${CUSTOM_PKGS}; do
     PKG_POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}") || exit -1
     echo "${PKG_POLICY}" | grep -F "***" -A1 | grep Packages &> /dev/null
-    if [ $? != 0 ]; then
+    if (( $? != 0 )); then
         case ${UNKNOWN_CUSTOM_PKGS,,} in
             "keep")
                 echo "[KEEP] Unknown customized package '${PKG}' will be kept."
@@ -35,7 +35,7 @@ for PKG in ${CUSTOM_PKGS}; do
                 echo "[REINSTALL] Unknown customized package '${PKG}' will be reinstalled on the available version."
                 ;;
             *)
-                echo "[ERROR] Unknown customized package: \"${PKG}\" was installed not from the configured repositories."
+                echo "[ERROR] Unknown customized package: '${PKG}' was installed not from the configured repositories."
                 (( RET |= 1 ))
                 ;;
         esac
@@ -43,7 +43,7 @@ for PKG in ${CUSTOM_PKGS}; do
     fi
 
     # Add to customized packages
-    [[ "${CUSTOMIZED_PKGS}" != "" ]] &&
+    [ -n "${CUSTOMIZED_PKGS}" ] &&
         CUSTOMIZED_PKGS+="\n"
     CUSTOMIZED_PKGS+="${PKG}"
 done
@@ -53,7 +53,7 @@ ALL_PKGS=$(apt-get -c "${APT_CONF}" --just-print upgrade | grep "Inst" | awk '{p
 for PKG in ${ALL_PKGS}; do
     PKG_POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}") || exit -1
     echo "${PKG_POLICY}" | grep -F "***" -A1 | grep Packages &> /dev/null
-    if [ $? != 0 ]; then
+    if (( $? != 0 )); then
         case ${UNKNOWN_UPGRADABLE_PKGS,,} in
             "keep")
                 echo "[KEEP] Unknown upgradable package '${PKG}' will be kept."
@@ -70,7 +70,8 @@ for PKG in ${ALL_PKGS}; do
     fi
 done
 
-[ -z "${CUSTOMIZED_PKGS}" ] || echo -e "${CUSTOMIZED_PKGS}"
+[ -n "${CUSTOMIZED_PKGS}" ] &&
+    echo -e "${CUSTOMIZED_PKGS}"
 
 if (( (RET & 1) == 1 )); then
     echo ""
