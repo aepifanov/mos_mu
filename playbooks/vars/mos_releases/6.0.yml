@@ -1,0 +1,56 @@
+---
+
+env_release: "6.0"
+fuel_url: "http://mirror.fuel-infra.org/fwm/"
+apt_repos:
+  - name: "mu-8"
+    url: "{{ fuel_url }}/{{ env_release }}/updates/ubuntu"
+    repo: "precise"
+    type: "main"
+apt_sources_lists:
+  - name: "fuel"
+    path: "/etc/apt/sources.list"
+
+controller_pcs_resources:
+    - p_heat-engine
+    - p_neutron-plugin-openvswitch-agent
+    - p_neutron-dhcp-agent
+    - p_neutron-metadata-agent
+    - p_neutron-l3-agent
+    - p_ceilometer-agent-central
+    - p_ceilometer-alarm-evaluator
+
+controller_services:
+    - heat-api
+    - heat-api-cfn
+    - heat-api-cloudwatch
+    - nova-api
+    - nova-cert
+    - nova-conductor
+    - nova-scheduler
+    - nova-novncproxy
+    - nova-objectstore
+    - nova-consoleauth
+    - cinder-api
+    - cinder-scheduler
+    - cinder-volume
+    - cinder-backup
+    - glance-api
+    - glance-registry
+    - neutron-server
+    - ceilometer-api
+    - ceilometer-collector
+    - ceilometer-alarm-notifier
+    - ceilometer-agent-notification
+    - sahara-all
+    - openstack-murano-api
+    - openstack-murano-engine
+    - apache2
+
+compute_services:
+    - nova-compute
+    - neutron-plugin-openvswitch-agent
+    - ceilometer-agent-compute
+    - cinder-volume
+    - cinder-backup
+    - libvirtd

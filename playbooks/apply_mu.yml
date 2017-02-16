@@ -15,6 +15,7 @@
       fail:
         msg: "[ERROR] This playbook can be ran only on MOS older than 9.0"
       when:
+        - mos_release != "6.0"
         - mos_release != "6.1"
         - mos_release != "7.0"
         - mos_release != "8.0"

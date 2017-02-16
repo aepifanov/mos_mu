@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# This script tries to apply  all patches from ${PATCHES_DIR} directory
+# on the specified (${PKG_VER_FOR_VERIFICATION}) version of packages
+# (Installed or Candidate)
+#
+# Return:
+#     0 - ok
+#     x - error
+# Output:
+#     Result of verification
+
 APT_CONF=${1:-$APT_CONF}
 APT_CONF=${APT_CONF:-"/root/mos_mu/apt/apt.conf"}
 PATCHES_DIR=${2:-$PATCHES_DIR}
@@ -10,10 +20,15 @@ PKG_VER_FOR_VERIFICATION=${4:-$PKG_VER_FOR_VERIFICATION}
 PKG_VER_FOR_VERIFICATION=${PKG_VER_FOR_VERIFICATION:?"PKG_VER_FOR_VERIFICATION is undefined!"}
 IGNORE_APPLIED_PATCHES=${5:-$IGNORE_APPLIED_PATCHES}
 IGNORE_APPLIED_PATCHES=${IGNORE_APPLIED_PATCHES:-"False"}
-KEEP_PKGS=${KEEP_PKGS:-$5}
+KEEP_PKGS=${KEEP_PKGS:-$6}
 
+CACHED_PKG_FILES="/var/cache/apt/archives/"
 
-# Get patackage name from patch
+# Gets patackage name from patch
+#
+# Return:
+#     0 - ok
+#     x - error
 # Global vars:
 #   OUT - Error or Warning messages
 #   PKG - Package name
@@ -23,24 +38,79 @@ get_pkg_name_from_patch()
     PKG=""
     local RET=0
     local PATCH=${1:?"Please specify patch's filename"}
-    local FILES=$(awk '/\+\+\+/ {print $2}' "${PATCH}")
-    # Get Package name and make sure that all affect the only one package
+
+    # Get list of customized files from patch file
+    local FILES=$(awk '/\+\+\+ \// {print $2}' "${PATCH}")
+    # Make sure that all customized files are belonged to the same Package
     for FILE in ${FILES}; do
-        [ -e "${FILE}" ] || {
-            OUT+="[WARN]   ${FILE} skipped since it is absent";
+        [ -f "${FILE}" ] || {
+            OUT+="[WARN]   ${FILE} skipped since it is absent\n";
             continue; }
         PACK=$(dpkg -S "${FILE}")
         PACK=$(echo -e "${PACK}" | awk '{print $1}')
+	# Make sure that this file isn't belonged to the several packages
+        [[ "${PACK}" =~ .*diversion*. ]] && {
+            (( RET |= 1 ));
+            OUT+="[ERROR]  File ${FILE} is diversion\n";
+            continue; }
         PACK=${PACK/\:/}
         [ -z "${PKG}" ] && {
             PKG="${PACK}";
             continue; }
         [[ "${PACK}" != "${PKG}" ]] && {
             (( RET |= 1 ));
-            OUT+="[ERROR]  Affect more than one package: ${PKG} != ${PACK} (${FILE})"; }
+            OUT+="[ERROR]  Affect more than one package: ${PKG} != ${PACK} (${FILE})\n";
+	    continue; }
     done
     return "${RET}"
 }
+
+# Returns a path to the deb file of specified package and version
+#
+# Return:
+#     0 - ok
+#     x - error # Global Vars:
+# Global Vars:
+# PKG_FILE - deb file for required package and version
+function get_deb ()
+{
+    local PKG=${1:?"Please specify package name."}
+    local VERS=${2:?"Please specify package version"}
+    PKG_FILE=$(find "${CACHED_PKG_FILES}" -type f -name "${PKG}*${VERS##*:}*.deb")
+    [ -f "${PKG_FILE}" ] && return 0
+
+    apt-get -c "${APT_CONF}" download "${PKG}=${VERS}" &> /dev/null || return -1
+    PKG_FILE=$(find . -type f -name "${PKG}*${VERS##*:}*.deb")
+    [ -f "${PKG_FILE}" ] && return 0
+
+    return 1
+}
+
+# Unpacks specified deb file
+#
+# Return:
+#     0 - ok
+#     x - error
+function unpack_deb ()
+{
+    local PKG_FILE=${1:?"Please specify package name."}
+    [ -f "${PKG_FILE}" ] || return -1
+    local DATA=$(ar t "${PKG_FILE}" | grep data.tar)
+    local ARCH_KEY=''
+    case $(echo "${DATA}" | awk -F '.' '{print $3}') in
+	'gz')
+	    ARCH_KEY='z'
+	    ;;
+	'xz')
+	    ARCH_KEY='J'
+            ;;
+	*)
+	    return -2
+	    ;;
+    esac
+    ar p "${PKG_FILE}" "${DATA}" | tar x"${ARCH_KEY}" || return -3
+}
+
 
 cd "${PATCHES_DIR}" &>/dev/null || exit 0
 
@@ -50,48 +120,39 @@ RET=0
 # Check patches
 PATCHES=$(find . -type f -name "*.patch" |sort)
 for PATCH in ${PATCHES}; do
-    cd "${PATCHES_DIR}" || exit 2
+    cd "${PATCHES_DIR}" || exit -1
     echo -e "\n-------- ${PATCH}"
     get_pkg_name_from_patch "${PATCH}"
     RS=$?
-    [ -z "${OUT}" ] ||
+    [ -n "${OUT}" ] &&
         echo -e "${OUT}"
     (( RS != 0 ))  && {
         (( RET |= 1 ));
         continue; }
-    # Whether package is installed on this node
+    # Whether package is installed on this node ?
     [ -z "${PKG}" ] &&
         continue
-    # Whether this package should be keeped
+    # Whether this package should be keeped ?
     echo "${KEEP_PKGS} ${HOLD_PKGS}" | grep ${PKG} &>/dev/null  && {
         echo "[SKIP]   ${PKG} is on hold";
         continue; }
 
-    # Download new version and extract it
-    PKG_PATH=${VERIFICATION_DIR}/${PKG}
-    POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}") || exit 2
-    VERS_ORIG=$(echo -e "${POLICY}" | grep "${PKG_VER_FOR_VERIFICATION}" | awk '{print $2}')
-    VERS=${VERS_ORIG/\:/\%3a}
-    VERS_PATH=${PKG_PATH}/${VERS}
-    PKG_NAME="${PKG}_${VERS}_all.deb"
+    # Identify required version
+    EXTRACTED_PKG=${VERIFICATION_DIR}/${PKG}
+    POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}" 2>/dev/null ) || exit -1
+    VERS=$(echo -e "${POLICY}" | grep "${PKG_VER_FOR_VERIFICATION}" | awk '{print $2}')
 
-    [ -d "${VERS_PATH}" ] || mkdir -p "${VERS_PATH}"
-    cd "${VERS_PATH}" || exit 2
-    [ -e "${PKG_NAME}" ] ||
-        apt-get -q -c "${APT_CONF}" download "${PKG}" &>/dev/null || {
-            echo "[ERROR]  Failed to download ${PKG}";
-            (( RET |= 2));
-            continue; }
-    [ -d "usr" ] ||
-        ar p "${PKG_NAME}" data.tar.xz | tar xJ || {
-            echo "[ERROR]  Failed to unpack ${PKG}";
-            (( RET |= 2));
-            continue; }
+    [ -d "${EXTRACTED_PKG}/${VERS}" ] ||
+        mkdir -p "${EXTRACTED_PKG}/${VERS}"
+    cd "${EXTRACTED_PKG}/${VERS}" &&
+        rm -rf ./*
+
+    get_deb "${PKG}" "${VERS}"
+
+    unpack_deb "${PKG_FILE}" || exit -1
 
     # Verify patch applying
-    cd "${PKG_PATH}" ||
-        { exit 2
-        echo "[ERROR]  Failed to enter to the folder ${PKG_PATH}";}
+    cd "${EXTRACTED_PKG}" || exit -1
 
     cp -f "${PATCHES_DIR}/${PATCH}" .
     PATCH_FILENAME=${PATCH##*/}

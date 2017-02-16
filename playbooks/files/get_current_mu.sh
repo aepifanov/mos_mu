@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REL="Undefined"
+REL=""
 
 APT_CONF=${1:-$APT_CONF}
 APT_CONF=${APT_CONF:-"/root/mos_mu/apt/apt.conf"}
@@ -15,16 +15,18 @@ for REPO in ${REPOS}; do
     REPO=${REPO%%.list}
     OUTS+="${REPO}:\n"
     OUTS+="    $(echo -e "${OUT}" | grep "upgraded,")\n"
-    echo "${OUT}" | grep Inst &>/dev/null ||
-		{ REL="${REPO}";
-		break; };
+    echo "${OUT}" | grep Inst &>/dev/null || {
+	[ -n "${REL}" ] && {
+	    REL+=", "; };
+	REL+="${REPO}"; }
 done
 
 REL=${REL##*/}
 REL=${REL%%.list}
 
-
-echo "${REL}"
-if [[ "${REL}" == "Undefined" ]]; then
+if [ -n "${REL}" ]; then
+    echo "${REL}"
+else
+    echo "Undefined"
     echo -e "${OUTS}"
 fi

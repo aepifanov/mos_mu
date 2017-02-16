@@ -34,7 +34,8 @@
 
     - name: Get OCFs which have "remove_artifacts_on_stop_start"
       tags: controller_pcs
-      shell: fgrep -l remove_artifacts_on_stop_start /usr/lib/ocf/resource.d/fuel/*
+      ignore_errors: yes
+      shell: fgrep -r remove_artifacts_on_stop_start /usr/lib/ocf/resource.d/
       register: ocfs
 
     - block:
