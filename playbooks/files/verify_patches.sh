@@ -139,7 +139,7 @@ for PATCH in ${PATCHES}; do
 
     # Identify required version
     EXTRACTED_PKG=${VERIFICATION_DIR}/${PKG}
-    POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}") || exit -1
+    POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}" 2>/dev/null ) || exit -1
     VERS=$(echo -e "${POLICY}" | grep "${PKG_VER_FOR_VERIFICATION}" | awk '{print $2}')
 
     [ -d "${EXTRACTED_PKG}/${VERS}" ] ||

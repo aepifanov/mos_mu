@@ -81,3 +81,5 @@ done
 
 [ -n "${CUSTOMIZED_PKGS}" ] &&
     echo -e "${CUSTOMIZED_PKGS}"
+
+exit 0
