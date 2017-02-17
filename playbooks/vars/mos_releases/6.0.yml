@@ -46,6 +46,22 @@ controller_services:
     - openstack-murano-api
     - openstack-murano-engine
     - apache2
+    - swift-account-auditor
+    - swift-account
+    - swift-account-reaper
+    - swift-account-replicator
+    - swift-container-auditor
+    - swift-container
+    - swift-container-reconciler
+    - swift-container-replicator
+    - swift-container-sync
+    - swift-container-updater
+    - swift-object-auditor
+    - swift-object
+    - swift-object-reconstructor
+    - swift-object-replicator
+    - swift-object-updater
+    - swift-proxy
 
 compute_services:
     - nova-compute
