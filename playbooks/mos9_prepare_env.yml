@@ -8,6 +8,11 @@
     - "vars/mos_releases/{{ mos_release }}.yml"
 
   tasks:
+  - name: Remove 9.0-holdback LP1663728
+    remove_repo_by_name:
+      env_id: "{{ env_id }}"
+      name: "mos-holdback"
+
   - name: Add MOS 9.2 repos
     add_repo_to_env:
       env_id: "{{ env_id }}"
@@ -34,6 +39,11 @@
   - name: Fix domain name in Neutron conf
     command: sed -i -e 's|domain_id=Default|domain_name=Default|' /etc/neutron/neutron.conf
     ignore_errors: true
+    
+  - name: Remove mos-holdback.list
+    file:
+        path: "/etc/apt/sources.list.d/mos-holdback.list"
+        state: absent
 
   - name: Add MOS 9.2 repo key
     apt_key:

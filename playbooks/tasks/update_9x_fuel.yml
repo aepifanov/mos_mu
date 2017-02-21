@@ -23,6 +23,11 @@
   disable_release:
     release: "Mitaka on Ubuntu+UCA 14.04"
 
+- name: Remove 9.0-holdback LP1663728
+  remove_repo_by_name:
+    release: "Mitaka on Ubuntu 14.04"
+    name: "mos-holdback"
+
 - name: Add MOS 9.2 repos
   add_repo_to_release:
     release: "Mitaka on Ubuntu 14.04"
