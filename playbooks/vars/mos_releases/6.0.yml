@@ -4,7 +4,8 @@ env_release: "6.0"
 fuel_url: "http://mirror.fuel-infra.org/fwm/"
 apt_repos:
   - name: "mu-8"
-    url: "{{ fuel_url }}/{{ env_release }}/updates/ubuntu"
+    suites:
+      - "{{ fuel_url }}/{{ env_release }}/updates/ubuntu"
     repo: "precise"
     type: "main"
 apt_sources_lists:
