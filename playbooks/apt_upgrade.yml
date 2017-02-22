@@ -1,0 +1,17 @@
+---
+
+- hosts: env_{{ env_id }}
+  any_errors_fatal: true
+  vars:
+      apt_update: true
+
+  vars_files:
+    - "vars/common.yml"
+    - "vars/mos_releases/{{ mos_release }}.yml"
+
+  tasks:
+    - include: tasks/apt_update.yml
+
+    - include: tasks/apt_upgrade.yml
+
+

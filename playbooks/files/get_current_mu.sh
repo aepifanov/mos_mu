@@ -16,9 +16,9 @@ for REPO in ${REPOS}; do
     OUTS+="${REPO}:\n"
     OUTS+="    $(echo -e "${OUT}" | grep "upgraded,")\n"
     echo "${OUT}" | grep Inst &>/dev/null || {
-	[ -n "${REL}" ] && {
-	    REL+=", "; };
-	REL+="${REPO}"; }
+        [ -n "${REL}" ] && {
+            REL+=", "; };
+        REL+="${REPO}"; }
 done
 
 REL=${REL##*/}

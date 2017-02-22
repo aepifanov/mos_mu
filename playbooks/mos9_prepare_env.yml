@@ -40,7 +40,7 @@
     command: sed -i -e 's|domain_id=Default|domain_name=Default|' /etc/neutron/neutron.conf
     ignore_errors: true
 
-  - name: Remove mos-holdback.list
+  - name: Remove mos-holdback.list LP1663728
     file:
         path: "/etc/apt/sources.list.d/mos-holdback.list"
         state: absent
