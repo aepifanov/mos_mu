@@ -1,20 +1,20 @@
 #!/bin/bash
 
 RESOURCE=${1:?"ERROR: Please specify resource name."}
-TIMEOUT=${2:-600}
 
-STATUS=$(pcs resource show "${RESOURCE}") ||
-    { echo "WARNING: Resource ${RESOURCE} is not present!";
+
+OUT=$(pcs resource show "${RESOURCE}") || {
+    echo "WARNING: Resource ${RESOURCE} is not present!";
     exit 100;}
-STATUS+=$(pcs resource show clone_"${RESOURCE}")
+DETAILES=${OUT}
+OUT+=$(pcs resource show clone_"${RESOURCE}")
 
-STATUS=$(echo "${STATUS}" | fgrep "target-role=Stopped") &&
-    { echo "WARNING: Resource ${RESOURCE} is stopped!";
-    exit 101;}
-
-STATUS=$(echo "${STATUS}" | fgrep "target-role=Stopped") ||
+echo "${OUT}" | fgrep "target-role=Stopped" || {
     echo "WARNING: Resource ${RESOURCE} is not stopped!"
-
-pcs resource debug-stop "${RESOURCE}" ||
-    { echo "ERROR: Resource ${RESOURCE} failed to stop";
     exit 1;}
+
+PROVIDER=$(echo "${DETAILES}" | awk '/Resource/ {for(i=1;i<=NF;i++) {if(match($i,"provider")) {gsub(".*\=","",$i);gsub("[\(\)]","",$i);print $i}}}')
+TYPE=$(    echo "${DETAILES}" | awk '/Resource/ {for(i=1;i<=NF;i++) {if(match($i,"type"))     {gsub(".*\=","",$i);gsub("[\(\)]","",$i);print $i}}}')
+
+export OCF_ROOT=/usr/lib/ocf
+${OCF_ROOT}/resource.d/${PROVIDER}/${TYPE} stop
