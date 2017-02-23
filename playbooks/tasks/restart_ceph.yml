@@ -34,6 +34,17 @@
     - restart_mon == "yes"
 
 
+- name: unset osd flags
+  command: ceph osd set {{ item }}
+  with_items:
+    - noout
+    - noscrub
+    - nodeep-scrub
+  delegate_to: "{{ groups['controller'][0] }}"
+  when:
+    - restart_osd is defined
+    - restart_osd == "yes"
+
 - name: restart ceph osds
   service:
     name: ceph-osd-all

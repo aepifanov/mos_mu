@@ -74,15 +74,6 @@
     - "vars/common.yml"
     - "vars/steps/{{ steps }}.yml"
 
-  pre_tasks:
-    - name: set osd flags
-      command: ceph osd set {{ item }}
-      with_items:
-        - noout
-        - noscrub
-        - nodeep-scrub
-      delegate_to: "{{ groups['controller'][0] }}"
-
   tasks:
     - include: tasks/update_ceph.yml
 
