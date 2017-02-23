@@ -1,5 +1,8 @@
 ---
 
+- name: APT Update
+  command: apt-get -c {{ apt_conf }} update
+
 - name: Get current MU
   script: files/get_current_mu.sh
   environment:
