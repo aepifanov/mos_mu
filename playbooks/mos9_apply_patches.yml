@@ -3,7 +3,9 @@
 - hosts: env_{{ env_id }}
   any_errors_fatal: true
   vars:
-      steps: "apply_mu"
+    steps: "apply_mu"
+    apt_flags: ""
+
 
   vars_files:
     - "vars/common.yml"

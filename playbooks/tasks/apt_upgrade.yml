@@ -1,12 +1,12 @@
 ---
 
 - name: APT correct dependencies
-  command: "apt-get -y -c {{ apt_conf }} -f install"
+  command: "apt-get -y -c {{ apt_conf }} {{ apt_flags }} -f install"
   environment:
     DEBIAN_FRONTEND: noninteractive
 
 - name: APT upgrade
-  command: "apt-get -y -c {{ apt_conf }} upgrade"
+  command: "apt-get -y -c {{ apt_conf }} {{ apt_flags }} upgrade"
   environment:
     DEBIAN_FRONTEND: noninteractive
 

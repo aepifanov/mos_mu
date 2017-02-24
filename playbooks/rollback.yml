@@ -2,6 +2,8 @@
 
 - hosts: env_{{ env_id }}
   any_errors_fatal: true
+  vars:
+    apt_flags: "-o Dir::Etc::sourcelist={{ apt_src_dir }}/{{ rollback }}.list -o Dir::Etc::sourceparts='-'"
 
   vars_files:
     - "vars/common.yml"
@@ -13,6 +15,7 @@
       fail:
         msg: "[ERROR] This playbook can be ran only on MOS older than 9.0"
       when:
+        - mos_release != "6.0"
         - mos_release != "6.1"
         - mos_release != "7.0"
         - mos_release != "8.0"
@@ -32,7 +35,7 @@
 
       - include: tasks/verify_patches.yml
 
-      - include: tasks/rollback_upgrade.yml
+      - include: tasks/apt_upgrade.yml
 
       - include: tasks/apply_patches.yml
 

@@ -5,7 +5,7 @@
   register: reinstall_pkgs
 
 - name: APT reinstall packages before customizing
-  command: "apt-get -y -c {{ apt_conf }} install --reinstall {{ item }}"
+  command: "apt-get -y -c {{ apt_conf }} {{ apt_flags }} install --reinstall {{ item }}"
   environment:
     DEBIAN_FRONTEND: noninteractive
   with_items: "{{ reinstall_pkgs.stdout_lines }}"
