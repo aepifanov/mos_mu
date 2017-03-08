@@ -1,0 +1,57 @@
+---
+
+- hosts: env_{{ env_id }}
+  any_errors_fatal: true
+
+  vars_files:
+    - "vars/common.yml"
+    - "vars/git_config.yml"
+
+  tasks:
+      #    - name: Install etckeeper
+      #      apt:
+      #        name: etckeeper
+      #        state: latest
+      #
+      #    - name: Make sure conf directory exists
+      #      file:
+      #        path: "{{ fuel_conf_dir  }}"
+      #        state: directory
+      #      run_once : true
+      #      delegate_to: localhost
+      #
+      #    - name: Git init
+      #      shell: "git --git-dir={{ fuel_conf_dir }}/.git --work-tree={{ fuel_conf_dir }} init"
+      #      run_once : true
+      #      delegate_to: localhost
+
+    - name: Read conf customizations
+      read_conf_customizations:
+          path: "{{ fuel_conf_cust_dir }}"
+          limit: "roles"
+      register: ret
+      delegate_to: localhost
+      run_once : true
+
+    - name: Print conf
+      debug:
+        msg: "{{ret}}"
+
+      #    - name: Upload /etc to Fuel
+      #      shell: "mkdir -p {{ fuel_conf_curr_dir }}/{{ ansible_hostname }}/{{ item.path }}; rsync -vazrcRPt {{ ansible_hostname }}:{{ item.path }} {{ fuel_conf_curr_dir }}/{{ ansible_hostname }}/{{ item.path }}"
+      #      delegate_to: localhost
+      #      when: item.group is defined and ansible_nodename in groups[item.limit]
+      #      with_items: "{{ git_configs }}"
+      #      register: ret
+      #      failed_when: false
+      #      changed_when: not ret.rc
+      #
+#    - name: Git add all
+#      shell: "git --git-dir={{ fuel_conf_dir }}/.git --work-tree={{ fuel_conf_dir }} add {{ fuel_conf_dir }}/; exit 0"
+#      run_once : true
+#      delegate_to: localhost
+#
+#    - name: Git commit
+#      shell: "git --git-dir={{ fuel_conf_dir }}/.git --work-tree={{ fuel_conf_dir }} commit -m 'test'; exit 0"
+#      run_once : true
+#      delegate_to: localhost

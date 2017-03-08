@@ -1,0 +1,6 @@
+
+git_configs:
+  - path: /etc/neutron_asd
+    limit: "controller"
+  - path: /etc/nova
+    limit: "controller"

@@ -6,6 +6,8 @@ yum -y install epel-release
 
 # Install Ansible
 yum -y install ansible
+# Install Git
+yum -y install git
 # Install tree util
 yum -y install tree
 # Install jq util
