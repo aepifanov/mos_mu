@@ -37,9 +37,6 @@
     priority: "{{ item.priority }}"
   with_items: "{{ mos92_repos }}"
 
-- name: Update Ubuntu template for building Mirrors
-  command: cp -f playbooks/templates/ubuntu.yaml /usr/share/fuel-mirror/
-
 - name: Rebuild bootstrap images
   command: fuel-bootstrap build --activate
   when:
