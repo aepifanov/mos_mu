@@ -14,6 +14,8 @@
         - mos_release != "9.1"
         - mos_release != "9.2"
 
+    - include: tasks/mos9_disable_upstream_repo.yaml
+
     - name: Install Cudet package
       yum:
         name: python-cudet

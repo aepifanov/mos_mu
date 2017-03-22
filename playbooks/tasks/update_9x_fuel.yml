@@ -1,3 +1,5 @@
+- include: tasks/mos9_disable_upstream_repo.yaml
+
 - name: Yum clean all
   command: yum clean all
 

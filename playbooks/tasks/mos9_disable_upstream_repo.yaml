@@ -1,0 +1,4 @@
+---
+
+- name: Disable upstream repos LP1673428
+  shell: "for i in base extras updates; do yum-config-manager --disable $i >/dev/null; done;"
