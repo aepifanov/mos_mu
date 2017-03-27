@@ -37,6 +37,14 @@
     command: sed -i -e 's|n=mos9.0-updates|n=mos9.0|' /etc/apt/preferences.d/mos-updates.pref
     failed_when: false
 
+  - name: Remove 9.0-holdback from nodes LP1663728
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - /etc/apt/sources.list.d/mos-holdback.list
+      - /etc/apt/preferences.d/mos-holdback.pref
+
   - name: Fix domain name in Neutron conf
     command: sed -i -e 's|domain_id=Default|domain_name=Default|' /etc/neutron/neutron.conf
     failed_when: false
