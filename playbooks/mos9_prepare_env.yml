@@ -64,3 +64,15 @@
       state: restarted
 
 - include: restart_services.yml
+
+
+- hosts: env_{{ env_id }}:&controller
+  any_errors_fatal: true
+  vars_files:
+    - "vars/common.yml"
+    - "vars/mos_releases/{{ mos_release }}.yml"
+
+  tasks:
+    - include: tasks/apt_update.yml
+
+    - include: tasks/update_pacemaker.yml

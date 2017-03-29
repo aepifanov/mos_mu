@@ -1,0 +1,33 @@
+- name: Set maintenance mode for Pacemaker
+  command: crm configure property maintenance-mode=true
+  ignore_errors: yes
+  run_once: true
+
+- name: Stop Pacemaker
+  service:
+    name: pacemaker
+    state: stopped
+  failed_when: false
+
+- name: Force stop Pacemaker processes
+  shell: "ps aux | awk '/[p]acemaker/ {print$2}' | xargs kill -9; sleep 2; pkill stop"
+  failed_when: false
+
+- name: Update Pacemaker and Corosync packages
+  command: "apt-get -y -c {{ apt_conf }} install {{ item }}"
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+  with_items:
+      - pacemaker
+      - corosync
+
+- name: Start Pacemaker
+  shell: "service pacemaker start; service pacemaker start"
+
+- name: Unset maintenance mode for Pacemaker
+  action:
+    command crm configure property maintenance-mode=false
+  run_once: true
+  register: result
+  until: result.rc == 0
+  retries: 5
