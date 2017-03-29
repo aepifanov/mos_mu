@@ -42,7 +42,7 @@ manage patches to successfully execute previous **verify_patches.yml** step.
 Apply MU
 --------
 
-Update Fuel node:
+Update Fuel node (skip for MOS6.0):
 ```
 ansible-playbook playbooks/update_fuel.yml
 ```

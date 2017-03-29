@@ -3,10 +3,6 @@ Apply MU
 
 This is a tool for applying Maintenance Updates on deployed MOS environments.
 
-**WORK IN PROGRESS !!!**
-
-Don't use it on production environment until it will be released !!!
-
 If you have any questions please don't hesitate to ask me: aepifanov@mirantis.com
 
 Any comments/suggestions are welcome :)
@@ -26,7 +22,7 @@ Conditions and Limitations
 --------------------------
 
 - should be run on Fuel Master under root
-- supports only MOS versions: 6.1, 7.0, 8.0 and 9.x.
+- supports only MOS versions: 6.x, 7.0, 8.0 and 9.x.
 - supports only Ubuntu
 - doesn't start puppet which means that doesn't apply fixes which are in puppet manifests
 - needs manual restart for non OpenStack services (RabbitMQ, MySQL, Libvirt, CEPH and etc)
@@ -62,5 +58,5 @@ You can use these flags specify them as Ansible extra vars.
 Usage
 =====
 
-- [Udage for MOS 6.1/7.0/8.0](doc/usage_old.md)
-- [Usage for MOS 9.x](doc/usage_9x.md)
+- [Usage for MOS 6.x/7.0/8.0](doc/usage_old.md)
+- [Usage for MOS 9.x](doc/update-product.rst)
