@@ -32,6 +32,7 @@
         repo={{ ceph_repo }}
         state=present
         update_cache=yes
+        filename="ceph-update"
       when:
         - add_ceph_repo is defined
         - add_ceph_repo
@@ -110,3 +111,24 @@
 
   tasks:
     - include: tasks/update_ceph.yml
+
+
+- hosts: env_{{ env_id }}
+  any_errors_fatal: true
+  vars:
+      steps: "update_ceph"
+
+  vars_files:
+    - "vars/ceph.yml"
+    - "vars/common.yml"
+    - "vars/mos_releases/{{ mos_release }}.yml"
+
+  tasks:
+    - name: remove ceph_repo
+      file:
+        path="/etc/apt/sources.list.d/ceph-update.list"
+        state=absent
+      when:
+        - add_ceph_repo is defined
+        - add_ceph_repo
+        - ceph_repo is defined

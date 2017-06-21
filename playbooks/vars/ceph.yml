@@ -1,7 +1,8 @@
 ---
-# This option is used to define temporary ceph repo
-#
-#ceph_repo: "deb http://mirror.fuel-infra.org/mos-repos/ubuntu/snapshots/9.0-latest/ mos9.0-proposed main restricted"
+# This variable is used to set a repo with updated ceph packages.
+# This repo will be used to update ceph installation if 'add_ceph_repo'
+# variable is True.
+ceph_repo: "deb http://mirror.fuel-infra.org/mos-repos/ubuntu/9.2/ mos9.0-updates main restricted"
 
 # A list of ceph/radosgw packages and libraries from
 # MOS repo. This list will be used to search for
