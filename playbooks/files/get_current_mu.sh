@@ -6,11 +6,13 @@ APT_CONF=${1:-$APT_CONF}
 APT_CONF=${APT_CONF:-"/root/mos_mu/apt/apt.conf"}
 APT_SRC_DIR=${2:-$APT_SRC_DIR}
 APT_SRC_DIR=${APT_SRC_DIR:-"/root/mos_mu/apt/sources.list.d"}
+APT_UPGRADE=${3:-$APT_UPGRADE}
+
 
 OUTS="\n"
 REPOS=$(find "${APT_SRC_DIR}" -type f -name "*.list")
 for REPO in ${REPOS}; do
-    OUT=$(apt-get  -c "${APT_CONF}" -o Dir::Etc::sourcelist="${REPO}"  -o Dir::Etc::sourceparts="-"  --just-print upgrade)
+    OUT=$(apt-get  -c "${APT_CONF}" -o Dir::Etc::sourcelist="${REPO}"  -o Dir::Etc::sourceparts="-"  --just-print "${APT_UPGRADE}")
     REPO=${REPO##*/}
     REPO=${REPO%%.list}
     OUTS+="${REPO}:\n"

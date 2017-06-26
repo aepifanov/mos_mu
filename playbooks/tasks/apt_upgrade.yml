@@ -6,7 +6,7 @@
     DEBIAN_FRONTEND: noninteractive
 
 - name: APT upgrade
-  command: "apt-get -y -c {{ apt_conf }} {{ apt_flags }} upgrade"
+  command: "apt-get -y -c {{ apt_conf }} {{ apt_flags }} {{ upgrade }}"
   environment:
     DEBIAN_FRONTEND: noninteractive
 

@@ -8,6 +8,7 @@
   environment:
     APT_CONF: "{{ apt_conf }}"
     APT_SRC_DIR: "{{ apt_src_dir }}"
+    APT_UPGRADE: "{{ apt_upgrade }}"
   register: current_mu
 
 - name: Show current MU
