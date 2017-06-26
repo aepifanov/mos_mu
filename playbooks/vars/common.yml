@@ -19,5 +19,5 @@ fuel_patches_dir:         "{{ fuel_dir }}/patches"
 fuel_custom_verification: "{{ fuel_dir }}/customizations_verification"
 fuel_unified_dir:         "{{ fuel_dir }}/customizations_unified"
 
-keep_pkgs:                ""
 srcs_list_tmpl:           "sources.list.j2"
+

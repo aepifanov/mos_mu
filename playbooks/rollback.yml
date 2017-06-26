@@ -8,7 +8,7 @@
   vars_files:
     - "vars/common.yml"
     - "vars/mos_releases/{{ mos_release }}.yml"
-    - "vars/steps/rollback.yml"
+    - "vars/steps.yml"
 
   tasks:
     - name: Check mos_realease less than 9.0

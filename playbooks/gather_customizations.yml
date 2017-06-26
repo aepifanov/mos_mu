@@ -6,7 +6,7 @@
   vars_files:
     - "vars/common.yml"
     - "vars/mos_releases/{{ mos_release }}.yml"
-    - "vars/steps/gather_customizations.yml"
+    - "vars/steps.yml"
 
   tasks:
     - include: tasks/health_checks.yml

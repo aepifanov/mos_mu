@@ -4,12 +4,11 @@
   any_errors_fatal: true
   vars:
     apt_flags: ""
-    steps: "apply_mu"
 
   vars_files:
     - "vars/common.yml"
     - "vars/mos_releases/{{ mos_release }}.yml"
-    - "vars/steps/{{ steps }}.yml"
+    - "vars/steps.yml"
 
   tasks:
     - name: Check mos_realease less than 9.0
