@@ -52,6 +52,20 @@ apt_repos:
       - "mos{{ env_release }}-security"
       - "mos{{ env_release }}-holdback"
     type: "main restricted"
+  - name: "mu-7"
+    url: "{{ fuel_url }}/{{ env_release }}-mu-7"
+    suites:
+      - "mos{{ env_release }}-updates"
+      - "mos{{ env_release }}-security"
+      - "mos{{ env_release }}-holdback"
+    type: "main restricted"
+  - name: "mu-8"
+    url: "{{ fuel_url }}/{{ env_release }}-mu-8"
+    suites:
+      - "mos{{ env_release }}-updates"
+      - "mos{{ env_release }}-security"
+      - "mos{{ env_release }}-holdback"
+    type: "main restricted"
 apt_sources_lists:
   - name: "fuel"
     path: "/etc/apt/sources.list.d/mos.list"
