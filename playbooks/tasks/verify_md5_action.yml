@@ -1,21 +1,6 @@
 ---
 
-- name: Make sure report directory exists
-  file:
-    path: "{{ report_dir }}"
-    state: directory
-
 - include: tasks/get_current_mu.yml
-
-- name: Get list of upgrdable packages
-  shell:  apt-get -c "{{ apt_conf }}" upgrade  --just-print | egrep -v "Conf|Inst" | tee "{{ report_dir }}/upgradable_pkgs"; exit 0
-  register: upgradable_pkgs
-
-- name: Show upgradable packages
-  debug:
-    msg: "{{ upgradable_pkgs.stdout_lines }}"
-  when:
-    - upgradable_pkgs.stdout != ""
 
 - name: Check MD5 sum for installed packages
   script: files/verify_md5_packages_ubuntu.sh

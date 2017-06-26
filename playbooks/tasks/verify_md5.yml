@@ -5,6 +5,17 @@
     path: "{{ report_dir }}"
     state: directory
 
+- name: Get list of upgrdable packages
+  shell:  apt-get -c "{{ apt_conf }}" "{{ apt_upgrade }}" --just-print | egrep -v "Conf|Inst" | tee "{{ report_dir }}/upgradable_pkgs"
+  failed_when: false
+  register: upgradable_pkgs
+
+- name: Show upgradable packages
+  debug:
+    msg: "{{ upgradable_pkgs.stdout_lines }}"
+  when:
+    - upgradable_pkgs.stdout != ""
+
 - name: Check if customizations were already gathered
   stat:
     path: "{{ report_dir }}/md5_results"

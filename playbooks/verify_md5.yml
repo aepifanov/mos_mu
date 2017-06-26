@@ -1,0 +1,36 @@
+---
+
+- hosts: env_{{ env_id }}
+  any_errors_fatal: true
+
+  vars_files:
+    - "vars/common.yml"
+    - "vars/mos_releases/{{ mos_release }}.yml"
+    - "vars/steps.yml"
+
+  tasks:
+    - include: tasks/health_checks.yml
+      when: health_check is undefined or
+            health_check
+
+    - include: tasks/apt_update.yml
+
+    - name: Save current locked packages
+      shell:  apt-mark showhold
+      register: locked_packages
+
+    - name: Hold keeped packages
+      shell: echo "{{ keep_pkgs }}" | xargs apt-mark hold
+      failed_when: false
+      when:
+        - keep_pkgs is defined
+        - keep_pkgs
+
+    - block:
+
+      - include: tasks/verify_md5.yml
+
+      always:
+        - name: Restore locked packages
+          shell: apt-mark showhold | xargs apt-mark unhold; echo "{{ locked_packages.stdout_lines }}" | xargs apt-mark hold
+          failed_when: false
