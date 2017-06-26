@@ -25,14 +25,15 @@
   ignore_errors: true
   register: md5_verify_result
 
-- name: Show results of MD5 sum verification
+- name: Show verification results
   debug:
     msg: "{{ md5_verify_result.stdout_lines }}"
   when:
     - md5_verify_result.stdout != ""
 
-- name: Store the MD5 verivication
-  shell: echo "{{ md5_verify_result.stdout }}" > "{{ report_dir }}/pkgs_verification_results"; exit 0
+- name: Store the verification results
+  shell: echo "{{ md5_verify_result.stdout }}" > "{{ report_dir }}/pkgs_verification_results"
+  failed_when: false
 
 - name: Fail if verification failed
   fail:
@@ -41,6 +42,7 @@
     - md5_verify_result.rc != 0
 
 - name: Remove messages and leave only packages
-  shell: echo "{{ md5_verify_result.stdout }}" | grep -v '^\[' | grep -v '^W\:'; exit 0
+  shell: echo "{{ md5_verify_result.stdout }}" | grep -v '^\[' | grep -v '^W\:'
+  failed_when: false
   register: md5_verify_result
 

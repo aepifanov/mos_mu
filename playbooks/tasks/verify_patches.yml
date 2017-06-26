@@ -47,7 +47,8 @@
     - verify_patches_result.stdout != ""
 
 - name: Store list of packages which will be customized
-  shell: echo "{{ verify_patches_result.stdout }}" | awk '/customized successfully/ {print $2}' > "{{ report_dir }}/reinstall_pkgs"; exit 0
+  shell: echo "{{ verify_patches_result.stdout }}" | awk '/customized successfully/ {print $2}' > "{{ report_dir }}/reinstall_pkgs"
+  failed_when: false
 
 - name: Fail if patches verifying failed
   fail:

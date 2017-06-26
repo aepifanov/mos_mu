@@ -40,7 +40,8 @@
     - verify_result.rc != 0
 
 - name: Store the MD5 verivication
-  shell: echo "{{ verify_result.stdout }}" > "{{ report_dir }}/md5_results"; exit 0
+  shell: echo "{{ verify_result.stdout }}" > "{{ report_dir }}/md5_results"
+  failed_when: false
 
 - name: Make sure backup directory exists
   file:

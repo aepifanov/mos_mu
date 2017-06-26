@@ -30,7 +30,15 @@
       shell:  apt-mark showhold
       register: locked_packages
 
+    - name: Hold keeped packages
+      shell: echo "{{ keep_pkgs }}" | xargs apt-mark hold
+      failed_when: false
+      when:
+        - keep_pkgs is defined
+        - keep_pkgs
+
     - block:
+
       - include: tasks/gather_customizations.yml
 
       - include: tasks/verify_customizations.yml
@@ -43,7 +51,8 @@
 
       always:
         - name: Restore locked packages
-          shell: apt-mark showhold | xargs apt-mark unhold; echo "{{ locked_packages.stdout }}" | xargs apt-mark hold; exit 0
+          shell: apt-mark showhold | xargs apt-mark unhold; echo "{{ locked_packages.stdout_lines }}" | xargs apt-mark hold
+          failed_when: false
 
 - include: restart_services.yml
 
