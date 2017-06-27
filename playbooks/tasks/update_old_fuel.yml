@@ -2,8 +2,6 @@
     - name: Stop docker containers
       command: dockerctl stop all
 
-    - include: backup_fuel.yml
-
     - name: Yum update
       command: yum -y update
 
