@@ -2,8 +2,6 @@
 
 - hosts: env_{{ env_id }}
   any_errors_fatal: true
-  vars:
-    apt_flags: ""
 
   vars_files:
     - "vars/common.yml"
@@ -11,21 +9,6 @@
     - "vars/steps.yml"
 
   tasks:
-    - name: Check mos_realease less than 9.0
-      fail:
-        msg: "[ERROR] This playbook can be ran only on MOS older than 9.0"
-      when:
-        - mos_release != "6.0"
-        - mos_release != "6.1"
-        - mos_release != "7.0"
-        - mos_release != "8.0"
-
-    - include: tasks/health_checks.yml
-      when: health_check is undefined or
-            health_check
-
-    - include: tasks/apt_update.yml
-
     - name: Save current locked packages
       shell:  apt-mark showhold
       register: locked_packages
@@ -39,22 +22,21 @@
 
     - block:
 
-      - include: tasks/gather_customizations.yml
+      - name: Get list of upgrdable packages
+        script: files/check_update_for_pkgs.sh
+        environment:
+          REPORT_DIR: "{{ report_dir }}"
+          APT_UPGRADE: "{{ apt_upgrade }}"
+          PKGS: "{{ pacemaker_pkgs }}"
+        changed_when: update_flag.rc == 0
+        failed_when: false
+        register: update_flag
 
-      - include: tasks/verify_customizations.yml
-
-      - include: tasks/verify_patches.yml
-
-      - include: tasks/apt_upgrade.yml
-
-      - include: tasks/apply_patches.yml
+      - include: tasks/update_pacemaker.yml
+        when: update_flag.changed
 
       always:
         - name: Restore locked packages
           shell: apt-mark showhold | xargs apt-mark unhold; echo "{{ locked_packages.stdout_lines }}" | xargs apt-mark hold
           failed_when: false
           when: locked_packages.stdout != ""
-
-- include: restart_services.yml
-
-- include: health_check.yml

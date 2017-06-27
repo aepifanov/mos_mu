@@ -21,3 +21,7 @@ fuel_unified_dir:         "{{ fuel_dir }}/customizations_unified"
 
 srcs_list_tmpl:           "sources.list.j2"
 
+
+pacemaker_pkgs:
+  - pacemaker
+  - corosync

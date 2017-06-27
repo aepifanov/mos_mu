@@ -13,6 +13,12 @@
   shell: "ps aux | awk '/[p]acemaker/ {print$2}' | xargs kill -9; sleep 2; pkill stop"
   failed_when: false
 
+- name: Stop Corosync
+  service:
+    name: corosync
+    state: stopped
+  failed_when: false
+
 - name: Update Pacemaker and Corosync packages
   command: "apt-get -y -c {{ apt_conf }} install {{ item }}"
   environment:
@@ -21,7 +27,16 @@
       - pacemaker
       - corosync
 
-- name: Start Pacemaker
+- name: Start Corosync and Pacemaker
+  service:
+    name: "{{ item }}"
+    state: started
+  failed_when: false
+  with_items:
+    - corosync
+    - pacemaker
+
+- name: Force Start Pacemaker
   shell: "service pacemaker start; service pacemaker start"
 
 - name: Unset maintenance mode for Pacemaker
