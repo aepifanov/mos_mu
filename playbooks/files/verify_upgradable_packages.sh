@@ -24,18 +24,19 @@ CUSTOM_PKGS=$(cat "${CUSTOM_PKGS_FILE}" | tr -d '\r')
 
 for PKG in ${CUSTOM_PKGS}; do
     PKG_POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}") || exit -1
+    VERS=$(echo -e "${PKG_POLICY}" | awk '/\*\*\*/ {print $2}')
     echo "${PKG_POLICY}" | grep -F "***" -A1 | grep Packages &> /dev/null
     if (( $? != 0 )); then
         case ${UNKNOWN_CUSTOM_PKGS,,} in
             "keep")
-                echo "[KEEP] Unknown customized package '${PKG}' will be kept."
+                echo "[KEEP] Unknown customized package '${PKG}' (${VERS}) will be kept."
                 apt-mark hold "${PKG}" &> /dev/null
                 ;;
             "reinstall")
-                echo "[REINSTALL] Unknown customized package '${PKG}' will be reinstalled on the available version."
+                echo "[REINSTALL] Unknown customized package '${PKG}'(${VERS}) will be reinstalled on the available version."
                 ;;
             *)
-                echo "[ERROR] Unknown customized package: '${PKG}' was installed not from the configured repositories."
+                echo "[ERROR] Unknown customized package: '${PKG}' (${VERS}) was installed not from the configured repositories."
                 (( RET |= 1 ))
                 ;;
         esac
@@ -52,18 +53,19 @@ done
 ALL_PKGS=$(apt-get -c "${APT_CONF}" --just-print upgrade | grep "Inst" | awk '{print $2}' ) || exit -1
 for PKG in ${ALL_PKGS}; do
     PKG_POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}") || exit -1
+    VERS=$(echo -e "${PKG_POLICY}" | awk '/\*\*\*/ {print $2}')
     echo "${PKG_POLICY}" | grep -F "***" -A1 | grep Packages &> /dev/null
     if (( $? != 0 )); then
         case ${UNKNOWN_UPGRADABLE_PKGS,,} in
             "keep")
-                echo "[KEEP] Unknown upgradable package '${PKG}' will be kept."
+                echo "[KEEP] Unknown upgradable package '${PKG}' (${VERS}) will be kept."
                 apt-mark hold "${PKG}" &> /dev/null
                 ;;
             "reinstall")
-                echo "[REINSTALL] Unknown upgradable package '${PKG}' will be reinstalled on the new available version."
+                echo "[REINSTALL] Unknown upgradable package '${PKG}' (${VERS}) will be reinstalled on the new available version."
                 ;;
             *)
-                echo "[ERROR] Unknown upgradable package: '${PKG}' was installed not from the configured repositories."
+                echo "[ERROR] Unknown upgradable package: '${PKG}' (${VERS}) was installed not from the configured repositories."
                 (( RET |= 2 ))
                 ;;
         esac
