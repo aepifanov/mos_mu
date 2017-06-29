@@ -1,5 +1,3 @@
-- include: backup_fuel.yml
-
 - name: Yum clean all
   command: yum clean all
 
