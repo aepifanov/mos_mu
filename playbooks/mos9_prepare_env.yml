@@ -76,4 +76,4 @@
     - include: tasks/apt_update.yml
 
 
-- include: tasks/update_pacemaker.yml
+- include: update_pacemaker.yml
