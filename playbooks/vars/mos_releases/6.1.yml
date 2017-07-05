@@ -98,6 +98,7 @@ controller_services:
     - openstack-murano-api
     - openstack-murano-engine
     - apache2
+    - radosgw
     - swift-account-auditor
     - swift-account
     - swift-account-reaper
