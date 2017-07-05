@@ -2,14 +2,11 @@
 
 - hosts: env_{{ env_id }}
   any_errors_fatal: true
-  vars:
-      steps: "update_ceph"
 
   vars_files:
     - "vars/ceph.yml"
     - "vars/common.yml"
     - "vars/mos_releases/{{ mos_release }}.yml"
-    - "vars/steps/{{ steps }}.yml"
 
   tasks:
     - name: Check if CEPH is deployed on this env
@@ -48,7 +45,6 @@
   vars_files:
     - "vars/ceph.yml"
     - "vars/common.yml"
-    - "vars/ceph.yml"
 
   tasks:
     - include: tasks/update_ceph.yml
@@ -64,13 +60,10 @@
 - hosts: env_{{ env_id }}:&ceph-osd
   any_errors_fatal: true
   serial: 1
-  vars:
-      steps: "update_ceph"
 
   vars_files:
     - "vars/ceph.yml"
     - "vars/common.yml"
-    - "vars/steps/{{ steps }}.yml"
 
   tasks:
     - include: tasks/update_ceph.yml
@@ -87,13 +80,10 @@
 - hosts: env_{{ env_id }}:&controller
   any_errors_fatal: true
   serial: 1
-  vars:
-      steps: "update_ceph"
 
   vars_files:
     - "vars/ceph.yml"
     - "vars/common.yml"
-    - "vars/steps/{{ steps }}.yml"
 
   tasks:
 
@@ -113,13 +103,10 @@
 
 - hosts: env_{{ env_id }}:!controller:!ceph-osd
   any_errors_fatal: true
-  vars:
-      steps: "update_ceph"
 
   vars_files:
     - "vars/ceph.yml"
     - "vars/common.yml"
-    - "vars/steps/{{ steps }}.yml"
 
   tasks:
     - include: tasks/update_ceph.yml
