@@ -37,21 +37,21 @@ apt_upgrade: "upgrade"
 # somtimes it is impossible.
 #
 # Possible values:
-# - "fail"      (default)
+# - "fail"      (fail)
 # - "keep"      (don't update these packages)
 # - "reinstall" (update these packages, lost current packages)
 # - any other mean "fail"
-unknown_custom_pkgs: "fail"
+unknown_custom_pkgs: "reinstall"
 
 # Action for upgradable packages which were installed not from
 # specified repositories(unknown packages).
 #
 # Possible values:
-# - "fail"      (default)
+# - "fail"      (fail)
 # - "keep"      (don't update these packages)
 # - "reinstall" (update these packages, lost current packages)
 # - any other mean "fail"
-unknown_upgradable_pkgs: "fail"
+unknown_upgradable_pkgs: "reinstall"
 
 # Unify only patches for package
 # Patch will be unified (copied to unified folder) if
