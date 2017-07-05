@@ -18,7 +18,7 @@ OUT=""
 for PKG in ${PKGS}; do
     echo "${RES}" | fgrep ${PKG}  &>/dev/null && {
         (( RET = 0 ));
-        OUT+="${PKG}"; }
+        OUT+="${PKG}\n"; }
 done
 
 echo "${OUT}"
