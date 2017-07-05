@@ -12,6 +12,7 @@
       failed_when:
         - restart_result | failed
         - "'no service or tool found for' not in restart_result.msg"
+        - "'Could not find the requested service' not in restart_result.msg"
       with_items: "{{ compute_services }}"
       when: restart is undefined or
             restart
@@ -28,6 +29,7 @@
       failed_when:
         - restart_result | failed
         - "'no service or tool found for' not in restart_result.msg"
+        - "'Could not find the requested service' not in restart_result.msg"
       with_items: "{{ controller_services }}"
       when: restart is undefined or
             restart
