@@ -1,0 +1,41 @@
+---
+
+- hosts: env_{{ env_id }}:&controller
+  any_errors_fatal: true
+
+  vars_files:
+    - "vars/common.yml"
+    - "vars/mos_releases/{{ mos_release }}.yml"
+    - "vars/steps.yml"
+
+  tasks:
+    - name: Stop Management VIP
+      shell: pcs resource disable vip__management --wait=600
+      run_once: true
+
+    - name: Make MySQL backup
+      script: files/backup_mysql.sh
+      environment:
+          BACKUP_DIR: "{{ backup_dir }}"
+      run_once: true
+      register: backup_result
+
+    - name: Make sure that directory for backups exists on Fuel
+      run_once: true
+      delegate_to: localhost
+      file:
+        path: "{{ fuel_env_backup_dir }}"
+        state: directory
+
+    - name: Upload backup to Fuel
+      fetch:
+        src:  "{{ backup_dir }}/{{ item }}"
+        dest: "{{ fuel_env_backup_dir }}/{{ item }}"
+        flat: true
+      with_items: "{{ backup_result.stdout_lines }}"
+      when:
+        - backup_result is defined
+
+    - name: Start Management VIP
+      shell: pcs resource disable vip__management --wait=600
+      run_once: true

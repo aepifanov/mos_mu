@@ -38,21 +38,21 @@
   when:
     - customizations_result is defined
 
-- name: Make sure that directory for customizations backups exists on Fuel
+- name: Make sure that directory for backups exists on Fuel
   run_once: true
   delegate_to: localhost
   file:
-    path: "{{ fuel_custom_backup_dir }}"
+    path: "{{ fuel_env_backup_dir }}"
     state: directory
   when:
     - customizations_result is defined
 
 - name: Make a backup of gathered customizations on Fuel
   run_once: true
-  local_action: shell tar -czf "{{ fuel_custom_backup_dir }}"/customizations__$(date +%m.%d.%y__%H-%M-%S).tgz "{{ fuel_custom_dir }}"
+  local_action: shell tar -czf "{{ fuel_env_backup_dir }}"/customizations__$(date +%m.%d.%y__%H-%M-%S).tgz "{{ fuel_custom_dir }}"
 
 - include: tasks/get_report.yml
 
 - name: Make a backup of reports on Fuel
   run_once: true
-  local_action: shell tar -czf "{{ fuel_custom_backup_dir }}"/reports__$(date +%m.%d.%y__%H-%M-%S).tgz "{{ fuel_report_dir }}"
+  local_action: shell tar -czf "{{ fuel_env_backup_dir }}"/reports__$(date +%m.%d.%y__%H-%M-%S).tgz "{{ fuel_report_dir }}"
