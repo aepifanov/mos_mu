@@ -19,11 +19,18 @@
       shell:  apt-mark showhold
       register: locked_packages
 
+    - name: Show locked packages
+      debug:
+        msg: "{{ locked_packages.stdout_lines }}"
+      when:
+        - locked_packages is defined
+        - locked_packages.stdout != ""
+
     - block:
 
       - include: tasks/verify_md5.yml
 
       always:
         - name: Restore locked packages
-          shell: apt-mark showhold | xargs apt-mark unhold; echo "{{ locked_packages.stdout_lines }}" | xargs apt-mark hold
+          shell: apt-mark showhold | xargs apt-mark unhold; echo "{{ locked_packages.stdout }}" | xargs apt-mark hold
           failed_when: false
