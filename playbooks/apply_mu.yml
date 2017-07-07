@@ -35,6 +35,9 @@
       - include: tasks/gather_customizations.yml
 
       - include: tasks/verify_customizations.yml
+        when:
+        - use_current_customizations is defined
+        - use_current_customizations
 
       - include: tasks/verify_patches.yml
 
