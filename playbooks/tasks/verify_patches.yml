@@ -37,7 +37,6 @@
     PKG_VER_FOR_VERIFICATION: "{{ pkg_ver_for_verification }}"
     IGNORE_APPLIED_PATCHES: "{{ ignore_applied_patches }}"
     APT_UPGRADE: "{{ apt_upgrade }}"
-    KEEP_PKGS: "{{ keep_pkgs }}"
   register: verify_patches_result
 
 - name: Show results of Patches Verification

@@ -12,7 +12,6 @@ APT_CONF=${APT_CONF:-$2}
 APT_CONF=${APT_CONF:-"/root/mos_mu/apt/apt.conf"}
 CUSTOM_DIR=${CUSTOM_DIR:-$3}
 CUSTOM_DIR=${CUSTOM_DIR:?"CUSTOM_DIR is undefined!"}
-KEEP_PKGS=${KEEP_PKGS:-$4}
 
 CACHED_PKG_FILES="/var/cache/apt/archives/"
 EXTRACTED_PKG="${CUSTOM_DIR}/${PKG}"
@@ -124,7 +123,7 @@ function unpack_deb ()
 
 
 HOLD_PKGS=$(apt-mark showhold)
-echo "${KEEP_PKGS} ${HOLD_PKGS}" | grep ${PKG} &&
+echo "${HOLD_PKGS}" | grep ${PKG} &&
     exit 100
 
 POLICY=$(apt-cache -c "${APT_CONF}" policy "${PKG}") || exit -1

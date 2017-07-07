@@ -19,7 +19,6 @@
   environment:
     PATCHES_DIR: "{{ patches_dir }}"
     IGNORE_APPLIED_PATCHES: "{{ ignore_applied_patches }}"
-    KEEP_PKGS: "{{ keep_pkgs }}"
   register: apply_patches_result
 
 - name: Show results of Patches Applying

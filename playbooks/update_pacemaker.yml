@@ -9,34 +9,17 @@
     - "vars/steps.yml"
 
   tasks:
-    - name: Save current locked packages
-      shell:  apt-mark showhold
-      register: locked_packages
 
-    - name: Hold keeped packages
-      shell: echo "{{ keep_pkgs }}" | xargs apt-mark hold
+    - name: Get list of upgrdable packages
+      script: files/check_update_for_pkgs.sh
+      environment:
+        REPORT_DIR: "{{ report_dir }}"
+        APT_UPGRADE: "{{ apt_upgrade }}"
+        PKGS: "{{ pacemaker_pkgs }}"
+      changed_when: update_flag.rc == 0
       failed_when: false
-      when:
-        - keep_pkgs is defined
-        - keep_pkgs
+      register: update_flag
 
-    - block:
+    - include: tasks/update_pacemaker.yml
+      when: update_flag.changed
 
-      - name: Get list of upgrdable packages
-        script: files/check_update_for_pkgs.sh
-        environment:
-          REPORT_DIR: "{{ report_dir }}"
-          APT_UPGRADE: "{{ apt_upgrade }}"
-          PKGS: "{{ pacemaker_pkgs }}"
-        changed_when: update_flag.rc == 0
-        failed_when: false
-        register: update_flag
-
-      - include: tasks/update_pacemaker.yml
-        when: update_flag.changed
-
-      always:
-        - name: Restore locked packages
-          shell: apt-mark showhold | xargs apt-mark unhold; echo "{{ locked_packages.stdout_lines }}" | xargs apt-mark hold
-          failed_when: false
-          when: locked_packages.stdout != ""

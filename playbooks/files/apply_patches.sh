@@ -4,7 +4,6 @@ PATCHES_DIR=${1:-$PATCHES_DIR}
 PATCHES_DIR=${PATCHES_DIR:?"PATCHES_DIR is undefined!"}
 IGNORE_APPLIED_PATCHES=${2:-$IGNORE_APPLIED_PATCHES}
 IGNORE_APPLIED_PATCHES=${IGNORE_APPLIED_PATCHES:-"False"}
-KEEP_PKGS=${KEEP_PKGS:-$3}
 
 # Get patackage name from patch
 # Global vars:
@@ -56,7 +55,7 @@ for PATCH in ${PATCHES}; do
     [ -z "${PKG}" ] &&
         continue
     # Whether this package should be keeped
-    echo "${KEEP_PKGS} ${HOLD_PKGS}" | grep ${PKG} &>/dev/null && {
+    echo "${HOLD_PKGS}" | grep ${PKG} &>/dev/null && {
         echo "[SKIP]   ${PKG} is on hold";
         continue; }
 

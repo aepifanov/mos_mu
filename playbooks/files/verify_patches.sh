@@ -21,7 +21,6 @@ PKG_VER_FOR_VERIFICATION=${PKG_VER_FOR_VERIFICATION:?"PKG_VER_FOR_VERIFICATION i
 IGNORE_APPLIED_PATCHES=${5:-$IGNORE_APPLIED_PATCHES}
 IGNORE_APPLIED_PATCHES=${IGNORE_APPLIED_PATCHES:-"False"}
 APT_UPGRADE=${6:-$APT_UPGRADE}
-KEEP_PKGS=${KEEP_PKGS:-$7}
 
 CACHED_PKG_FILES="/var/cache/apt/archives/"
 
@@ -134,7 +133,7 @@ for PATCH in ${PATCHES}; do
     [ -z "${PKG}" ] &&
         continue
     # Whether this package should be keeped ?
-    echo "${KEEP_PKGS} ${HOLD_PKGS}" | grep ${PKG} &>/dev/null  && {
+    echo "${HOLD_PKGS}" | grep ${PKG} &>/dev/null  && {
         echo "[SKIP]   ${PKG} is on hold";
         continue; }
 

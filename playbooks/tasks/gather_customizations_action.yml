@@ -18,7 +18,6 @@
   environment:
     APT_CONF: "{{ apt_conf }}"
     CUSTOM_DIR: "{{ custom_dir }}"
-    KEEP_PKGS: "{{ keep_pkgs }}"
   with_items: "{{ md5_verify_result.stdout_lines }}"
   changed_when:
     - customizations_result.rc == 0

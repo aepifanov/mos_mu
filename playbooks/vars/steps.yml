@@ -28,9 +28,6 @@ gather_customizations: false
 # Type of APT upgrade
 apt_upgrade: "upgrade"
 
-# List of packages that should be holded (splited by space)
-#keep_pkgs: ""
-
 # Action for customized packages which were installed not from
 # specified repositories(uknown packages).
 # Since it is useless to get diff for unknown package and
