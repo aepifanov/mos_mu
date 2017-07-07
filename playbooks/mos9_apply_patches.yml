@@ -2,15 +2,11 @@
 
 - hosts: env_{{ env_id }}
   any_errors_fatal: true
-  vars:
-    steps: "apply_mu"
-    apt_flags: ""
-
 
   vars_files:
     - "vars/common.yml"
     - "vars/mos_releases/{{ mos_release }}.yml"
-    - "vars/steps/{{ steps }}.yml"
+    - "vars/steps.yml"
 
   tasks:
     - name: Check mos_realease is 9.x
