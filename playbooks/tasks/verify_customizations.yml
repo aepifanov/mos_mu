@@ -11,9 +11,6 @@
     FUEL_VERIFICATION_DIR: "{{ fuel_custom_verification }}"
     FUEL_UNIFIED_DIR: "{{ fuel_unified_dir }}"
     UNIFY_ONLY_PATCHES: "{{ unify_only_patches }}"
-  when:
-    - use_current_customizations is defined
-    - use_current_customizations
 
 - name: Show results of customizations consistency Verification
   run_once: true
