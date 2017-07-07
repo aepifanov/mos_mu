@@ -41,6 +41,8 @@
 
       - include: tasks/verify_patches.yml
 
+      - include: tasks/update_pacemaker.yml
+
       - include: tasks/apt_upgrade.yml
 
       - include: tasks/apply_patches.yml
