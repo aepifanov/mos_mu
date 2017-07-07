@@ -37,5 +37,5 @@
         - backup_result is defined
 
     - name: Start Management VIP
-      shell: pcs resource disable vip__management --wait=600
+      shell: pcs resource enable vip__management --wait=600
       run_once: true
