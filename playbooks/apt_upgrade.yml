@@ -3,7 +3,6 @@
 - hosts: env_{{ env_id }}
   any_errors_fatal: true
   vars:
-    apt_update: true
     apt_flags: ""
 
   vars_files:

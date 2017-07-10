@@ -38,5 +38,3 @@
     dest: "{{ apt_conf }}"
     force: yes
 
-- name: APT Update
-  command: apt-get -c {{ apt_conf }} update

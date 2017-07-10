@@ -16,3 +16,6 @@
 - include: tasks/apt_update_action.yml
   when:
     - not apt_directory.stat.exists
+
+- name: APT Update
+  command: apt-get -c {{ apt_conf }} update
