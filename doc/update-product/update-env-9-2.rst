@@ -1,17 +1,22 @@
 .. _update-env-9-2:
 
+**Caution**
+
+    Carefully read the whole `update to 9.2`_ section
+    to understand the update scenario.
+
+    We strongly recommend contacting Mirantis Support if you plan
+    to update your Mirantis OpenStack environment.
+
+**Warning**
+
+    Please gracefully SHUT OFF all VMs on the environtment before
+    the starting update.
+
+
 =================================================
 Update an existing Mirantis OpenStack environment
 =================================================
-
-.. caution:: Carefully read the whole :ref:`update-from-9-to-9-2` section
-             to understand the update scenario.
-
-             We strongly recommend contacting Mirantis Support if you plan
-             to update your Mirantis OpenStack environment.
-
-.. warning:: Please gracefully SHUT OFF all VMs on the environtment before
-             the starting update.
 
 If you have a running Mirantis OpenStack 9.0 or 9.1 environment, you can
 safely update it to version 9.2.
@@ -26,22 +31,26 @@ customizations in plugins is not supported.
 **To update an existing Mirantis OpenStack environment to 9.2:**
 
 #. Verify that you have updated the Fuel Master node as described in
-   :ref:`update-master-9-2`.
+   `Update Master Node`_
 #. Log in to the Fuel Master node CLI as root.
 #. Change the directory to ``mos_playbooks/mos_mu/``.
 
 
 #. Collect the Python OpenStack code customizations:
 
-   .. note:: If your environment does not contain customizations, skip to
-             step 9.
+   **Note**
+
+        If your environment does not contain customizations, skip to
+        step 9.
 
    .. code-block:: console
 
     ansible-playbook playbooks/gather_customizations.yml -e '{"env_id":<ENV_ID>}'
 
-   .. caution:: If a Python OpenStack package was customized by adding a new
-                file, such file will not be detected.
+   **Caution**
+
+        If a Python OpenStack package was customized by adding a new
+        file, such file will not be detected.
 
    You may use flags to manage this procedure. For example:
 
@@ -54,22 +63,23 @@ customizations in plugins is not supported.
 
    .. code-block:: console
 
-    ansible-playbook playbooks/gather_customizations.yml -e \
-    '{"env_id":<ENV_ID>,"gather_customizations":true}'
+    ansible-playbook playbooks/gather_customizations.yml -e '{"env_id":<ENV_ID>,"gather_customizations":true}'
 
    Sometimes, playbooks may fail, for example, when a customized package
    was installed not from the ``mos`` repository. Modifying specific flags
    may resolve the issue. But use the flags with caution.
 
-   .. note:: If you have some other patches that should be applied to
-             this environment, you can manually add these customizations
-             to the ``/fuel_mos_mu/env_id/patches/`` folder
-             on the Fuel Master node. Add the ID prefix to every
-             patch name, such as ``0x-patch_name``, ``0y-patch_name``,
-             starting from the ``01-`` prefix.
+   **Note**
 
-             After the update, you can use this folder to apply new
-             customizations.
+        If you have some other patches that should be applied to
+        this environment, you can manually add these customizations
+        to the ``/fuel_mos_mu/env_id/patches/`` folder
+        on the Fuel Master node. Add the ID prefix to every
+        patch name, such as ``0x-patch_name``, ``0y-patch_name``,
+        starting from the ``01-`` prefix.
+
+        After the update, you can use this folder to apply new
+        customizations.
 
 #. Verify that the customizations in the OpenStack packages are the same
    on all nodes. Also, verify that the customizations are applied correctly
@@ -121,49 +131,24 @@ customizations in plugins is not supported.
            ]
        }
 
+#. Make a back up of MySQL:
+
+   .. code-block:: console
+
+    ansible-playbook playbooks/backup_mysql.yml -e '{"env_id":<ENV_ID>}'
+
 #. Perform a preparation playbook for the environment. The playbook adds
    the update repository to each node of the environment, configures the
    ``/etc/apt/preferences.d/`` folder, updates and restarts MCollective,
-   Corosync, Pacemaker and stop all VMs.
+   Corosync, Pacemaker.
 
    .. code-block:: console
 
     ansible-playbook playbooks/mos9_prepare_env.yml -e '{"env_id":<ENV_ID>}'
 
-#. (Optional) Run the environment configuration check using Noop run to simulate
-   the changes and verify that the update does not override the important
-   customizations of your environment.
+   **Warning**
 
-   .. note:: If your environment does not contain customizations, skip to
-             step 9.
-
-   .. code-block:: console
-
-    fuel2 env redeploy --noop <ENV_ID>
-
-   It may take a while for the task to complete. When the task succeeds, its
-   status changes from ``running`` to ``ready``.
-
-   To verify the task status, run :command:`fuel2 task show <TASK_ID>`.
-   The task ID is specified in the output of the configuration check command.
-
-#. (Optional) Verify the summary of the configuration check task:
-
-   .. code-block:: console
-
-    fuel2 report <TASK_ID>
-
-   The task ID is specified in the output of the :command:`fuel2 task list`
-   command. The name of the task is ``dry_run_deployment``.
-
-   The detailed Noop run reports are stored on each OpenStack node in the
-   ``/var/lib/puppet/reports/node-FQDN/timestamp.yaml`` directory.
-
-   .. warning:: Some configuration and architecture customizations of the
-                environment can be lost during the update process.
-                Therefore, use the customizations detection reports
-                made by Noop run to make a decision on whether it is worth
-                proceeding with the update.
+        Please make sure that all VMs are in SHUTOFF state to avoid any data lost.
 
 #. Update the environment:
 
@@ -171,22 +156,17 @@ customizations in plugins is not supported.
 
     fuel2 update --env <ENV_ID> install --repos mos9.2-updates
 
-   To verify the update progress:
+   To verify the update progress in the Fuel web UI, use the Dashboard tab:
 
-   * In the Fuel web UI, use the :guilabel:`Dashboard` tab.
-   * In the Fuel CLI, run :command:`fuel2 task show <TASK_ID>`.
-
-     The task ID is specified in the output of the
-     :command:`fuel2 update install` command.
+   .. figure:: upgrade_dashboard.png
+       :align: center
+       :alt:
 
 #. Upgrade the Ubuntu kernel to version 4.4:
 
    .. code-block:: console
 
     ansible-playbook playbooks/mos9_env_upgrade_kernel_4.4.yml -e '{"env_id":<ENV_ID>}'
-
-   .. note:: To apply the upgrade of the Ubuntu kernel, an environment
-             restart is required. See step 13.
 
 #. Apply the customizations (if any) accumulated in
    ``/fuel_mos_mu/env_id/patches`` to your updated environment:
@@ -205,7 +185,9 @@ customizations in plugins is not supported.
    #. The system is waiting until all Ceph OSDs are ``up``, if present.
    #. If present, Ceph monitors start.
 
-   .. warning:: This step assumes a major downtime of the entire environment.
+   **Warning**
+
+        This step assumes a major downtime of the entire environment.
 
    Run the following command:
 
@@ -237,4 +219,8 @@ customizations in plugins is not supported.
 
     uname -r
 
-.. seealso:: :ref:`customize_new_node_9_2`
+See also: `Apply customizations to a new node in Mirantis OpenStack 9.2`_
+
+.. _`update to 9.2`: ../update-product.rst
+.. _`Update Master Node`: update-master-9-2.rst
+.. _Apply customizations to a new node in Mirantis OpenStack 9.2: customize-new-node-9-2.rst

@@ -17,3 +17,8 @@ following limitations:
 * If your environment has the StackLight InfluxDB-Grafana plugin for Fuel,
   update the plugin to version 0.10.3 before updating your Mirantis OpenStack
   to 9.2.
+
+Then proceed to start with `Prerequisites`_.
+
+.. _`Prerequisites`: update-prerequisites-9-2.rst
+

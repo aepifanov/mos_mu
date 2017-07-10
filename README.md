@@ -15,7 +15,6 @@ Features
 - apply gathered customizations
 - apply new customizations and patches
 - restart OpenStack services
-- rollback on any release
 
 
 Conditions and Limitations
@@ -25,7 +24,7 @@ Conditions and Limitations
 - supports only MOS versions: 6.x, 7.0, 8.0 and 9.x.
 - supports only Ubuntu
 - doesn't start puppet which means that doesn't apply fixes which are in puppet manifests
-- needs manual restart for non OpenStack services (RabbitMQ, MySQL, Libvirt, CEPH and etc)
+- needs manual restart for non OpenStack services (RabbitMQ, MySQL, CEPH and etc)
 - patches should have absolute target path
 
 Install
@@ -51,7 +50,7 @@ Documentation
 
 Before using this tool please take a look into vars files:
 - [Vars files](playbooks/vars/)
-- [Apply MU steps](playbooks/vars/steps/apply_mu.yml)
+- [Steps](playbooks/vars/steps.yml)
 
 You can use these flags specify them as Ansible extra vars.
 

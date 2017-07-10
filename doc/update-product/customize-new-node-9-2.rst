@@ -17,13 +17,16 @@ Mirantis OpenStack 9.2 environment with a newly added node.
 
 #. Log in to the Fuel Master node CLI.
 #. Change the directory to ``mos_playbooks/mos_mu/``.
-#. Apply the customizations of your existing environment to the new node:
+#. Apply the customizations of your existing environment to the new node
 
    .. code-block:: console
 
     ansible-playbook playbooks/mos9_apply_patches.yml -e '{"env_id":<ENV_ID>}' --limit <NODE_FQDN>
 
-   This task restarts the OpenStack services on the node to apply
-   customizations.
+This task restarts the OpenStack services on the node to apply
+customizations.
 
-.. seealso:: :ref:`update-env-9-2`
+
+See also:  Limitations_
+
+.. _Limitations: update-limitations-9-2.rst

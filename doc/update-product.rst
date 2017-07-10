@@ -15,21 +15,26 @@ the update of Ceph from version 0.94.6 to 0.94.9. The update of other
 environment components does not occur within the scope of Mirantis OpenStack
 update.
 
-.. warning:: Updating of a Mirantis OpenStack deployment results in a downtime
-             of the entire environment. Therefore, before applying the
-             updates to production, you must plan a maintenance window and
-             back up your deployment as well as test the updates on your
-             staging environment. We strongly recommend consulting
-             Mirantis Support if you plan to update your
-             Mirantis OpenStack environment.
+**Warning**
+
+    Updating of a Mirantis OpenStack deployment results in a downtime
+    of the entire environment. Therefore, before applying the
+    updates to production, you must plan a maintenance window and
+    back up your deployment as well as test the updates on your
+    staging environment. We strongly recommend consulting
+    Mirantis Support if you plan to update your
+    Mirantis OpenStack environment.
 
 This section includes the following topics:
 
-.. toctree::
-  :maxdepth: 2
+  - Limitations_
+  - `Prerequisites`_
+  - `Update the Fuel Master node`_
+  - `Update an existing Mirantis OpenStack environment`_
+  - `Apply customizations to a new node in Mirantis OpenStack 9.2`_
 
-  update-product/update-limitations-9-2.rst
-  update-product/update-prerequisites-9-2.rst
-  update-product/update-master-9-2.rst
-  update-product/update-env-9-2.rst
-  update-product/customize-new-node-9-2.rst
+.. _Limitations: update-product/update-limitations-9-2.rst
+.. _`Prerequisites`: update-product/update-prerequisites-9-2.rst
+.. _`Update the Fuel Master node`: update-product/update-master-9-2.rst
+.. _`Update an existing Mirantis OpenStack environment`: update-product/update-env-9-2.rst
+.. _`Apply customizations to a new node in Mirantis OpenStack 9.2`: update-product/customize-new-node-9-2.rst

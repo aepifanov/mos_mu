@@ -1,14 +1,16 @@
 .. _update-master-9-2:
 
+**Caution**
+
+    Carefully read the whole `update to 9.2`_ section
+    to understand the update scenario.
+
+    We strongly recommend contacting Mirantis Support if you plan
+    to update your Mirantis OpenStack environment.
+
 ===========================
 Update the Fuel Master node
 ===========================
-
-.. caution:: Carefully read the whole :ref:`update-from-9-to-9-2` section
-             to understand the update scenario.
-
-             We strongly recommend contacting Mirantis Support if you plan
-             to update your Mirantis OpenStack environment.
 
 Before creating a new environment, update the Fuel Master node from
 version 9.0 or 9.1 to 9.2 using the procedure below.
@@ -18,12 +20,12 @@ updating the Fuel Master node, take a note that all the environment
 customizations will be lost during the update to version 9.2. Therefore,
 use the customizations detection reports created before an environment
 update to make a decision on whether it is worth proceeding with the update.
-For details, see :ref:`update-env-9-2`.
+For details, see `Update Environment`_.
 
 **To update the Fuel Master node:**
 
 #. Verify that you have completed the tasks described in
-   :ref:`update-prerequisites-9-2`.
+   Prerequisites_.
 
 #. Log in to the Fuel Master node CLI as root.
 
@@ -43,8 +45,10 @@ For details, see :ref:`update-env-9-2`.
 
     ansible-playbook playbooks/update_fuel.yml -e '{"rebuild_bootstrap":false}'
 
-   .. warning:: During the update procedure, the Fuel Master node
-                services will be restarted automatically.
+   **Warning**
+
+        During the update procedure, the Fuel Master node
+        services will be restarted automatically.
 
 #. Upgrade the Ubuntu kernel to version 4.4 for the Fuel bootstrap:
 
@@ -56,7 +60,7 @@ For details, see :ref:`update-env-9-2`.
 
    * In the Fuel web UI, verify the version number in the bottom left corner
      of the page.
-   * In the Fuel CLI, run :command:`fuel2 fuel-version`. The output of the
+   * In the Fuel CLI, run ``fuel2 fuel-version``. The output of the
      command should be as follows:
 
      .. code-block:: console
@@ -65,5 +69,10 @@ For details, see :ref:`update-env-9-2`.
         openstack_version: mitaka-9.0
         release: '9.2'
 
-After completing these steps, proceed to :ref:`update-env-9-2` if you have
+After completing these steps, proceed to `Update Environment`_ if you have
 a Mirantis OpenStack environment 9.0 or 9.1.
+
+
+.. _`update to 9.2`: ../update-product.rst
+.. _`Update Environment`: update-env-9-2.rst
+.. _Prerequisites: update-prerequisites-9-2.rst
