@@ -37,6 +37,10 @@
 
 - name: Force Start Pacemaker
   shell: "service pacemaker start; service pacemaker start"
+  register: start_status
+  failed_when:
+      - start_status | failed
+      - "'Job is already running' not in start_status.stderr"
 
 - name: Unset maintenance mode for Pacemaker
   action:
