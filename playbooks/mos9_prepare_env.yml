@@ -65,7 +65,7 @@
 
   - include: tasks/apt_update.yml
 
-  - include: update_pacemaker.yml
+  - include: tasks/update_pacemaker.yml
 
 - include: restart_services.yml
 
