@@ -10,22 +10,10 @@ Any comments/suggestions are welcome :)
 Features
 --------
 
-- gather current customizations and backup it
-- apply MUs
-- apply gathered customizations
-- apply new customizations and patches
-- restart OpenStack services
+- Gather current customizations and backup them
+- Apply MU
+- Apply gathered customizations and new patches after applying MU
 
-
-Conditions and Limitations
---------------------------
-
-- should be run on Fuel Master under root
-- supports only MOS versions: 6.x, 7.0, 8.0 and 9.x.
-- supports only Ubuntu
-- doesn't start puppet which means that doesn't apply fixes which are in puppet manifests
-- needs manual restart for non OpenStack services (RabbitMQ, MySQL, CEPH and etc)
-- patches should have absolute target path
 
 Install
 =======
@@ -57,5 +45,14 @@ You can use these flags specify them as Ansible extra vars.
 Usage
 =====
 
-- [Usage for MOS 6.x/7.0/8.0](doc/usage_old.md)
+It's recommended to continue working under screen or tmux to avoid a break of procedure
+due to lost ssh session and etc.
+
+During the work plabooks print important information, like description of errors and usefull
+information (list of upgradable packages, current MU and etc). So, please always after the
+completion of playbooks scroll up the screen and carefully read the output. Also output is
+logged in ansible.log file in the mos_mu directory and can be read there.
+
+
+- [Usage for MOS 6.x/7.0/8.0](doc/usage_old.rst)
 - [Usage for MOS 9.x](doc/update-product.rst)

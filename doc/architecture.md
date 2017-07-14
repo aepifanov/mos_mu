@@ -7,25 +7,11 @@
  - [Playbooks](#playbooks)
    - [gather_customizations.yml](#gather_customizationsyml)
    - [verify_patches.yml](#verify_patchesyml)
-   - [update_fuel.yml](#update_fuelyml)
    - [apply_mu.yml](#apply_muyml)
+   - [update_fuel.yml](#update_fuelyml)
    - [restart_services.yml](#restart_servicesyml)
-   - [rollback.yml](#rollbackyml)
    - [update_ceph.yml](#update_cephyml)
- - [Tasks](#tasks)
-   - [health_checks.yml](health_checksyml)
-   - [apt_update.yml](#apt_updateyml)
-   - [apt_update_action.yml](#apt_update_actionyml)
-   - [verify_md5.yml](#verify_md5yml)
-   - [get_current_mu.yml](get_current_muyml)
-   - [gather_customizations.yml](#gather_customizationsyml)
-   - [verify_customizations.yml](#verify_customizationsyml)
-   - [verify_patches.yml](#verify_patchesyml)
-   - [apt_upgrade.yml](#apt_upgradeyml)
-   - [apply_patches.yml](#apply_patchesyml)
-   - [rollback_upgrade.yml](#rollback_upgradeyml)
-   - [update_ceph.yml](#tasksupdate_cephyml)
-   - [restart_ceph.yml](#restart_cephyml)
+   - [rollback.yml](#rollbackyml)
 
 
 Inventory
@@ -36,6 +22,9 @@ For review inventory you can run this script separately.
 
 [fuel_inventory.py](../inventory/fuel_inventory.py)
 
+Please be aware that this script generates the inventory only for nodes which
+are in **ready** state and **online**!
+
 Folder structure
 ================
 
@@ -43,52 +32,69 @@ By default it looks like this (might be configured in conf file):
 
 Fuel
 ----
-Variables in config:
-```
-fuel_backup_dir:          "/root/fuel_mos_mu/fuel_backup"
-fuel_dir:                 "/root/fuel_mos_mu/env_{{ env_id }}"
-fuel_custom_dir:          "{{ fuel_dir }}/customizations"
-fuel_custom_backup_dir:   "{{ fuel_dir }}/customizations_backup"
-fuel_patches_dir:         "{{ fuel_dir }}/patches"
-fuel_custom_verification: "{{ fuel_dir }}/customizations_verification"
-fuel_unified_dir:         "{{ fuel_dir }}/customizations_unified"
-```
 
 Directory tree:
 ```
 ../fuel_mos_mu/
-└── env_1
-    ├── customizations
-    │   ├── node-1
-    │   │   ├── neutron-common_customization.patch
-    │   │   └── nova-compute_customization.patch
-    │   ├── node-2
-    │   ├── node-3
-    │   │   └── neutron-common_customization.patch
-    │   ├── node-4
-    │   └── node-5
-    ├── customizations_backup
-    │   └── customizations__09.27.16__03-39-12.tgz
-    ├── customizations_unified
-    │   ├── neutron-common_customization.patch
-    │   └── nova-compute_customization.patch
-    ├── customizations_verification
-    │   ├── neutron-common
-    │   │   ├── node-1
-    │   │   │   └── neutron-common_customization.patch
-    │   │   └── node-3
-    │   │       └── neutron-common_customization.patch
-    │   └── nova-compute
-    │       └── node-1
-    │           └── nova-compute_customization.patch
-    └── patches
-        ├── 00-customizations
-        │   ├── neutron-common_customization.patch
-        │   └── nova-compute_customization.patch
-        └── 01-neutron.patch
+├── env_1
+|   ├── backup
+|   │   ├── customizations__07.10.17__08-19-03.tgz
+|   │   └── reports__07.10.17__08-19-05.tgz
+|   ├── customizations
+|   │   ├── node-1
+|   │   │   ├── neutron-common_customization.patch
+|   │   │   └── nova-compute_customization.patch
+|   │   ├── node-2
+|   │   ├── node-3
+|   │   │   └── neutron-common_customization.patch
+|   │   ├── node-4
+|   │   └── node-5
+|   ├── customizations_unified
+|   │   ├── neutron-common_customization.patch
+|   │   └── nova-compute_customization.patch
+|   ├── customizations_verification
+|   │   ├── neutron-common
+|   │   │   ├── node-1
+|   │   │   │   └── neutron-common_customization.patch
+|   │   │   └── node-3
+|   │   │       └── neutron-common_customization.patch
+|   │   └── nova-compute
+|   │       └── node-1
+|   │           └── nova-compute_customization.patch
+|   ├── patches
+|   │   ├── 00-customizations
+|   │   │   ├── neutron-common_customization.patch
+|   │   │   └── nova-compute_customization.patch
+|   │   └── 01-neutron.patch
+│   └── report
+│       ├── node-1
+│       │   ├── md5_results
+│       │   ├── pkgs_verification_results
+│       │   └── upgradable_pkgs
+│       ├── node-2
+│       │   ├── md5_results
+│       │   ├── pkgs_verification_results
+│       │   └── upgradable_pkgs
+│       ├── node-3
+│       │   ├── md5_results
+│       │   ├── pkgs_verification_results
+│       │   └── upgradable_pkgs
+│       ├── node-4
+│       │   ├── md5_results
+│       │   ├── pkgs_verification_results
+│       │   └── upgradable_pkgs
+│       └── node-5
+│           ├── md5_results
+│           ├── pkgs_verification_results
+│           └── upgradable_pkgs
+└── fuel_backup
+    └── fuel_backup__07.10.17__06-12-16.tgz
 ```
 
 * Each environment has its own folder **env_<env_id>**
+
+* **backup** contains backups of gathered customizations.
+  Backup is generated after each gathering customizations process.
 
 * **customizations** is used for gathering customizations from nodes.
   Customizations are placed in folder with nodename.
@@ -96,12 +102,9 @@ Directory tree:
   gather it from scratch please use flag **gather_customizations: true**.
   This folder is generated by [gather_customizations.yml](#gather_customizationsyml)
 
-* **customizations_backup** contains backups of gathered customizations.
-  Backup is generated after each gathering customizations process.
-
 * **customizations_verifications** is used for processing of customizations
   which contains set of folders (package customization) across the environment.
-  This folder is generated by [verify_customizations.yml](#verify_customizationsyml)
+  This folder is generated by [verify_customizations.yml](../playbooks/tasks/verify_customizations.yml)
 
 * **customizations_unified** contains unified customizations which will be
   copied to **patches/00-customizations** folder and used for applying after updating.
@@ -116,18 +119,13 @@ Directory tree:
   So it is recommended to name patches with prefixes like this
   **01-\<patchname\>.patch, 02-\<patchname2\>.patch**.
 
+* **report** contains reports from all nodes
+
+* **fuel_backup** contains backup of PSQL DB and some configuration files.
+
+
 Nodes
 -----
-Variables in config:
-```
-mos_dir:          "/root/mos_mu"
-custom_dir:       "{{ mos_dir }}/customizations"
-patches_dir:      "{{ mos_dir }}/patches"
-verification_dir: "{{ mos_dir }}/verification"
-apt_dir:          "{{ mos_dir }}/apt"
-apt_conf:         "{{ apt_dir }}/apt.conf"
-apt_src_dir:      "{{ apt_dir }}/sources.list.d"
-```
 
 Directory tree:
 ```
@@ -142,6 +140,8 @@ Directory tree:
 │       ├── mu-1.list
 │       ├── mu-2.list
 │       └── mu-3.list
+├── backup
+│   └── etc.tgz
 ├── customizations
 │   ├── neutron-common
 │   │   ├── 2%3a7.1.1-4~u14.04+mos82
@@ -156,6 +156,10 @@ Directory tree:
 │   │   ├── neutron-common_customization.patch
 │   │   └── nova-compute_customization.patch
 │   └── 01-neutron.patch
+├── report
+│   ├── md5_results
+│   ├── pkgs_verification_results
+│   └── upgradable_pkgs
 └── verification
     ├── neutron-common
     │   ├── 2%3a7.1.1-4~u14.04+mos82
@@ -177,11 +181,11 @@ Directory tree:
 * **apt** contains apt.conf which is always used for apt and uses
   only **sources.lists.d** folder for sources lists.
 
-* **apt/sources.list.d** contains sources lists for all configured in config
-  repositories.
+    * **apt/sources.list.d** contains sources lists for all configured in config
+    repositories.
 
-* **apt/preferences.d** contains preferences for package pinning.
-
+    * **apt/preferences.d** contains preferences for package pinning.
+* **backup** contains backup files on node. For now archive for etc directory.
 * **customizations** folder consists of folders for customized packages.
   Package folder contains a folder (current package version) with unpacked
   package and diff file between this unpacked (original) version and current
@@ -191,17 +195,23 @@ Directory tree:
   This folder is cleared every time when task [verify_patches.yml](#verify_patchesyml)
   is started.
 
+* **report** contains some reports and cached files with the results of some steps
+  which allow to reuse some results (save time) for the multiple run of some
+  playbooks. For gathering fresh results please use special flags
+  [Steps](../playbooks/vars/steps.yml).
+
 * **verification** folder consists of folders for customized packages.
-  Packages folder contains folder (candidate package version, by default,
+  Packages folders contain a folder (candidate package version, by default,
   configured by flag **pkg_ver_for_verification: "Candidate"**) with unpacked
   package and patches files witch should be applied.
+
 
 Playbooks
 =========
 
-By default all playbooks are defined for all nodes except Fuel.
+By default all playbooks are defined for all nodes in env_<env_id> except Fuel.
 It might be run for any node and group of nodes using standard flag **--limit**
-like this `--limit=env_2:compute` (all computes in env_2).
+like this `--limit=compute` (all computes in env_<env_id>).
 
 All playbooks include variable file
 [vars/mos_releases/{{ mos_release }}.yml](../playbooks/vars/mos_releases)
@@ -211,64 +221,72 @@ the inventorization phase.
 Also it is possible to pass extra variables via cli using standard flag **-e**,
 like this `-e '{"apt_update":true, "health_check":false}'`.
 
+
 [gather_customizations.yml](../playbooks/gather_customizations.yml)
 -------------------------------------------------------------------
-Makes sure that customizations were not gathered already and then gathers them.
+For the first step it starts health check (if it might be disabled by
+**health_check** flag). Then generates APT configuration files, if they are
+not present on node or enabled flag **apt_update** for regerating them.
+Makes sure that customizations were not gathered already and then gathers it.
 If you need to gather it again you can use flag **gather_customizations**.
 
-Runs the set of tasks based on set of flags which allow or deny executing some
-tasks. Uses
-[vars/steps/gather_customizations.yml](../playbooks/vars/steps/gather_customizations.yml)
-set of flags.
+Uses [vars/steps.yml](../playbooks/vars/steps.yml) set of flags.
+
+* **"health_check":false** to skip the health check task
+* **"apt_update":true** to repeat the generation of APT files
+* **"gather_customizations":true** to repeat gathering of customizations
+* **"md5_check":true** to repeat MD5 hash verification
 
 Runs the following tasks:
-* [health_checks.yml](#health_checksyml)
-* [apt_update.yml](#apt_updateyml)
-* [get_current_mu.yml](#get_current_muyml)
-* [gather_customizations.yml](#clean_customizationsyml)
+* [health_checks.yml](../playbooks/tasks/health_checks.yml)
+* [apt_update.yml](../playbooks/tasks/apt_update.yml)
+* [gather_customizations.yml](../playbooks/tasks/gather_customizations.yml)
+    * [verify_md5.yml](../playbooks/tasks/verify_md5.yml)
+    * [gather_customizations_action.yml](../playbooks/tasks/gather_customizations_action.yml)
+
 
 [verify_patches.yml](../playbooks/verify_patches.yml)
 -----------------------------------------------------
-Verify customizations by  verify applying patches on target version of packages
-**pkg_ver_for_verification**.
+Actually this playbook only verifies that all nodes have the same set of patches
+and then verifies applying the patches on target version of packages
+**pkg_ver_for_verification**. Let's
 
-Uses [vars/steps/verify_patches.yml](../playbooks/vars/steps/verify_patches.yml)
-set of flags.
+Uses [vars/steps.yml](../playbooks/vars/steps.yml) set of flags.
 
-Runs only two steps:
-* [apt_update.yml](#apt_updateyml)
-* [verify_customizations.yml](#verify_customizationsyml)
-* [verify_patches.yml](#verify_patchesyml)
+* **"use_current_customization":false** to skip handling gathered customizations from
+  "customizaions" folder and use only patches that are already present in folder
+  "patches"
+* **"ignore_applied_patches": true** to ignore if patches already contains in
+  new package. Please go on one node and double checked that this pached already contains
+  to avoid any issues.
 
-[update_fuel.yml](../playbooks/update_fuel)
--------------------------------------------
-Update the Master node itself.
+Runs 3 tasks:
+* [apt_update.yml](../playbooks/tasks/apt_update.yml)
+* [verify_customizations.yml](../playbooks/tasks/verify_customizations.yml)
+* [verify_patches.yml](../playbooks/tasks/verify_patches.yml)
 
-Runs the following tasks:
-* Stop containers
-* Make a backup of DB and config files
-* Yum update
-* Load new images
-* Rebuild and start containers
 
 [apply_mu.yml](../playbooks/apply_mu.yml)
 -----------------------------------------
-Apply MU, apply patches and re-apply current customizations(if enabled).
+This playbook contains all tasks from 2 previous playbooks
+[gather_customizations.yml](#gather_customizationsyml) and
+[verify_patches.yml](#verify_patchesyml).
+Then upgrade packages and applies patches on nodes.
 
-By default uses [var/steps/apply_mu.yml](../playbooks/vars/steps/apply_mu.yml)
-set of flags.
+Uses [vars/steps.yml](../playbooks/vars/steps.yml) set of flags.
 
 Runs the following tasks:
-* [health_checks.yml](#health_checksyml)
-* [apt_update.yml](#apt_updateyml)
-* [get_current_mu.yml](#get_current_muyml)
-* [gather_customizations.yml](#gather_customizationsyml)
-* [verify_customizations.yml](#verify_customizationsyml)
-* [verify_patches.yml](#verify_patchesyml)
-* [apt_upgrade.yml](#apt_upgradeyml)
-* [apply_patches.yml](#apply_patchesyml)
+* [health_checks.yml](../playbooks/tasks/health_checks.yml)
+* [apt_update.yml](../playbooks/tasks/apt_update.yml)
+* [gather_customizations.yml](../playbooks/tasks/gather_customizations.yml)
+    * [verify_md5.yml](../playbooks/tasks/verify_md5.yml)
+    * [gather_customizations_action.yml](../playbooks/tasks/gather_customizations_action.yml)
+* [verify_customizations.yml](../playbooks/tasks/verify_customizations.yml)
+* [verify_patches.yml](../playbooks/tasks/verify_patches.yml)
+* [apt_upgrade.yml](../playbooks/tasks/apt_upgrade.yml)
+* [apply_patches.yml](../playbooks/tasks/apply_patches.yml)
 
-and then include one more playbook:
+and then runs one more playbook:
 * [restart_services.yml](#restart_servicesyml)
 
 [restart_services.yml](../playbooks/restart_services.yml)
@@ -277,6 +295,70 @@ Restart all services for each role specified in
 [vars/mos_releases/{{ mos_releases }}.yml](../playbooks/vars/mos_releases).
 
 Might be used separately.
+
+
+[update_fuel.yml](../playbooks/update_fuel.yml)
+-------------------------------------------
+Update the Master node itself.
+Depends on the current version of Fuel it runs different set of tasks, for
+MOS versions before 9.0 it runs the following tasks:
+
+[update_old_fuel.yml](../playbooks/tasks/update_old_fuel.yml)
+* Stop containers
+* Make a backup of DB and config files
+* Yum update
+* Load new images
+* Rebuild and start containers
+
+For MOS9.x it uses another set of tasks:
+[update_9x_fuel.yml](../playbooks/tasks/update_9x_fuel.yml)
+
+
+[backup_mysql.yml](../playbooks/backup_mysql.yml)
+-------------------------------------------
+
+This playbook runs the following tasks:
+* Stop VIP Management using Pacemaker
+* Make MySQL backup
+* Upload backup on the Fuel
+* Start VIP Management using Pacemaker
+
+
+[get_version.yml](../playbooks/get_version.yml)
+-------------------------------------------
+
+This playbook run apt-get upgrade for each MU repo. The repo which doesn't
+required any upgrade/downgrade for any package is the currently used.
+
+Runs the following tasks:
+* [apt_update.yml](../playbooks/tasks/apt_update.yml)
+* [get_current_mu](../playbooks/tasks/get_current_mu.yml)
+
+
+[update_ceph.yml](../playbooks/update_ceph.yml)
+-----------------------------------------
+This is a separate playbook that uses some ideas and solutions introduced in
+ceph-ansible project to update ceph installations deployed by Fuel.
+
+Runs the following tasks:
+* [health_checks.yml](../playbooks/tasks/health_checks.yml)
+* [update_ceph.yml](../playbooks/tasks/update_ceph.yml)
+* [restart_ceph.yml](../playbooks/tasks/restart_ceph.yml)
+
+MON, OSD and RGW nodes are updated one-by-one. The following features are used
+to protect data and achieve zero downtime:
+* Quorum is checked after MONs services restart to ensure that updated host
+came up and running.
+* scrub and deep-scrub operations are stopped during OSDs update.
+* noout flag is used to activate maintenance mode for a cluster.
+* Clusters health is checked to ensure that updated OSD came up and running.
+* Any failure during any update play will stop the whole update process.
+
+This playbook should be runned with env_id specified using standard flag **-e**.
+For example: `-e '{"env_id":1}'`.
+
+Uses [vars/steps/ceph.yml](../playbooks/vars/steps/ceph.yml) set of flags.
+
 
 [rollback.yml](../playbooks/rollback.yml)
 -----------------------------------------
@@ -298,165 +380,4 @@ Runs the following tasks:
 and then include one more playbook:
 * [restart_services.yml](#restart_servicesyml)
 
-Uses [vars/steps/rollback.yml](../playbooks/vars/steps/rollback.yml) set of
-flags.
-
-[update_ceph.yml](../playbooks/update_ceph.yml)
------------------------------------------
-This is a separate playbook that uses some ideas and solutions introduced in
-ceph-ansible project to update ceph installations deployed by Fuel.
-
-Runs the following tasks:
-* [health_checks.yml](#health_checksyml)
-* [update_ceph.yml](#tasksupdate_cephyml)
-* [restart_ceph.yml](#restart_cephyml)
-
-MON, OSD and RGW nodes are updated one-by-one. The following features are used
-to protect data and achieve zero downtime:
-* Quorum is checked after MONs services restart to ensure that updated host
-came up and running.
-* scrub and deep-scrub operations are stopped during OSDs update.
-* noout flag is used to activate maintenance mode for a cluster.
-* Clusters health is checked to ensure that updated OSD came up and running.
-* Any failure during any update play will stop the whole update process.
-
-This playbook should be runned with env_id specified using standard flag **-e**.
-For example: `-e '{"env_id":1}'`.
-
-Uses [vars/steps/update_ceph.yml](../playbooks/vars/steps/apply_mu.yml) set
-of flags.
-
-
-Tasks
-=====
-
-[health_checks.yml](../playbooks/tasks/health_checks.yml)
--------------------------------------------------------
-* Check health of Fuel [health_check_fuel.sh](../playbooks/files/health_check_fuel.sh)
-* Check health of OpenStack services [health_check_os.sh](../playbooks/files/health_check_os.sh)
-* Check free space on nodes
-* Check status of Pacemaker resources
-
-[apt_update.yml](../playbooks/tasks/apt_update.yml)
----------------------------------------------------
-* Clean **apt** folder on nodes if **apt_update** flag is true
-* Check if **apt** folder already exists, if exists skip generation process
-* If **apt** dir does not exist performed
-  [apt_update_action.yml](#apt_update_actionyml)
-
-[apt_update_action.yml](../playbooks/tasks/apt_update_action.yml)
------------------------------------------------------------------
-* Generate and copy on nodes sources.list files from
-  [templates/sources.list.j2](../playbooks/templates/sources.list.j2) using
-  configured repositories in conf file.
-* Generate and copy on nodes **apt.conf** file from
-  [templates/apt_conf.j2](../playbooks/templates/apt.conf.j2).
-* Perform APT update using generated **apt.conf** on nodes.
-
-[verify_md5.yml](../playbooks/tasks/verify_md5.yml)
----------------------------------------------------
-* Runs [files/verify_md5_packages_ubuntu.sh](../playbooks/files/verify_md5_packages_ubuntu.sh)
-  script which for all installed packages calculates MD5 sum and compares
-  with origin.
-* Return list of customized packages in **md5_verify_result** variable.
-
-[get_current_mu.yml](../playbooks/tasks/get_current_mu.yml)
------------------------------------------------------------
-* Runs [files/get_current_mu.sh](../playbooks/files/get_current_mu.sh) script to
-  identify which MU currently is applied. Actually this script just uses one by
-  one sources.list from sources.list.d folder and check if any package have
-  available 'update'. If no one have update it means that exactly this MU is
-  installed now. It can return 'undefined' result, that means the node has
-  installed packages from different MU(or other undefined) repos.
-
-[gather_customizations.yml](../playbooks/tasks/gather_customizations.yml)
--------------------------------------------------------------------------
-* include [verify_md5.yml](#verify_md5yml)
-* include [get_current_mu.yml](#get_current_muyml)
-* Make sure **patches** directory exists on Fuel
-* Check **gather_customizations** flag, if enabled clean customizations
-  folder on Fuel and nodes
-* Check if customizations are gathered ( **customizations** folder exists on Fuel)
-* If does not exist include [gather_customizations_action.yml](#gather_customizations_actionyml)
-
-[gather_customizations_action.yml](../playbooks/tasks/gather_customizations_action.yml)
----------------------------------------------------------------------------------------
-* For each customized package in **md5_verify_result** run
-  [files/get_package_customizations.sh](../playbooks/files/get_package_customizations.sh).
-  This script unpacks cached origin installed package (or download if cached does
-  not exist) and make a diff between origin and current customized file.
-* Please be aware if package was customized by **adding new files it will NOT
-  be detected !!! **
-* If customizations were gathered, download them on Fuel in
-  **customizations/\<env_id\>/\<nodename\>**.
-
-[verify_customizations.yml](../playbooks/tasks/verify_customizations.yml)
--------------------------------------------------------------------------
-This task checks the consistency of gathered custom patches across the environment.
-Actually consistency is checked by the following way:
-- For each customized package create folder
-  **customizations_verification/\<packagename\>**
-- All customizations for this package will be copied to
-  **customizations_verification/\<packagename\>/\<nodename\>**
-- For each customization for specific package calculates MD5 Sum
-
-Then we can get 3 situation:
-  1. All nodes have the same customization
-  2. Some nodes have the same customization and the rest do not have any customization
-  3. Some nodes have different customizations
-
-Results for these cases:
-  1. Copy this customization to **patches/00-customizations** folder
-  2. Fail and print an instruction with flag **unify_only_patches**,
-which allows to ignore this warning and continue
-  3. Fail and print an instruction how to fix this issue.
-
-Runs the following tasks:
-* Check whether flag **use_current_customization** is enabled
-* Run script [verify_customizations_consistency.sh](../playbooks/files/verify_customizations_consistency.sh)
-* Copy unified customizations to **patches/00-customizations** folder
-
-[verify_patches.yml](../playbooks/tasks/verify_patches.yml)
------------------------------------------------------------
-* Clean **patches** folder on nodes.
-* Clean **verification** folder on nodes.
-* Copy patches from Fuel folder **patches** to nodes folder **patches**
-  (if **rollback** is not enabled).
-* Run [files/rollback_customizations.sh](../playbooks/files/rollback_customizations.sh)
-  script which copy current patches from **customizations** folder to
-  **patches** folder (if **use_current_customization** is enabled).
-* Run [files/verify_patches.sh](../playbooks/files/verify_patches.sh) script
-  which:
-    * Make sure that each patch affects only one package.
-    * Download and extract candidate package if it does not already exist.
-    * Try to apply patch. If more than 1 patch affects this package they will
-      be applied in alphabetic order.
-
-[apt_upgrade.yml](../playbooks/tasks/apt_upgrade.yml)
------------------------------------------------------
-* Correct dependencies.
-* Perform APT upgrade.
-* Reinstall customized packages
-
-[apply_patches.yml](../playbooks/tasks/apply_patches.yml)
----------------------------------------------------------
-* Run [files/apply_patches.sh](../playbooks/files/apply_patches.sh) script
-  which just applies sorted by relative name patches in **patches** folder on
-  nodes.
-
-[rollback_upgrade.yml](../playbooks/tasks/rollback_upgrade.yml)
----------------------------------------------------------------
-* Correct dependencies.
-* Perform APT upgrade using only specified in variable **rollback** MU name.
-* Reinstall customized packages
-
-[tasks/update_ceph.yml](../playbooks/tasks/update_ceph.yml)
----------------------------------------------------------------
-* Gather a list of installed ceph packages.
-* Update all listed packages one-by-one.
-
-[restart_ceph.yml](../playbooks/tasks/restart_ceph.yml)
----------------------------------------------------------------
-* Restart specific ceph services.
-* Ensure that restart finished correctly and services are up and running
-
+Uses [vars/steps.yml](../playbooks/vars/steps.yml) set of flags.

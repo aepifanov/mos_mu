@@ -162,7 +162,7 @@ customizations in plugins is not supported.
        :align: center
        :alt:
 
-#. Upgrade the Ubuntu kernel to version 4.4:
+#. (Should be skipped for MOS9.2) Upgrade the Ubuntu kernel to version 4.4:
 
    .. code-block:: console
 
@@ -175,9 +175,13 @@ customizations in plugins is not supported.
 
     ansible-playbook playbooks/mos9_apply_patches.yml -e '{"env_id":<ENV_ID>,"restart":false}'
 
-#. Restart all nodes of your environment to apply the Ubuntu kernel upgrade
-   as well as updates for non-OpenStack services (such as RabbitMQ, MySQL,
-   Ceph). The restart order is as follows:
+   **Warning**
+
+        For MOS9.2 flag restart should be removed from command or changed on ``true``
+
+#. (Should be skipped for MOS9.2) Restart all nodes of your environment to apply
+   the Ubuntu kernel upgrade as well as updates for non-OpenStack services (such
+   as RabbitMQ, MySQL, Ceph). The restart order is as follows:
 
    #. The controller nodes restart.
    #. If present, Ceph monitors stop.
