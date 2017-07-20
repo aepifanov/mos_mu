@@ -3,6 +3,7 @@
   script: files/check_update_for_pkgs.sh
   environment:
     REPORT_DIR: "{{ report_dir }}"
+    APT_FLAGS: "{{ apt_flags }}"
     APT_UPGRADE: "{{ apt_upgrade }}"
     PKGS: "{{ pacemaker_pkgs }}"
   changed_when: update_flag.rc == 0

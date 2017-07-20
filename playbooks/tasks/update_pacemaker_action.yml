@@ -19,7 +19,7 @@
   failed_when: false
 
 - name: Update Pacemaker and Corosync packages
-  command: "apt-get -y -c {{ apt_conf }} install {{ item }}"
+  command: "apt-get -y -c {{ apt_conf }} {{ apt_flags }} install {{ item }}"
   environment:
     DEBIAN_FRONTEND: noninteractive
   with_items:

@@ -2,8 +2,6 @@
 
 - hosts: env_{{ env_id }}
   any_errors_fatal: true
-  vars:
-    apt_flags: ""
 
   vars_files:
     - "vars/common.yml"

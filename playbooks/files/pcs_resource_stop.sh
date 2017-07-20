@@ -7,7 +7,7 @@ OUT=$(pcs resource show "${RESOURCE}") || {
     echo "WARNING: Resource ${RESOURCE} is not present!";
     exit 100;}
 
-OUT+=$(pcs resource show clone_"${RESOURCE}")
+OUT+=$(pcs resource show "${RESOURCE}")
 
 echo "${OUT}" | fgrep "target-role=Stopped" && {
     echo "WARNING: Resource ${RESOURCE} is stopped!"

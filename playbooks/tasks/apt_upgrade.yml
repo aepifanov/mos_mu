@@ -1,5 +1,7 @@
 ---
 
+- include: tasks/update_special_services.yml
+
 - name: APT correct dependencies
   command: "apt-get -y -c {{ apt_conf }} {{ apt_flags }} -f install"
   environment:

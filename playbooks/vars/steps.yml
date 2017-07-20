@@ -24,6 +24,8 @@ gather_customizations: false
 
 
 
+# Additional flags for APT
+apt_flags: ""
 
 # Type of APT upgrade
 apt_upgrade: "upgrade"

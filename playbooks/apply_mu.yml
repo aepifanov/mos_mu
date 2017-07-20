@@ -2,8 +2,6 @@
 
 - hosts: env_{{ env_id }}
   any_errors_fatal: true
-  vars:
-    apt_flags: ""
 
   vars_files:
     - "vars/common.yml"
@@ -47,8 +45,6 @@
         - use_current_customizations
 
       - include: tasks/verify_patches.yml
-
-      - include: tasks/update_pacemaker.yml
 
       - include: tasks/apt_upgrade.yml
 

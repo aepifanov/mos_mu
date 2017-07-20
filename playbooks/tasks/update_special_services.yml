@@ -1,0 +1,4 @@
+---
+
+- include: tasks/update_pacemaker.yml
+
