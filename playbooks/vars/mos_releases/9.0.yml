@@ -104,14 +104,14 @@ controller_services:
     - swift-proxy
 
 compute_services:
-    - nova-compute
+    - libvirtd
     - neutron-l3-agent
     - neutron-openvswitch-agent
     - neutron-metadata-agent
     - ceilometer-agent-compute
     - cinder-volume
     - cinder-backup
-    - libvirtd
+    - nova-compute
 
 fuel_services:
     - astute

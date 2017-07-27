@@ -117,9 +117,9 @@ controller_services:
     - swift-proxy
 
 compute_services:
-    - nova-compute
+    - libvirtd
     - neutron-plugin-openvswitch-agent
     - ceilometer-agent-compute
     - cinder-volume
     - cinder-backup
-    - libvirtd
+    - nova-compute
