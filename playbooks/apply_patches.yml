@@ -9,12 +9,6 @@
     - "vars/steps.yml"
 
   tasks:
-    - name: Check mos_realease is 9.x
-      fail:
-        msg: "[ERROR] This playbook can be ran only on MOS 9.x"
-      when:
-        - mos_release != "9.0"
-        - mos_release != "9.1"
 
     - include: tasks/apt_update.yml
 

@@ -21,7 +21,7 @@ Mirantis OpenStack 9.2 environment with a newly added node.
 
    .. code-block:: console
 
-    ansible-playbook playbooks/mos9_apply_patches.yml -e '{"env_id":<ENV_ID>}' --limit <NODE_FQDN>
+    ansible-playbook playbooks/apply_patches.yml -e '{"env_id":<ENV_ID>}' --limit <NODE_FQDN>
 
 This task restarts the OpenStack services on the node to apply
 customizations.

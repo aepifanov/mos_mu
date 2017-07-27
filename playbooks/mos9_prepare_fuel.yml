@@ -13,6 +13,7 @@
         - mos_release != "9.0"
         - mos_release != "9.1"
         - mos_release != "9.2"
+
     - name: Install Cudet package
       yum:
         name: python-cudet

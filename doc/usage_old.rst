@@ -224,6 +224,19 @@ Apply MU
      }
 
 
+Customize new nodes
+-------------------
+
+Apply the customizations of your existing environment to the new node
+
+   .. code-block:: console
+
+    ansible-playbook playbooks/apply_patches.yml -e '{"env_id":<env_id>}' --limit <node_fqdn>
+
+This task restarts the OpenStack services on the node to apply
+customizations.
+
+
 
 Rollback
 --------
