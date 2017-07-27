@@ -8,7 +8,7 @@
       ignore_errors: true
 
     - name: Waiting for server to come back
-      local_action: wait_for host={{ inventory_hostname }} port=22 state=drained delay=300 timeout=600
+      local_action: wait_for host={{ inventory_hostname }} port=22 state=drained delay=300 timeout=1000
 
     - name: Stop CEPH Monitors
       service: name=ceph-mon-all state=stopped
@@ -24,7 +24,7 @@
       ignore_errors: true
 
     - name: Waiting for server to come back
-      local_action: wait_for host={{ inventory_hostname }} port=22 state=drained delay=300 timeout=600
+      local_action: wait_for host={{ inventory_hostname }} port=22 state=drained delay=300 timeout=1000
 
 - hosts: env_{{ env_id }}:&ceph-osd
   tasks:
