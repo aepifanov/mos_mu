@@ -35,11 +35,11 @@
   tasks:
   - name: Fix apt-preferences
     command: sed -i -e 's|n=mos9.0-updates|n=mos9.0|' /etc/apt/preferences.d/mos-updates.pref
-    ignore_errors: true
+    failed_when: false
 
   - name: Fix domain name in Neutron conf
     command: sed -i -e 's|domain_id=Default|domain_name=Default|' /etc/neutron/neutron.conf
-    ignore_errors: true
+    failed_when: false
 
   - name: Remove mos-holdback.list LP1663728
     file:
