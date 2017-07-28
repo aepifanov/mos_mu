@@ -9,6 +9,16 @@
 - name: Systemd loads fresh units
   command: systemctl daemon-reload
 
+- name: Add MOS 9.2 repos to fuel-bootstrap config
+  add_repo_to_astute_yaml:
+    name: "{{ item.name }}"
+    url: "{{ item.url }}"
+    suite: "{{ item.suite }}"
+    section: "{{ item.section }}"
+    type: "{{ item.type }}"
+    priority: "{{ item.priority }}"
+  with_items: "{{ mos92_repos }}"
+
 - name: Re-apply puppet master node configuration
   command: /etc/puppet/modules/fuel/examples/deploy.sh
 
@@ -28,7 +38,7 @@
     release: "Mitaka on Ubuntu 14.04"
     name: "mos-holdback"
 
-- name: Add MOS 9.2 repos
+- name: Add MOS 9.2 repos to release configuration
   add_repo_to_release:
     release: "Mitaka on Ubuntu 14.04"
     name: "{{ item.name }}"
