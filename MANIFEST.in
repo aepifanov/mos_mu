@@ -1,0 +1,9 @@
+include ansible.cfg
+recursive-include doc *
+recursive-include inventory *
+recursive-include modules *
+recursive-include playbooks *
+include README.rst
+include LICENSE
+include setup.py
+recursive-include tool *
