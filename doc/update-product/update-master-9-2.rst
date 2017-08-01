@@ -50,7 +50,7 @@ For details, see `Update Environment`_.
         During the update procedure, the Fuel Master node
         services will be restarted automatically.
 
-#. Upgrade the Ubuntu kernel to version 4.4 for the Fuel bootstrap:
+#. (Should be skipped for MOS9.2) Upgrade the Ubuntu kernel to version 4.4 for the Fuel bootstrap:
 
    .. code-block:: console
 

@@ -69,6 +69,64 @@ customizations in plugins is not supported.
    was installed not from the ``mos`` repository. Modifying specific flags
    may resolve the issue. But use the flags with caution.
 
+   The output contains:
+
+   #. List of upgradable packages for each node:
+
+      .. code-block:: console
+
+       TASK [Show upgradable packages] ***********************
+       ok: [node-5.domain.tld] => {
+           "msg": [
+               "Reading package lists...",
+               "Building dependency tree...",
+               "Reading state information...",
+               "The following packages were automatically installed and are no longer required:",
+               "  cloud-guest-utils eatmydata python-oauth python-serial python3-pycurl",
+               "  python3-software-properties software-properties-common unattended-upgrades",
+               "Use 'apt-get autoremove' to remove them.",
+               "The following packages will be upgraded:",
+               "  ceph ceph-common dh-python fuel-ha-utils fuel-misc hpsa-dkms i40e-dkms",
+               "  libcephfs1 librados2 librbd1 libvirt-bin libvirt-clients libvirt-daemon",
+               "  libvirt-daemon-system libvirt0 nailgun-agent nailgun-mcagents neutron-common",
+               "  neutron-plugin-openvswitch-agent nova-common nova-compute nova-compute-qemu",
+               "  puppet puppet-common python-cephfs python-cinderclient python-glanceclient",
+               "  python-keystoneclient python-keystonemiddleware python-neutron",
+               "  python-neutronclient python-nova python-novaclient python-oslo.concurrency",
+               "  python-oslo.config python-oslo.context python-oslo.db python-oslo.log",
+               "  python-oslo.messaging python-oslo.middleware python-oslo.reports",
+               "  python-oslo.serialization python-oslo.service python-oslo.utils",
+               "  python-oslo.versionedobjects python-pycadf python-rados python-rbd",
+               "48 upgraded, 0 newly installed, 0 to remove and 0 not upgraded."
+           ]
+       }
+
+   #. Current MU of each node:
+
+      .. code-block:: console
+
+        TASK [Show current MU] ******************************
+        ok: [node-5.domain.tld] => {
+            "msg": [
+                "fuel"
+            ]
+        }
+
+   #. MD5 verification of all packages on each node:
+
+      .. code-block:: console
+
+       [Show verification results] *************************
+       ok: [node-1.domain.tld] => {
+          "msg": [
+                  "[REINSTALL] Unknown upgradable package 'dh-python' (1.20140128-1ubuntu8.2) will be reinstalled on the new available version.",
+                  "neutron-common",
+                  "nova-common"
+          ]
+       }
+
+   Please read the whole output and make sure that everything looks good and nothing strange is there.
+
    **Note**
 
         If you have some other patches that should be applied to
