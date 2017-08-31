@@ -14,7 +14,7 @@ Conditions and Limitations
 - Needs separate restart for some non OpenStack services (RabbitMQ, MySQL, CEPH and etc)
 - Patches should have absolute target path
 
-Local repos mirrors
+Local repos mirrors (If nodes don't have access to http://mirror.fuel-infra.org/)
 -------------------
 
 If nodes don't have access to http://mirror.fuel-infra.org/ you can create and sync
