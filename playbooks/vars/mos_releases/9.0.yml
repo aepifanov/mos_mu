@@ -20,6 +20,20 @@ apt_repos:
   - name: "9.2"
     url: "{{ fuel_url }}/{{ snapshot_repo }}"
     suites:
+      - "mos9.0"
+      - "mos9.0-security"
+      - "mos9.0-holdback"
+    type: "main restricted"
+  - name: "9.2-mu-2"
+    url: "{{ fuel_url }}/{{ snapshot_repo }}-mu-2"
+    suites:
+      - "mos9.0-updates"
+      - "mos9.0-security"
+      - "mos9.0-holdback"
+    type: "main restricted"
+  - name: "9.2-mu-3"
+    url: "{{ fuel_url }}/{{ snapshot_repo }}-mu-3"
+    suites:
       - "mos9.0-updates"
       - "mos9.0-security"
       - "mos9.0-holdback"
