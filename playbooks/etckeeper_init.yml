@@ -1,0 +1,43 @@
+---
+
+- hosts: env_{{ env_id }}
+  any_errors_fatal: true
+
+  vars_files:
+    - "vars/common.yml"
+      #  - "vars/git_config.yml"
+  vars:
+    etckeeper_conf: "/etc/etckeeper/etckeeper.conf"
+    etckeeper_git_dir: "{{ mos_dir }}/etckeeper_git"
+
+  tasks:
+    - name: Install etckeeper and git
+      apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
+      with_items:
+        - etckeeper
+        - git
+      register: result
+
+    - name: Configure etckeeper
+      ini_file:
+        dest: "{{ etckeeper_conf }}"
+        option: "VCS"
+        value: '"git"'
+        section: null
+        no_extra_spaces: true
+      when: result|changed
+
+    - name: Init etcpeeker
+      shell: "etckeeper init"
+      when: result|changed
+
+    - name: Initial commit etcpeeker
+      shell: 'etckeeper commit "init"'
+      when: result|changed
+
+    - name: Create a tag in git repo for initial commit
+      shell: 'cd /etc/ && git tag -a v.init -m "Initial commit"'
+      when: result|changed
