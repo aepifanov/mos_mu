@@ -31,6 +31,7 @@ for PKG in ${CUSTOM_PKGS}; do
             "keep")
                 echo "[KEEP] Unknown customized package '${PKG}' (${VERS}) will be kept."
                 apt-mark hold "${PKG}" &> /dev/null
+                continue
                 ;;
             "reinstall")
                 echo "[REINSTALL] Unknown customized package '${PKG}'(${VERS}) will be reinstalled on the available version."
@@ -40,7 +41,6 @@ for PKG in ${CUSTOM_PKGS}; do
                 (( RET |= 1 ))
                 ;;
         esac
-        continue
     fi
 
     # Add to customized packages
