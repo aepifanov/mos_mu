@@ -84,12 +84,12 @@ function get_deb ()
     local VERS=${2:?"Please specify package version"}
 
     # Try to find required deb file in cached directory
-    PKG_FILE=$(find "${CACHED_PKG_FILES}" -type f -name "${PKG}*${VERS##*:}*.deb")
+    PKG_FILE=$(find "${CACHED_PKG_FILES}" -type f -name "${PKG}_*${VERS##*:}*.deb")
     [ -f "${PKG_FILE}" ] && return 0
 
     # Download required deb file from repository
     apt-get -c "${APT_CONF}" download "${PKG}=${VERS}" &> /dev/null || return -1
-    PKG_FILE=$(find . -type f -name "${PKG}*${VERS##*:}*.deb")
+    PKG_FILE=$(find . -type f -name "${PKG}_*${VERS##*:}*.deb")
     [ -f "${PKG_FILE}" ] && return 0
 
     return 1
