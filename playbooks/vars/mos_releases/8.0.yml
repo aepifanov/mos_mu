@@ -10,6 +10,13 @@ apt_repos:
       - "mos{{ env_release }}-security"
       - "mos{{ env_release }}-holdback"
     type: "main restricted"
+  - name: "latest"
+    url: "{{ fuel_url }}/{{ env_release }}"
+    suites:
+      - "mos{{ env_release }}-updates"
+      - "mos{{ env_release }}-security"
+      - "mos{{ env_release }}-holdback"
+    type: "main restricted"
   - name: "mu-1"
     url: "{{ fuel_url }}/{{ env_release }}-mu-1"
     suites:
@@ -33,6 +40,20 @@ apt_repos:
     type: "main restricted"
   - name: "mu-4"
     url: "{{ fuel_url }}/{{ env_release }}-mu-4"
+    suites:
+      - "mos{{ env_release }}-updates"
+      - "mos{{ env_release }}-security"
+      - "mos{{ env_release }}-holdback"
+    type: "main restricted"
+  - name: "mu-5"
+    url: "{{ fuel_url }}/{{ env_release }}-mu-5"
+    suites:
+      - "mos{{ env_release }}-updates"
+      - "mos{{ env_release }}-security"
+      - "mos{{ env_release }}-holdback"
+    type: "main restricted"
+  - name: "mu-6"
+    url: "{{ fuel_url }}/{{ env_release }}-mu-6"
     suites:
       - "mos{{ env_release }}-updates"
       - "mos{{ env_release }}-security"
