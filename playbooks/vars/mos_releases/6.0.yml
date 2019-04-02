@@ -66,7 +66,6 @@ controller_services:
     - swift-proxy
 
 compute_services:
-    - libvirtd
     - neutron-plugin-openvswitch-agent
     - ceilometer-agent-compute
     - cinder-volume

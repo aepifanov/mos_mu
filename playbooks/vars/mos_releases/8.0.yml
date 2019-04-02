@@ -119,7 +119,6 @@ controller_services:
     - swift-proxy
 
 compute_services:
-    - libvirtd
     - neutron-l3-agent
     - neutron-plugin-openvswitch-agent
     - neutron-metadata-agent
